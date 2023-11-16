@@ -5,7 +5,7 @@ namespace App\Infrastructure\Query;
 use App\App\Query\DTO\UserInfo;
 use App\App\Query\StaffInfoQueryServiceInterface;
 use App\Infrastructure\Hydrator\Hydrator;
-use App\Infrastructure\Repository\Entity\StaffInfo as ORMStaffInfo;
+use App\Infrastructure\Repositories\Entity\StaffInfo as ORMStaffInfo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,7 +22,7 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
           'SELECT s
-          FROM App\Infrastructure\Repository\Entity\StaffInfo s
+          FROM App\Infrastructure\Repositories\Entity\StaffInfo s
           WHERE s.id = :id'
         )->setParameters([
             'id' => $id
