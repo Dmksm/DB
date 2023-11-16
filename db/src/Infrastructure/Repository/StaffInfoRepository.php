@@ -5,6 +5,7 @@ namespace App\Infrastructure\Repository;
 use App\Infrastructure\Repository\Entity\StaffInfo;
 use App\Infrastructure\Repository\Service\StaffInfoRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,6 +23,9 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
         parent::__construct($registry, StaffInfo::class);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findOneById(int $id): ?StaffInfo
     {
         return $this->createQueryBuilder('s')
@@ -39,7 +43,7 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
     }
 
 //    /**
-//     * @return StaffInfo[] Returns an array of StaffInfo objects
+//     * @return ORMStaffInfo[] Returns an array of ORMStaffInfo objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -53,7 +57,7 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?StaffInfo
+//    public function findOneBySomeField($value): ?ORMStaffInfo
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')

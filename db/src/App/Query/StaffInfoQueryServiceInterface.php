@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace App\Api\User;
+namespace App\App\Query;
 
 use App\App\Query\DTO\UserInfo;
 
-interface ApiInterface
+interface StaffInfoQueryServiceInterface
 {
     public function getUserInfo(int $id): UserInfo;
 }

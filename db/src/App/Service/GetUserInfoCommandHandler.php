@@ -2,16 +2,16 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\Api\User\DTO\UserInfo;
 use App\App\Service\Command\GetUserInfoCommand;
+use App\App\Service\DTO\UserInfo;
 use App\Infrastructure\Repository\Service\StaffInfoRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GetUserInfoCommandHandler
 {
-    protected ValidatorInterface $validator;
-    protected StaffInfoRepositoryInterface $staffInfoRepositoryService;
+    private ValidatorInterface $validator;
+    private StaffInfoRepositoryInterface $staffInfoRepositoryService;
 
     /**
      * Dependency Injection constructor.
@@ -34,15 +34,33 @@ class GetUserInfoCommandHandler
      * @param  GetUserInfoCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(GetUserInfoCommand $command)
+    public function handle(GetUserInfoCommand $command): UserInfo
     {
-        $violations = $this->validator->validate($command);
-
-        if (count($violations) != 0) {
-            $error = $violations->get(0)->getMessage();
-            throw new BadRequestHttpException($error);
+        $errors = $this->validator->validate($command);
+        if (count($errors) != 0)
+        {
+            $error = $errors->get(0)->getMessage();
+            throw new BadRequestHttpException($error, null,400);
         }
 
+        $id = $command->getId();
+        $user = $this->staffInfoRepositoryService->findOneById($id);
+        if ($user)
+        {
+            throw new \Exception("user with id $id not found");
+        }
 
+        return new UserInfo(
+            $user->getId(),
+            $user->getFirstName(),
+            $user->getLastName(),
+            $user->getBirthday(),
+            $user->getEmail(),
+            $user->getPassword(),
+            $user->getPatronymic(),
+            $user->getPhoto(),
+            $user->getTelephone(),
+            $user->getPosition()
+        );
     }
 }
