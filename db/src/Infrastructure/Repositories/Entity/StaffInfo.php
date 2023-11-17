@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace App\Infrastructure\Repository\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
-use App\Infrastructure\Repository\StaffInfoRepository;
+use App\Infrastructure\Repositories\Repository\StaffInfoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace App\Api\User\DTO;
+namespace App\App\Query\DTO;
 
 class UserInfo
 {
