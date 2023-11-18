@@ -11,4 +11,4 @@ interface ApiProductInterface
     public function addProductCategory(
         string $name,
     ): void;
-}
+} 
