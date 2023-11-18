@@ -21,7 +21,7 @@ class ProductCategoryRepository extends ServiceEntityRepository implements Produ
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ProductCategory::class);
+        parent::__construct($registry, ORMProductCategory::class);
     }
 
     public function getNextId(): int
@@ -43,12 +43,12 @@ class ProductCategoryRepository extends ServiceEntityRepository implements Produ
         $entityManager->flush();
     }
 
-    private function hydrateStaffInfo(ProductCategory $staffInfo): ORMProductCategory
+    private function hydrateProductCategory(ProductCategory $productCategory): ORMProductCategory
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMProductCategory::class, [
-            'id' => $staffInfo->getId(),
-            'name' => $staffInfo->getname()
+            'id' => $productCategory->getId(),
+            'name' => $productCategory->getname()
         ]);
     }
 
