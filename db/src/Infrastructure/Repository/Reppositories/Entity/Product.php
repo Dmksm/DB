@@ -11,29 +11,29 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 50)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255)]
-    private ?string $descryption = null;
+    private string $descryption;
 
     #[ORM\Column]
-    private ?int $cactegory = null;
+    private int $cactegory;
 
     #[ORM\Column]
-    private ?float $money = null;
+    private float $cost;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -45,7 +45,7 @@ class Product
         return $this;
     }
 
-    public function getDescryption(): ?string
+    public function getDescryption(): string
     {
         return $this->descryption;
     }
@@ -57,7 +57,7 @@ class Product
         return $this;
     }
 
-    public function getCactegory(): ?int
+    public function getCactegory(): int
     {
         return $this->cactegory;
     }
@@ -69,19 +69,19 @@ class Product
         return $this;
     }
 
-    public function getMoney(): ?float
+    public function getCost(): float
     {
-        return $this->money;
+        return $this->cost;
     }
 
-    public function setMoney(float $money): static
+    public function setCost(float $cost): static
     {
-        $this->money = $money;
+        $this->cost = $cost;
 
         return $this;
     }
 
-    public function getPhoto(): ?string
+    public function getPhoto(): string
     {
         return $this->photo;
     }
