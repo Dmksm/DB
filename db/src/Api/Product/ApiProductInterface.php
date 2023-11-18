@@ -8,7 +8,7 @@ interface ApiProductInterface
 {
     public function getProductCategory(int $id): ProductCategory;
 
-    public function AddProductCategory(
+    public function addProductCategory(
         string $name,
     ): void;
 }

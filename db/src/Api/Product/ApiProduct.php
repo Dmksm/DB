@@ -26,7 +26,7 @@ class ApiProduct implements ApiProductInterface
         return $this->productCategoryQueryService->getProductCategory($id);
     }
 
-    public function AddProductCategory(string $name): void
+    public function addProductCategory(string $name): void
     {
         $productCategoryRepository = new ProductCategoryRepository($this->doctrine);
         $handler = new AddProductCategoryCommandHandler($this->validator, $productCategoryRepository);

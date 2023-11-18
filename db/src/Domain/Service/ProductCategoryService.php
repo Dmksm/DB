@@ -11,7 +11,7 @@ class ProductCategoryService
     {
     }
 
-    public function AddProductCategory(
+    public function addProductCategory(
         string             $name,
     ): void
     {

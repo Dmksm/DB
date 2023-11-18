@@ -7,5 +7,5 @@ use App\Domain\Entity\ProductCategory;
 interface ProductCategoryRepositoryInterface
 {
     public function getNextId(): int;
-    public function AddProductCategory(ProductCategory $productCategory): void;
+    public function addProductCategory(ProductCategory $productCategory): void;
 }

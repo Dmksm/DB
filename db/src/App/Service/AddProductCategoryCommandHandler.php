@@ -37,7 +37,7 @@ class AddProductCategoryCommandHandler
             throw new BadRequestHttpException($error, null,400);
         }
         
-        $this->productCategoryService->AddProductCategory(
+        $this->productCategoryService->addProductCategory(
             $command->getName()
         );
     }

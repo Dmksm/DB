@@ -54,7 +54,7 @@ class PagesController extends AbstractController
         return $response;
     }
     #[Route('/get_product_category')]
-    public function GetProductCategory(): Response
+    public function getProductCategory(): Response
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->productApi->getProductCategory(1);
@@ -65,9 +65,9 @@ class PagesController extends AbstractController
     }
 
     #[Route('/add_product_category')]
-    public function AddProductCategory(Request $request): Response
+    public function addProductCategory(Request $request): Response
     {
-        $this->productApi->AddProductCategory(
+        $this->productApi->addProductCategory(
             'Продукты'
         );
 

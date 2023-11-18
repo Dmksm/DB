@@ -35,7 +35,7 @@ class ProductCategoryRepository extends ServiceEntityRepository implements Produ
         return $query->getResult()[0][1] + 1;
     }
 
-    public function AddProductCategory(ProductCategory $productCategory): void
+    public function addProductCategory(ProductCategory $productCategory): void
     {
         $entityManager = $this->getEntityManager();
         
