@@ -34,7 +34,7 @@ class RegisterUserInfoCommandHandler
         if (count($errors) != 0)
         {
             $error = $errors->get(0)->getMessage();
-            throw new BadRequestHttpException($error, null,400);
+            throw new BadRequestHttpException($error, null, 400);
         }
         
         $this->staffInfoService->registerRespondent(
