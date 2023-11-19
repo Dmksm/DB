@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,7 +21,7 @@ class Product
     private string $descryption;
 
     #[ORM\Column]
-    private int $cactegory;
+    private int $category;
 
     #[ORM\Column]
     private float $cost;
@@ -57,14 +58,14 @@ class Product
         return $this;
     }
 
-    public function getCactegory(): int
+    public function getCategory(): int
     {
-        return $this->cactegory;
+        return $this->category;
     }
 
-    public function setCactegory(int $cactegory): static
+    public function setCategory(int $category): static
     {
-        $this->cactegory = $cactegory;
+        $this->category = $category;
 
         return $this;
     }
@@ -81,7 +82,7 @@ class Product
         return $this;
     }
 
-    public function getPhoto(): string
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }

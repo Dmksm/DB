@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\ProductPurchaseRepository;
 use Doctrine\DBAL\Types\Types;
@@ -12,35 +13,32 @@ class ProductPurchase
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?int $id_product = null;
+    private int $id_product;
 
     #[ORM\Column]
-    private ?int $id_order = null;
+    private int $id_order;
 
     #[ORM\Column]
-    private ?int $id_client = null;
+    private int $id_storage;
 
     #[ORM\Column]
-    private ?int $id_storage = null;
+    private \DateTimeImmutable $order_date;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $order_date = null;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $delivery_date = null;
+    #[ORM\Column]
+    private \DateTimeImmutable $delivery_date;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $status = null;
+    private int $status;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdProduct(): ?int
+    public function getIdProduct(): int
     {
         return $this->id_product;
     }
@@ -52,7 +50,7 @@ class ProductPurchase
         return $this;
     }
 
-    public function getIdOrder(): ?int
+    public function getIdOrder(): int
     {
         return $this->id_order;
     }
@@ -64,19 +62,7 @@ class ProductPurchase
         return $this;
     }
 
-    public function getIdClient(): ?int
-    {
-        return $this->id_client;
-    }
-
-    public function setIdClient(int $id_client): static
-    {
-        $this->id_client = $id_client;
-
-        return $this;
-    }
-
-    public function getIdStorage(): ?int
+    public function getIdStorage(): int
     {
         return $this->id_storage;
     }
@@ -88,31 +74,31 @@ class ProductPurchase
         return $this;
     }
 
-    public function getOrderDate(): ?\DateTimeInterface
+    public function getOrderDate(): \DateTimeImmutable 
     {
         return $this->order_date;
     }
 
-    public function setOrderDate(\DateTimeInterface $order_date): static
+    public function setOrderDate(\DateTimeImmutable $order_date): static
     {
         $this->order_date = $order_date;
 
         return $this;
     }
 
-    public function getDeliveryDate(): ?\DateTimeInterface
+    public function getDeliveryDate(): \DateTimeImmutable
     {
         return $this->delivery_date;
     }
 
-    public function setDeliveryDate(\DateTimeInterface $delivery_date): static
+    public function setDeliveryDate(\DateTimeImmutable $delivery_date): static
     {
         $this->delivery_date = $delivery_date;
 
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): int
     {
         return $this->status;
     }

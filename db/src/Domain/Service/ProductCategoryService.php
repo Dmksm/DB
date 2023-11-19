@@ -19,6 +19,6 @@ class ProductCategoryService
             $this->productCategoryRepository->getNextId(),
             $name
         );
-        $this->productCategoryRepository->AddProductCategory($productCategory);
+        $this->productCategoryRepository->addProductCategory($productCategory);
     }
 }

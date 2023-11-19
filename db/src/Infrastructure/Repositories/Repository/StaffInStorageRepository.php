@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
+namespace App\Infrastructure\Repositories\Repository;
 
-namespace App\Repository;
-
-use App\Entity\StaffInStorage;
+use App\Infrastructure\Repositories\Entity\StaffInStorage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

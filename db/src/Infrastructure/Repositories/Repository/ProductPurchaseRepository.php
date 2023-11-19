@@ -1,28 +1,28 @@
 <?php
+declare(strict_types=1);
+namespace App\Infrastructure\Repositories\Repository;
 
-namespace App\Repository;
-
-use App\Entity\Product;
+use App\Infrastructure\Repositories\Entity\ProductPurchase;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Product>
+ * @extends ServiceEntityRepository<ProductPurchase>
  *
- * @method Product|null find($id, $lockMode = null, $lockVersion = null)
- * @method Product|null findOneBy(array $criteria, array $orderBy = null)
- * @method Product[]    findAll()
- * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ProductPurchase|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ProductPurchase|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ProductPurchase[]    findAll()
+ * @method ProductPurchase[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductRepository extends ServiceEntityRepository
+class ProductPurchaseRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Product::class);
+        parent::__construct($registry, ProductPurchase::class);
     }
 
 //    /**
-//     * @return Product[] Returns an array of Product objects
+//     * @return ProductPurchase[] Returns an array of ProductPurchase objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class ProductRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Product
+//    public function findOneBySomeField($value): ?ProductPurchase
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

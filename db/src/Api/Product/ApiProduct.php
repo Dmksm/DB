@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Api\Product;
 
-use App\App\Query\DTO\ProductCategory;
-use App\App\Query\ProductCategoryQueryServiceInterface;
-use App\App\Service\Command\AddProductCategoryCommand;
-use App\App\Service\AddProductCategoryCommandHandler;
-use App\Infrastructure\Repositories\Repository\ProductCategoryRepository;
+use App\App\Query\DTO\Product;
+use App\App\Query\ProductQueryServiceInterface;
+use App\App\Service\Command\AddProductCommand;
+use App\App\Service\AddProductCommandHandler;
+use App\Infrastructure\Repositories\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -16,22 +16,32 @@ class ApiProduct implements ApiProductInterface
     public function __construct(
         private readonly ManagerRegistry                $doctrine,
         private readonly ValidatorInterface             $validator,
-        private readonly ProductCategoryQueryServiceInterface $productCategoryQueryService,
+        private readonly ProductQueryServiceInterface $productQueryService, 
     )
     {
     }
     
-    public function getProductCategory(int $id): ProductCategory
+    public function getProduct(int $id): Product
     {
-        return $this->productCategoryQueryService->getProductCategory($id);
+        return $this->productQueryService->getProduct($id);
     }
 
-    public function addProductCategory(string $name): void
+    public function addProduct(
+        string      $name,
+        string      $descryption,
+        int         $category,
+        int         $cost,
+        string|null $photo = null
+        ): void
     {
-        $productCategoryRepository = new ProductCategoryRepository($this->doctrine);
-        $handler = new AddProductCategoryCommandHandler($this->validator, $productCategoryRepository);
-        $command = new AddProductCategoryCommand(
+        $productRepository = new ProductRepository($this->doctrine);  
+        $handler = new AddProductCommandHandler($this->validator, $productRepository); 
+        $command = new AddProductCommand(
             $name,
+            $descryption,
+            $category,
+            $cost,
+            $photo,
         );
         $handler->handle($command);
 

@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,53 +12,38 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $first_name;
 
     #[ORM\Column(length: 255)]
-    private ?string $first_name = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $last_name = null;
+    private string $last_name;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $birthday = null;
+    private \DateTimeImmutable $birthday;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $patronymic = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    private string $email ;
 
     #[ORM\Column(length: 255)]
-    private ?string $password = null;
+    private string $password ;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $telephone = null;
+    private string $telephone ;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->first_name;
     }
@@ -69,7 +55,7 @@ class Client
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->last_name;
     }
@@ -81,7 +67,7 @@ class Client
         return $this;
     }
 
-    public function getBirthday(): ?\DateTimeImmutable
+    public function getBirthday(): \DateTimeImmutable
     {
         return $this->birthday;
     }
@@ -105,7 +91,7 @@ class Client
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -117,7 +103,7 @@ class Client
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -141,7 +127,7 @@ class Client
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getTelephone(): string
     {
         return $this->telephone;
     }

@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\ProductInStorageRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,23 +12,23 @@ class ProductInStorage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?int $id_product = null;
+    private int $id_product;
 
     #[ORM\Column]
-    private ?int $id_storage = null;
+    private int $id_storage;
 
     #[ORM\Column]
-    private ?int $count = null;
+    private int $count;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdProduct(): ?int
+    public function getIdProduct(): int
     {
         return $this->id_product;
     }
@@ -39,7 +40,7 @@ class ProductInStorage
         return $this;
     }
 
-    public function getIdStorage(): ?int
+    public function getIdStorage(): int
     {
         return $this->id_storage;
     }
@@ -51,7 +52,7 @@ class ProductInStorage
         return $this;
     }
 
-    public function getCount(): ?int
+    public function getCount(): int
     {
         return $this->count;
     }

@@ -9,9 +9,7 @@ class AddProductCategoryCommand
     #[Assert\NotBlank]
     private string $name;
 
-    public function __construct(
-        string             $name,
-    )
+    public function __construct(string $name,)
     {
         $this->name = $name;
     }

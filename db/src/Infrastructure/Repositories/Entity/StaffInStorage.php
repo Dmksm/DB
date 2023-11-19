@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\StaffInStorageRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,20 +12,20 @@ class StaffInStorage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?int $id_staff = null;
+    private int $id_staff;
 
     #[ORM\Column]
-    private ?int $id_storage = null;
+    private int $id_storage;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdStaff(): ?int
+    public function getIdStaff(): int
     {
         return $this->id_staff;
     }
@@ -36,7 +37,7 @@ class StaffInStorage
         return $this;
     }
 
-    public function getIdStorage(): ?int
+    public function getIdStorage(): int
     {
         return $this->id_storage;
     }

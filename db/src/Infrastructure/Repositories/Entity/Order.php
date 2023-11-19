@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
 use App\Repository\OrderRepository;
 use Doctrine\DBAL\Types\Types;
@@ -13,29 +14,29 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column]
-    private ?int $id_client = null;
+    private int $id_client;
 
     #[ORM\Column]
-    private ?float $sum = null;
+    private float $sum;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $order_date = null;
+    private \DateTimeImmutable $order_date;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $status = null;
+    private int $status;
 
     #[ORM\Column(length: 255)]
-    private ?string $addres = null;
+    private string $address;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getIdClient(): ?int
+    public function getIdClient(): int
     {
         return $this->id_client;
     }
@@ -47,7 +48,7 @@ class Order
         return $this;
     }
 
-    public function getSum(): ?float
+    public function getSum(): float
     {
         return $this->sum;
     }
@@ -59,7 +60,7 @@ class Order
         return $this;
     }
 
-    public function getOrderDate(): ?\DateTimeImmutable
+    public function getOrderDate(): \DateTimeImmutable
     {
         return $this->order_date;
     }
@@ -71,7 +72,7 @@ class Order
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -83,14 +84,14 @@ class Order
         return $this;
     }
 
-    public function getAddres(): ?string
+    public function getAddress(): ?string
     {
-        return $this->addres;
+        return $this->address;
     }
 
-    public function setAddres(string $addres): static
+    public function setAddress(string $address): static
     {
-        $this->addres = $addres;
+        $this->address = $address;
 
         return $this;
     }
