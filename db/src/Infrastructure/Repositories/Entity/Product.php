@@ -20,8 +20,8 @@ class Product
     #[ORM\Column(length: 255)]
     private string $descryption;
 
-    #[ORM\Column]
-    private int $category;
+    // #[ORM\Column]
+    // private int $category;
 
     #[ORM\Column]
     private float $cost;
@@ -58,17 +58,17 @@ class Product
         return $this;
     }
 
-    public function getCategory(): int
-    {
-        return $this->category;
-    }
+    // public function getCategory(): int
+    // {
+    //     return $this->category;
+    // }
 
-    public function setCategory(int $category): static
-    {
-        $this->category = $category;
+    // public function setCategory(int $category): static
+    // {
+    //     $this->category = $category;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCost(): float
     {
