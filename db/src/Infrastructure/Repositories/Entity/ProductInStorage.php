@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\ProductInStorageRepository;
+use App\Infrastructure\Repositories\Repository\ProductInStorageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductInStorageRepository::class)]

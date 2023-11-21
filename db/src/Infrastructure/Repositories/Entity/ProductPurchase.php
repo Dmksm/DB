@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\ProductPurchaseRepository;
+use App\Infrastructure\Repositories\Repository\ProductPurchaseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

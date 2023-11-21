@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Infrastructure\Repositories\Repository;
 
 use App\Infrastructure\Repositories\Entity\Client;

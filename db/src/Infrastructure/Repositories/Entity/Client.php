@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\ClientRepository;
+use App\Infrastructure\Repositories\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -27,16 +26,16 @@ class Client
     private ?string $patronymic = null;
 
     #[ORM\Column(length: 255)]
-    private string $email ;
+    private string $email;
 
     #[ORM\Column(length: 255)]
-    private string $password ;
+    private string $password;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
     #[ORM\Column(length: 255)]
-    private string $telephone ;
+    private string $telephone;
 
     public function getId(): int
     {

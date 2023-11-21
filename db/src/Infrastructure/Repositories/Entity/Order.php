@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\OrderRepository;
+use App\Infrastructure\Repositories\Repository\OrderRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

@@ -3,11 +3,11 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
 use App\Domain\Entity\Product;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Infrastructure\Repositories\Entity\Product as ORMProduct;
 use App\Domain\Service\ProductRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Product>
  *
@@ -37,7 +37,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     public function addProduct(Product $product): void
     {
         $entityManager = $this->getEntityManager();
-        
+
         $entityManager->persist($this->hydrateProduct($product));
         $entityManager->flush();
     }
@@ -54,29 +54,4 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             'photo' => $product->getPhoto(),
         ]);
     }
-
-//    /**
-//     * @return Product[] Returns an array of Product objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Product
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }
