@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\StaffInStorageRepository;
+use App\Infrastructure\Repositories\Repository\StaffInStorageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StaffInStorageRepository::class)]

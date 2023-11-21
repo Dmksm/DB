@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\StorageRepository;
+use App\Infrastructure\Repositories\Repository\StorageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StorageRepository::class)]

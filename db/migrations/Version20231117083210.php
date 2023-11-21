@@ -28,7 +28,6 @@ final class Version20231117083210 extends AbstractMigration
         $this->addSql('CREATE TABLE product_purchase (id INT AUTO_INCREMENT NOT NULL, id_product INT NOT NULL, id_order INT NOT NULL, id_client INT NOT NULL, id_storage INT NOT NULL, order_date DATE NOT NULL, delivery_date DATE NOT NULL, status SMALLINT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE staff_in_storage (id INT AUTO_INCREMENT NOT NULL, id_staff INT NOT NULL, id_storage INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE storage (id INT AUTO_INCREMENT NOT NULL, city VARCHAR(255) NOT NULL, street VARCHAR(255) NOT NULL, house VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        
     }
 
     public function down(Schema $schema): void

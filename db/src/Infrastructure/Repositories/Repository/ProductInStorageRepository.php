@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Repository;
+namespace App\Infrastructure\Repositories\Repository;
 
-use App\Entity\ProductCategory;
+use App\Infrastructure\Repositories\Entity\ProductInStorage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ProductCategory>
+ * @extends ServiceEntityRepository<ProductInStorage>
  *
- * @method ProductCategory|null find($id, $lockMode = null, $lockVersion = null)
- * @method ProductCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method ProductCategory[]    findAll()
- * @method ProductCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method ProductInStorage|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ProductInStorage|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ProductInStorage[]    findAll()
+ * @method ProductInStorage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductCategoryRepository extends ServiceEntityRepository
+class ProductInStorageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ProductCategory::class);
+        parent::__construct($registry, ProductInStorage::class);
     }
 
 //    /**
-//     * @return ProductCategory[] Returns an array of ProductCategory objects
+//     * @return ProductInStorage[] Returns an array of ProductInStorage objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class ProductCategoryRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ProductCategory
+//    public function findOneBySomeField($value): ?ProductInStorage
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

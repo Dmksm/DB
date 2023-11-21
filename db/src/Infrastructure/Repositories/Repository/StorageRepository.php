@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Repository;
+namespace App\Infrastructure\Repositories\Repository;
 
-use App\Entity\StaffInStorage;
+use App\Infrastructure\Repositories\Entity\Storage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<StaffInStorage>
+ * @extends ServiceEntityRepository<Storage>
  *
- * @method StaffInStorage|null find($id, $lockMode = null, $lockVersion = null)
- * @method StaffInStorage|null findOneBy(array $criteria, array $orderBy = null)
- * @method StaffInStorage[]    findAll()
- * @method StaffInStorage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Storage|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Storage|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Storage[]    findAll()
+ * @method Storage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class StaffInStorageRepository extends ServiceEntityRepository
+class StorageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, StaffInStorage::class);
+        parent::__construct($registry, Storage::class);
     }
 
 //    /**
-//     * @return StaffInStorage[] Returns an array of StaffInStorage objects
+//     * @return Storage[] Returns an array of Storage objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class StaffInStorageRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?StaffInStorage
+//    public function findOneBySomeField($value): ?Storage
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\ProductCategoryRepository;
+use App\Infrastructure\Repositories\Repository\ProductCategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductCategoryRepository::class)]

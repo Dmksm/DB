@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Infrastructure\Repositories\Entity;
 
-use App\Repository\ClientRepository;
+use App\Infrastructure\Repositories\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
@@ -11,28 +11,25 @@ class Client
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $first_name;
 
     #[ORM\Column(length: 255)]
-    private ?string $first_name = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $last_name = null;
+    private string $last_name;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $birthday = null;
+    private \DateTimeImmutable $birthday;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $patronymic = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column(length: 255)]
-    private ?string $password = null;
+    private string $password;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
