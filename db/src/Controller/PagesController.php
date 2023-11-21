@@ -65,8 +65,8 @@ class PagesController extends AbstractController
     public function getProductCategory(): Response
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->productCategoryApi->getProductCategory(1);
-        $name = ($user) ? $user->getname() : 'anonymous';
+        $productCategory = $this->productCategoryApi->getProductCategory(1);
+        $name = ($productCategory) ? $productCategory->getname() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'name' => $name,
         ]);
@@ -96,7 +96,7 @@ class PagesController extends AbstractController
         $id = $product->getId();
         $name = $product->getName();
         $descryption = $product->getDescryption();
-        $category = $product->getCategory();
+        $category = $this->productCategoryApi->getProductCategory($product->getCategory())->getName();
         $cost = $product->getCost();
         $photo = $product->getPhoto();
         return $this->render('Product/login.html.twig', [
