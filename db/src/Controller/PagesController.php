@@ -27,6 +27,7 @@ class PagesController extends AbstractController
     }
 
     #[Route('/login')]
+    #[Route('/')]
     public function loginPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
