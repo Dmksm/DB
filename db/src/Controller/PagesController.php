@@ -38,6 +38,16 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/general')]
+    public function generalPage(): Response
+    {
+        $user = $this->userApi->getUserInfo(1);
+        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        return $this->render('general/general.html.twig', [
+            'name' => $name,
+        ]);
+    }
+
     #[Route('/register')]
     public function register(Request $request): Response
     {
@@ -62,13 +72,14 @@ class PagesController extends AbstractController
         return $response;
     }
 
+
     #[Route('/get_product_category')]
     public function getProductCategory(): Response
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $productCategory = $this->productCategoryApi->getProductCategory(1);
         $name = ($productCategory) ? $productCategory->getname() : 'anonymous';
-        return $this->render('authorization/login.html.twig', [
+        return $this->render('product/product.html.twig', [
             'name' => $name,
         ]);
     }
@@ -100,7 +111,7 @@ class PagesController extends AbstractController
         $category = $this->productCategoryApi->getProductCategory($product->getCategory())->getName();
         $cost = $product->getCost();
         $photo = $product->getPhoto();
-        return $this->render('Product/login.html.twig', [
+        return $this->render('product/product.html.twig', [
             'id' => $id,
             'name' => $name,
             'descryption' => $descryption, 

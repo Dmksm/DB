@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="page_content">
+        <div class="widget_panel">
+            <form action="" method="get" class="widget-form">
+                <div>
+                    <input class="widget" type="submit" value="page 1" />
+                </div>
+                <div>
+                    <input class="widget" type="submit" value="page 2" />
+                </div>
+                <div>
+                    <input class="widget" type="submit" value="page 3" />
+                </div>
+                <div>
+                    <input class="widget" type="submit" value="page 4" />
+                </div>
+                <div>
+                    <input class="widget" type="submit" value="page 5" />
+                </div>
+                <div>
+                    <input class="widget" type="submit" value="page 6" />
+                </div>
+            </form>
+        </div>
+        <div class="general_content">
+            <form class="widget-search" action="" method="get">
+                <input class="widget-input" placeholder="Search some..." type="email" name="email" id="email" required />
+            </form>
+            <div class="general_products">
+                <div class="widget_product">Product 1</div>
+                <div class="widget_product">Product 2</div>
+                <div class="widget_product">Product 3</div>
+                <div class="widget_product">Product 4</div>
+                <div class="widget_product">Product 5</div>
+                <div class="widget_product">Product 6</div>
+                <div class="widget_product">Product 7</div>
+                <div class="widget_product">Product 8</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
