@@ -61,6 +61,7 @@ class PagesController extends AbstractController
             'features' => "Вес упаковки  200 г
                 Тип консервированные овощи
                 Вид продукта морковь",
+            'imagePath' => "images/watermelon.webp",
         ]);
     }
 
