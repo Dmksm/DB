@@ -8,6 +8,8 @@ interface ApiProductInterface
 {
     public function getProduct(int $id): Product;
 
+    public function getProductsByCategory(int $categoryId): array;
+
     public function addProduct(
         string $name,
         string $descryption,
@@ -15,4 +17,6 @@ interface ApiProductInterface
         int $cost,
         string|null $photo = null
     ): void;
+
+    public function getAllProducts(): array;
 } 

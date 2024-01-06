@@ -49,7 +49,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             'id' => $product->getId(),
             'name' => $product->getName(),
             'descryption' => $product->getDescryption(),
-            'category' => $product->getCategory(),
+            'category_id' => $product->getCategory(),
             'cost' => $product->getCost(),
             'photo' => $product->getPhoto(),
         ]);

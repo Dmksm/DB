@@ -41,6 +41,32 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         return $this->hydrateAttempt($ORMProduct[0]);
     }
 
+    public function getProductsByCategory(int $categoryId): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+          'SELECT s
+          FROM App\Infrastructure\Repositories\Entity\Product s
+          WHERE s.category_id = :categoryId'
+        )->setParameters([
+            'categoryId' => $categoryId
+        ]);
+        $ORMProduct = $query->getResult();
+
+        return $ORMProduct;
+    }
+
+    public function getAllProducts(): array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+          'SELECT s
+          FROM App\Infrastructure\Repositories\Entity\Product s'
+        );
+        $ORMProduct = $query->getResult();
+        return $ORMProduct;
+    }
+
     private function hydrateAttempt(ORMProduct $ORMProduct): Product
     {
         $hydrator = new Hydrator();
@@ -48,7 +74,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
             'id' => $ORMProduct->getId(),
             'name' => $ORMProduct->getname(),
             'descryption' => $ORMProduct->getDescryption(),
-            'category' => $ORMProduct->getCategory(),
+            'category_id' => $ORMProduct->getCategory(),
             'cost' => $ORMProduct->getCost(),
             'photo' => $ORMProduct->getPhoto(),
         ]);

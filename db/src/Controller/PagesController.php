@@ -71,6 +71,14 @@ class PagesController extends AbstractController
             'name' => $name,
         ]);
     }
+    #[Route('/get_all_products')]
+    public function getAllProducts(): Response
+    {
+        $products = $this->productApi->getAllProducts();
+        return $this->render('Product/get_all_products.html.twig', [
+            'products' => $products,
+        ]);
+    }
 
     #[Route('/add_product_category')]
     public function addProductCategory(Request $request): Response
@@ -109,14 +117,24 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/get_products_by_category')]
+    public function getProductsByCategory(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $products = $this->productApi->getProductsByCategory(1);
+        return $this->render('Product/get_all_products.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
     #[Route('/add_product')]
     public function addProduct(Request $request): Response
     {
         $this->productApi->addProduct(
-            'банан',
-            'Это банан',
+            'яблоко',
+            'Это яблоко',
             1,
-            100,
+            200,
             'path'
         );
 

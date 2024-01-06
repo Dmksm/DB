@@ -26,6 +26,12 @@ class ApiProduct implements ApiProductInterface
         return $this->productQueryService->getProduct($id);
     }
 
+    
+    public function getProductsByCategory(int $categoryId): array
+    {
+        return $this->productQueryService->getProductsByCategory($categoryId);
+    }
+
     public function addProduct(
         string      $name,
         string      $descryption,
@@ -45,5 +51,10 @@ class ApiProduct implements ApiProductInterface
         );
         $handler->handle($command);
 
+    }
+
+    public function getAllProducts(): array
+    {
+        return $this->productQueryService->getAllProducts();
     }
 }
