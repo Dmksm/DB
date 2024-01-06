@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="login_content">
-        <h1 id="welcome_text">Welcome</h1>
-        <form action="" method="get" class="login-form">
-            <div>
-                <input class="login-input" placeholder="Email" type="email" name="email" id="email" required />
+    <div class="page_content">
+        {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="product_content">
+            <div class="product-review">
+                <img class="product-image" src="{{ asset('images/watermelon.webp') }}" alt="Symfony!"/>
+                <div class="product-features"><h2>Характеристики</h2>{{ features }}</div>
             </div>
-            <div>
-                <input class="login-input" placeholder="Password" type="password" name="password" id="password" required />
-            </div>
-            <div>
-                <input class="login-submit" type="submit" value="Log in" />
-            </div>
-        </form>
+            <div class="product-description"><h2>Описание</h2>{{ description }}</div>
+        </div>
+        <div class="product-button">
+            {{ component('Button', { message: 'Добавить' }) }}
+        </div>
     </div>
 {% endblock %}

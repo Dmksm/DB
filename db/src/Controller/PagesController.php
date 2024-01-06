@@ -48,6 +48,22 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/product/{id}')]
+    public function productPage(int $id): Response
+    {
+        return $this->render('product/product.html.twig', [
+            'description' => "Срок годности в днях: 60Состав: морковь столовая,
+                масло подсолнечное, соль, специи, перец красный острый молотый,
+                регулятор кислотности уксусная кислота, консерванты: сорбат калия,
+                бензоат натрия, усилитель вкуса и аромата Е621, подсластители: E952
+                , E954Пищевая ценность: Калорийность: 55.8Белки: 1Жиры: 3.4Углеводы:
+                5.3Страна изготовления: Россия Производитель: Кафе Йошка",
+            'features' => "Вес упаковки  200 г
+                Тип консервированные овощи
+                Вид продукта морковь",
+        ]);
+    }
+
     #[Route('/register')]
     public function register(Request $request): Response
     {

@@ -1,28 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div class="page_content">
-        <div class="widget_panel">
-            <form action="" method="get" class="widget-form">
-                <div>
-                    <input class="widget" type="submit" value="page 1" />
-                </div>
-                <div>
-                    <input class="widget" type="submit" value="page 2" />
-                </div>
-                <div>
-                    <input class="widget" type="submit" value="page 3" />
-                </div>
-                <div>
-                    <input class="widget" type="submit" value="page 4" />
-                </div>
-                <div>
-                    <input class="widget" type="submit" value="page 5" />
-                </div>
-                <div>
-                    <input class="widget" type="submit" value="page 6" />
-                </div>
-            </form>
-        </div>
+        {{ include('components/sidebar/sidebar.html.twig') }}
         <div class="general_content">
             <form class="widget-search" action="" method="get">
                 <input class="widget-input" placeholder="Search some..." type="email" name="email" id="email" required />
