@@ -34,14 +34,78 @@ class PagesController extends AbstractController
         $this->staffInStorageApi = $staffInStorageApi;
     }
 
-    #[Route('/login')]
+    #[Route('/loginPage', 'loginPage')]
     public function loginPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->userApi->getUserInfo(1);
+        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
+        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
+        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
+        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
         $name = ($user) ? $user->getFirstName() : 'anonymous';
-        return $this->render('authorization/login.html.twig', [
-            'name' => $name,
+        return $this->render('mockPages/loginPage.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'productPage' => $productPage,
+            'basketPage' => $basketPage,
+        ]);
+    }
+
+    #[Route('/mainPage', 'mainPage')]
+    public function mainPage(): Response
+    {
+        // TODO: удалить получение пользователя и поправить метод loginPage
+        $user = $this->userApi->getUserInfo(1);
+        $products = $this->productApi->getAllProducts();
+        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
+        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
+        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
+        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        return $this->render('mockPages/mainPage.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'productPage' => $productPage,
+            'basketPage' => $basketPage,
+        ]);
+    }
+
+    #[Route('/productPage', 'productPage')]
+    public function productPage(): Response
+    {
+        // TODO: удалить получение пользователя и поправить метод loginPage
+        $user = $this->userApi->getUserInfo(1);
+        $products = $this->productApi->getAllProducts();
+        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
+        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
+        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
+        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        return $this->render('mockPages/productPage.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'productPage' => $productPage,
+            'basketPage' => $basketPage,
+        ]);
+    }
+
+    #[Route('/basketPage', 'basketPage')]
+    public function basketPage(): Response
+    {
+        // TODO: удалить получение пользователя и поправить метод loginPage
+        $user = $this->userApi->getUserInfo(1);
+        $products = $this->productApi->getAllProducts();
+        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
+        $mainPage = 'https://localhost:8000' . $this->generateUrl('mainPage');
+        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
+        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        return $this->render('mockPages/basketPage.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'productPage' => $productPage,
+            'basketPage' => $basketPage,
         ]);
     }
 
@@ -79,12 +143,22 @@ class PagesController extends AbstractController
             'name' => $name,
         ]);
     }
+
     #[Route('/get_all_products')]
     public function getAllProducts(): Response
     {
         $products = $this->productApi->getAllProducts();
         return $this->render('Product/get_all_products.html.twig', [
             'products' => $products,
+        ]);
+    }
+
+    #[Route('/get_all_products_count', name:'get_all_products_count')]
+    public function getAllProductsCount(): Response
+    {
+        $products = $this->productApi->getAllProducts();
+        return $this->render('Product/get_all_products_count.html.twig', [
+            'productsCount' => count($products),
         ]);
     }
 
@@ -218,7 +292,7 @@ class PagesController extends AbstractController
         $staffInStorage = $this->staffInStorageApi->getStaffInStorage(1);
         $name = ($staffInStorage) ? $this->userApi->getUserInfo(1)->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
-            'name' => $name,
+            'name' => $this->generateUrl('basketPage'),
         ]);
     }
 }
