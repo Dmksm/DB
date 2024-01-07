@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Api\User\ApiInterface as UserApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
+use App\Api\Storage\ApiStorageInterface as StorageApi;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,15 +16,18 @@ class PagesController extends AbstractController
     private UserApi $userApi;
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
+    private StorageApi $storageApi;
     public function __construct(
         UserApi $userApi, 
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
+        StorageApi $storageApi,
         )
     {
         $this->userApi = $userApi;
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
+        $this->storageApi = $storageApi;
     }
 
     #[Route('/login')]
@@ -145,5 +149,34 @@ class PagesController extends AbstractController
         );
 
         return $response;
+    }
+
+    #[Route('/add_storage')]
+    public function addStorage(Request $request): Response
+    {
+        $this->storageApi->addStorage(
+            'Йошкар-ола',
+            'Пушкина',
+            '10'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_storage')]
+    public function getStorage(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $storage = $this->storageApi->getStorage(1);
+        $name = ($storage) ? $storage->getCity() : 'anonymous';
+        return $this->render('authorization/login.html.twig', [
+            'name' => $name,
+        ]);
     }
 }
