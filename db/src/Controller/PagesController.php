@@ -135,6 +135,16 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/get_products_by_including_string')]
+    public function getProductsByIncludingString(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $products = $this->productApi->getProductsByIncludingString('ан');
+        return $this->render('Product/get_all_products.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
     #[Route('/add_product')]
     public function addProduct(Request $request): Response
     {

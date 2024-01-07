@@ -31,6 +31,12 @@ class ApiProduct implements ApiProductInterface
     {
         return $this->productQueryService->getProductsByCategory($categoryId);
     }
+    
+    public function getProductsByIncludingString(string $subString): array
+    {
+        return $this->productQueryService->getProductsByIncludingString($subString);
+
+    }
 
     public function addProduct(
         string      $name,

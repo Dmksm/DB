@@ -10,6 +10,8 @@ interface ApiProductInterface
 
     public function getProductsByCategory(int $categoryId): array;
 
+    public function getProductsByIncludingString(string $subString): array;
+
     public function addProduct(
         string $name,
         string $descryption,

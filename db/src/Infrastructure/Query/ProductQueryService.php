@@ -56,6 +56,22 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         return $ORMProduct;
     }
 
+    
+    public function getProductsByIncludingString(string $subString): array
+    {
+        $subString = '%' . $subString .'%';
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+          'SELECT s
+          FROM App\Infrastructure\Repositories\Entity\Product s
+          WHERE s.name LIKE :subString'
+        )->setParameters([
+            'subString' => $subString
+        ]);
+        $ORMProduct = $query->getResult();
+
+        return $ORMProduct;
+    }
     public function getAllProducts(): array
     {
         $entityManager = $this->getEntityManager();
