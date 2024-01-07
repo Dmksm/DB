@@ -6,6 +6,7 @@ use App\Api\User\ApiInterface as UserApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
+use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,17 +18,20 @@ class PagesController extends AbstractController
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
     private StorageApi $storageApi;
+    private StaffInStorageApi $staffInStorageApi;
     public function __construct(
         UserApi $userApi, 
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         StorageApi $storageApi,
+        StaffInStorageApi $staffInStorageApi,
         )
     {
         $this->userApi = $userApi;
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
         $this->storageApi = $storageApi;
+        $this->staffInStorageApi = $staffInStorageApi;
     }
 
     #[Route('/login')]
@@ -175,6 +179,34 @@ class PagesController extends AbstractController
         //TODO: удалить получение пользователя и поправить метод loginPage
         $storage = $this->storageApi->getStorage(1);
         $name = ($storage) ? $storage->getCity() : 'anonymous';
+        return $this->render('authorization/login.html.twig', [
+            'name' => $name,
+        ]);
+    } 
+    
+    #[Route('/add_staff_in_storage')]
+    public function addStaffInStorage(Request $request): Response
+    {
+        $this->staffInStorageApi->addStaffInStorage(
+            $this->userApi->getUserInfo(1)->getId(),
+            $this->storageApi->getStorage(1)->getId(),
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_staff_in_storage')]
+    public function getStaffInStorage(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $staffInStorage = $this->staffInStorageApi->getStaffInStorage(1);
+        $name = ($staffInStorage) ? $this->userApi->getUserInfo(1)->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'name' => $name,
         ]);
