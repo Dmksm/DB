@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
@@ -47,10 +48,10 @@ class PagesController extends AbstractController
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->userApi->getUserInfo(1);
-        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
-        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
-        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
-        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/loginPage.html.twig', [
             'loginPage' => $loginPage,
@@ -65,11 +66,10 @@ class PagesController extends AbstractController
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->userApi->getUserInfo(1);
-        $products = $this->productApi->getAllProducts();
-        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
-        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
-        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
-        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/mainPage.html.twig', [
             'loginPage' => $loginPage,
@@ -85,10 +85,10 @@ class PagesController extends AbstractController
         // TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->userApi->getUserInfo(1);
         $products = $this->productApi->getAllProducts();
-        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
-        $mainPage = 'http://localhost:8000' . $this->generateUrl('mainPage');
-        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
-        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/productPage.html.twig', [
             'loginPage' => $loginPage,
@@ -104,10 +104,10 @@ class PagesController extends AbstractController
         // TODO: удалить получение пользователя и поправить метод loginPage
         $user = $this->userApi->getUserInfo(1);
         $products = $this->productApi->getAllProducts();
-        $loginPage = 'http://localhost:8000' . $this->generateUrl('loginPage');
-        $mainPage = 'https://localhost:8000' . $this->generateUrl('mainPage');
-        $productPage = 'http://localhost:8000' . $this->generateUrl('productPage');
-        $basketPage = 'http://localhost:8000' . $this->generateUrl('basketPage');
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/basketPage.html.twig', [
             'loginPage' => $loginPage,
