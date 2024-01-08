@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Api\User\ApiInterface as UserApi;
+use App\Api\Client\ApiClientInterface as ClientApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PagesController extends AbstractController
 {
     private UserApi $userApi;
+    private ClientApi $clientApi;
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
     private StorageApi $storageApi;
@@ -25,9 +27,11 @@ class PagesController extends AbstractController
         ProductApi $productApi,
         StorageApi $storageApi,
         StaffInStorageApi $staffInStorageApi,
+        ClientApi $clientApi,
         )
     {
         $this->userApi = $userApi;
+        $this->clientApi = $clientApi;
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
         $this->storageApi = $storageApi;
@@ -293,6 +297,39 @@ class PagesController extends AbstractController
         $name = ($staffInStorage) ? $this->userApi->getUserInfo(1)->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'name' => $this->generateUrl('basketPage'),
+        ]);
+    }
+    
+    #[Route('/add_client')]
+    public function addClient(Request $request): Response
+    {
+        $this->clientApi->addClient(
+            'Роман',
+            'Смирнов',
+            (new \DateTimeImmutable()),
+            'roman123@mail.com',
+            '123456Roman',
+            'Vecheslavovich',
+            '/path',
+            '+71239870010',
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_client')]
+    public function getClient(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $client = $this->clientApi->getClient(1);
+        return $this->render('authorization/login.html.twig', [
+            'name' => $client->getFirstName(),
         ]);
     }
 }
