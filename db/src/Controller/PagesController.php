@@ -7,6 +7,7 @@ use App\Api\Client\ApiClientInterface as ClientApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
+use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,12 +21,14 @@ class PagesController extends AbstractController
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
     private StorageApi $storageApi;
+    private ProductInStorageApi $productInStorageApi;
     private StaffInStorageApi $staffInStorageApi;
     public function __construct(
         UserApi $userApi, 
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         StorageApi $storageApi,
+        ProductInStorageApi $productInStorageApi,
         StaffInStorageApi $staffInStorageApi,
         ClientApi $clientApi,
         )
@@ -35,6 +38,7 @@ class PagesController extends AbstractController
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
         $this->storageApi = $storageApi;
+        $this->productInStorageApi = $productInStorageApi;
         $this->staffInStorageApi = $staffInStorageApi;
     }
 
@@ -330,6 +334,34 @@ class PagesController extends AbstractController
         $client = $this->clientApi->getClient(1);
         return $this->render('authorization/login.html.twig', [
             'name' => $client->getFirstName(),
+        ]);
+    }
+    
+    #[Route('/add_product_in_storage')]
+    public function addProductInStorage(Request $request): Response
+    {
+        $this->productInStorageApi->addProductInStorage(
+            1,
+            1,
+            1
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_product_in_storage')]
+    public function getProductInStorage(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $productInStorageApi = $this->productInStorageApi->getProductInStorage(1);
+        return $this->render('authorization/login.html.twig', [
+            'name' => $this->storageApi->getStorage($productInStorageApi->getIdProduct())->getCity(),
         ]);
     }
 }
