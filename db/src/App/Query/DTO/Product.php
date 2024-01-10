@@ -11,7 +11,7 @@ class Product
 
     private string $descryption;
 
-    private int $category;
+    private int $category_id;
 
     private float $cost;
 
@@ -20,14 +20,14 @@ class Product
     public function __construct(
         string  $name,
         string  $descryption,
-        int     $category,
+        int     $category_id,
         int     $cost,
         ?string $photo = null,
     )
     {
         $this->name = $name;
         $this->descryption = $descryption;
-        $this->category = $category;
+        $this->category_id = $category_id;
         $this->cost = $cost;
         $this->photo = $photo;
     }
@@ -48,7 +48,7 @@ class Product
 
     public function getCategory(): int
     {
-        return $this->category;
+        return $this->category_id;
     }
 
     public function getCost(): float

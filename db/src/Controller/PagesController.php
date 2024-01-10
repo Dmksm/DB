@@ -7,6 +7,7 @@ use App\Api\Client\ApiClientInterface as ClientApi;
 use App\Api\Order\ApiOrderInterface as OrderApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
+use App\Api\ProductPurchase\ApiProductPurchaseInterface as ProductPurchaseApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
@@ -23,6 +24,7 @@ class PagesController extends AbstractController
     private OrderApi $orderApi;
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
+    private ProductPurchaseApi $productPurchaseApi;
     private StorageApi $storageApi;
     private ProductInStorageApi $productInStorageApi;
     private StaffInStorageApi $staffInStorageApi;
@@ -30,6 +32,7 @@ class PagesController extends AbstractController
         UserApi $userApi, 
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
+        ProductPurchaseApi $productPurchaseApi,
         StorageApi $storageApi,
         ProductInStorageApi $productInStorageApi,
         StaffInStorageApi $staffInStorageApi,
@@ -42,6 +45,7 @@ class PagesController extends AbstractController
         $this->orderApi = $orderApi;
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
+        $this->productPurchaseApi = $productPurchaseApi;
         $this->storageApi = $storageApi;
         $this->productInStorageApi = $productInStorageApi;
         $this->staffInStorageApi = $staffInStorageApi;
@@ -396,6 +400,37 @@ class PagesController extends AbstractController
         $order = $this->orderApi->getOrder(1);
         return $this->render('authorization/login.html.twig', [
             'name' => $order->getAddress(),
+        ]);
+    }
+    
+    #[Route('/add_product_purchase')]
+    public function addProductPurchase(Request $request): Response
+    {
+        $this->productPurchaseApi->addProductPurchase(
+            1,
+            1,
+            1,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            0
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_product_purchase')]
+    public function getProductPurchase(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $productPurchase = $this->productPurchaseApi->getProductPurchase(1);
+        return $this->render('authorization/login.html.twig', [
+            'name' => $this->productApi->getProduct($productPurchase->getIdProduct())->getName(),
         ]);
     }
 }
