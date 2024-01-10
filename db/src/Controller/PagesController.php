@@ -59,13 +59,11 @@ class PagesController extends AbstractController
         $user = $this->userApi->getUserInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
-        return $this->render('mockPages/loginPage.html.twig', [
+        return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
         ]);
     }
@@ -77,32 +75,11 @@ class PagesController extends AbstractController
         $user = $this->userApi->getUserInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
-        return $this->render('mockPages/mainPage.html.twig', [
+        return $this->render('general/general.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
-            'basketPage' => $basketPage,
-        ]);
-    }
-
-    #[Route('/productPage', 'productPage')]
-    public function productPage(): Response
-    {
-        // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
-        $products = $this->productApi->getAllProducts();
-        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
-        return $this->render('mockPages/productPage.html.twig', [
-            'loginPage' => $loginPage,
-            'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
         ]);
     }
@@ -115,13 +92,11 @@ class PagesController extends AbstractController
         $products = $this->productApi->getAllProducts();
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
-        return $this->render('mockPages/basketPage.html.twig', [
+        return $this->render('basket/basket.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
         ]);
     }
@@ -136,20 +111,23 @@ class PagesController extends AbstractController
         ]);
     }
 
-    #[Route('/product/{id}')]
+    #[Route('/product/{id}', 'productPage')]
     public function productPage(int $id): Response
     {
+        //TODO: передать категорию продукта
+        $product = $this->productApi->getProduct($id);
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('product/product.html.twig', [
-            'description' => "Срок годности в днях: 60Состав: морковь столовая,
-                масло подсолнечное, соль, специи, перец красный острый молотый,
-                регулятор кислотности уксусная кислота, консерванты: сорбат калия,
-                бензоат натрия, усилитель вкуса и аромата Е621, подсластители: E952
-                , E954Пищевая ценность: Калорийность: 55.8Белки: 1Жиры: 3.4Углеводы:
-                5.3Страна изготовления: Россия Производитель: Кафе Йошка",
-            'features' => "Вес упаковки  200 г
-                Тип консервированные овощи
-                Вид продукта морковь",
-            'imagePath' => "images/watermelon.webp",
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
+            'description' => $product->getDescryption(),
+            'name' => $product->getName(),
+            'cost' => $product->getCost(),
+            'category' => "Какая то категория",
+            'imagePath' => "images/" . $product->getPhoto(),
         ]);
     }
 
@@ -193,7 +171,7 @@ class PagesController extends AbstractController
     public function getAllProducts(): Response
     {
         $products = $this->productApi->getAllProducts();
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('product/get_all_products.html.twig', [
             'products' => $products,
         ]);
     }
@@ -202,7 +180,7 @@ class PagesController extends AbstractController
     public function getAllProductsCount(): Response
     {
         $products = $this->productApi->getAllProducts();
-        return $this->render('Product/get_all_products_count.html.twig', [
+        return $this->render('product/get_all_products_count.html.twig', [
             'productsCount' => count($products),
         ]);
     }
@@ -249,7 +227,7 @@ class PagesController extends AbstractController
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $products = $this->productApi->getProductsByCategory(1);
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('product/get_all_products.html.twig', [
             'products' => $products,
         ]);
     }
@@ -259,7 +237,7 @@ class PagesController extends AbstractController
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $products = $this->productApi->getProductsByIncludingString('ан');
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('product/get_all_products.html.twig', [
             'products' => $products,
         ]);
     }
@@ -309,6 +287,7 @@ class PagesController extends AbstractController
         $storage = $this->storageApi->getStorage(1);
         $name = ($storage) ? $storage->getCity() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
+            'homePageLink' => $this->generateUrl(''),
             'name' => $name,
         ]);
     }
