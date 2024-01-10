@@ -21,7 +21,7 @@ class Product
     private string $descryption;
 
     #[ORM\Column]
-    private int $category;
+    private int $category_id;
 
     #[ORM\Column]
     private float $cost;
@@ -60,12 +60,12 @@ class Product
 
     public function getCategory(): int
     {
-        return $this->category;
+        return $this->category_id;
     }
 
     public function setCategory(int $category): static
     {
-        $this->category = $category;
+        $this->category_id = $category;
 
         return $this;
     }
