@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Api\User\ApiInterface as UserApi;
 use App\Api\Client\ApiClientInterface as ClientApi;
+use App\Api\Order\ApiOrderInterface as OrderApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
@@ -19,6 +20,7 @@ class PagesController extends AbstractController
 {
     private UserApi $userApi;
     private ClientApi $clientApi;
+    private OrderApi $orderApi;
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
     private StorageApi $storageApi;
@@ -32,10 +34,12 @@ class PagesController extends AbstractController
         ProductInStorageApi $productInStorageApi,
         StaffInStorageApi $staffInStorageApi,
         ClientApi $clientApi,
+        OrderApi $orderApi,
         )
     {
         $this->userApi = $userApi;
         $this->clientApi = $clientApi;
+        $this->orderApi = $orderApi;
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
         $this->storageApi = $storageApi;
@@ -362,6 +366,36 @@ class PagesController extends AbstractController
         $productInStorageApi = $this->productInStorageApi->getProductInStorage(1);
         return $this->render('authorization/login.html.twig', [
             'name' => $this->storageApi->getStorage($productInStorageApi->getIdProduct())->getCity(),
+        ]);
+    }
+    
+    #[Route('/add_order')]
+    public function addOrder(Request $request): Response
+    {
+        $this->orderApi->addOrder(
+            1,
+            100,
+            new \DateTimeImmutable(),
+            0,
+            'address'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/get_order')]
+    public function getOrder(): Response
+    {
+        //TODO: удалить получение пользователя и поправить метод loginPage
+        $order = $this->orderApi->getOrder(1);
+        return $this->render('authorization/login.html.twig', [
+            'name' => $order->getAddress(),
         ]);
     }
 }
