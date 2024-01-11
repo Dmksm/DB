@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
 use App\App\Service\Command\ProductCommand;
 use App\Domain\Service\ProductRepositoryInterface;

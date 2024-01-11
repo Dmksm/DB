@@ -6,7 +6,7 @@ namespace App\Api\ProductInStorage;
 use App\App\Query\DTO\ProductInStorage;
 use App\App\Query\ProductInStorageQueryServiceInterface;
 use App\App\Service\Command\ProductInStorageCommand;
-use App\App\Service\AddProductInStorageCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddProductInStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductInStorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

@@ -6,7 +6,7 @@ namespace App\Api\Storage;
 use App\App\Query\DTO\Storage;
 use App\App\Query\StorageQueryServiceInterface;
 use App\App\Service\Command\StorageCommand;
-use App\App\Service\AddStorageCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\StorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

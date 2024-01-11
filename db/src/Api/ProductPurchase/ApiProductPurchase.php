@@ -6,7 +6,7 @@ namespace App\Api\ProductPurchase;
 use App\App\Query\DTO\ProductPurchase;
 use App\App\Query\ProductPurchaseQueryServiceInterface;
 use App\App\Service\Command\ProductPurchaseCommand;
-use App\App\Service\AddProductPurchaseCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddProductPurchaseCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductPurchaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

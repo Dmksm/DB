@@ -1,34 +1,34 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
-use App\App\Service\Command\ClientCommand;
-use App\Domain\Service\ClientRepositoryInterface;
-use App\Domain\Service\ClientService;
+use App\App\Service\Command\StaffInfoCommand;
+use App\Domain\Service\StaffInfoRepositoryInterface;
+use App\Domain\Service\StaffInfoService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class AddClientCommandHandler
+class AddStaffInfoCommandHandler
 {
-    private ClientService $clientService;
+    private StaffInfoService $staffInfoService;
     
     /**
      * @param ValidatorInterface $validator
-     * @param ClientRepositoryInterface $clientRepository
+     * @param StaffInfoRepositoryInterface $staffInfoRepository
      */
     public function __construct(
         private readonly ValidatorInterface $validator,
-        private readonly ClientRepositoryInterface $clientRepository
+        private readonly StaffInfoRepositoryInterface $staffInfoRepository
     )
     {
-        $this->clientService = new ClientService($this->clientRepository);
+        $this->staffInfoService = new StaffInfoService($this->staffInfoRepository);
     }
 
     /**
-     * @param ClientCommand $command
+     * @param  StaffInfoCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(ClientCommand $command): void
+    public function handle(StaffInfoCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
@@ -37,7 +37,7 @@ class AddClientCommandHandler
             throw new BadRequestHttpException($error, null, 400);
         }
         
-        $this->clientService->addClient(
+        $this->staffInfoService->AddStaffInfo(
             $command->getFirstName(),
             $command->getLastName(),
             $command->getBirthday(),
@@ -46,6 +46,7 @@ class AddClientCommandHandler
             $command->getPatronymic(),
             $command->getPhoto(),
             $command->getTelephone(),
+            $command->getPosition(),
         );
     }
 }

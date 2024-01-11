@@ -6,7 +6,7 @@ namespace App\Api\Order;
 use App\App\Query\DTO\Order;
 use App\App\Query\OrderQueryServiceInterface;
 use App\App\Service\Command\OrderCommand;
-use App\App\Service\AddOrderCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddOrderCommandHandler;
 use App\Infrastructure\Repositories\Repository\OrderRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

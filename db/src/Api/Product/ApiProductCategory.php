@@ -6,7 +6,7 @@ namespace App\Api\Product;
 use App\App\Query\DTO\ProductCategory;
 use App\App\Query\ProductCategoryQueryServiceInterface;
 use App\App\Service\Command\ProductCategoryCommand;
-use App\App\Service\AddProductCategoryCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddProductCategoryCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductCategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

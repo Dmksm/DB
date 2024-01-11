@@ -6,7 +6,7 @@ namespace App\Api\Client;
 use App\App\Query\DTO\Client;
 use App\App\Query\ClientQueryServiceInterface;
 use App\App\Service\Command\ClientCommand;
-use App\App\Service\AddClientCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddClientCommandHandler;
 use App\Infrastructure\Repositories\Repository\ClientRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

@@ -6,7 +6,7 @@ namespace App\Api\StaffInStorage;
 use App\App\Query\DTO\StaffInStorage;
 use App\App\Query\StaffInStorageQueryServiceInterface;
 use App\App\Service\Command\StaffInStorageCommand;
-use App\App\Service\AddStaffInStorageCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddStaffInStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\StaffInStorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

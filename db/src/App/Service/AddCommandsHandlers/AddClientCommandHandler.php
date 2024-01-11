@@ -1,34 +1,34 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
-use App\App\Service\Command\StaffInfoCommand;
-use App\Domain\Service\StaffInfoRepositoryInterface;
-use App\Domain\Service\StaffInfoService;
+use App\App\Service\Command\ClientCommand;
+use App\Domain\Service\ClientRepositoryInterface;
+use App\Domain\Service\ClientService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class AddStaffInfoCommandHandler
+class AddClientCommandHandler
 {
-    private StaffInfoService $staffInfoService;
+    private ClientService $clientService;
     
     /**
      * @param ValidatorInterface $validator
-     * @param StaffInfoRepositoryInterface $staffInfoRepository
+     * @param ClientRepositoryInterface $clientRepository
      */
     public function __construct(
         private readonly ValidatorInterface $validator,
-        private readonly StaffInfoRepositoryInterface $staffInfoRepository
+        private readonly ClientRepositoryInterface $clientRepository
     )
     {
-        $this->staffInfoService = new StaffInfoService($this->staffInfoRepository);
+        $this->clientService = new ClientService($this->clientRepository);
     }
 
     /**
-     * @param  StaffInfoCommand $command
+     * @param ClientCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(StaffInfoCommand $command): void
+    public function handle(ClientCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
@@ -37,7 +37,7 @@ class AddStaffInfoCommandHandler
             throw new BadRequestHttpException($error, null, 400);
         }
         
-        $this->staffInfoService->AddStaffInfo(
+        $this->clientService->addClient(
             $command->getFirstName(),
             $command->getLastName(),
             $command->getBirthday(),
@@ -46,7 +46,6 @@ class AddStaffInfoCommandHandler
             $command->getPatronymic(),
             $command->getPhoto(),
             $command->getTelephone(),
-            $command->getPosition(),
         );
     }
 }

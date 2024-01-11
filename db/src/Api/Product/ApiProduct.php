@@ -6,7 +6,7 @@ namespace App\Api\Product;
 use App\App\Query\DTO\Product;
 use App\App\Query\ProductQueryServiceInterface;
 use App\App\Service\Command\ProductCommand;
-use App\App\Service\AddProductCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddProductCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

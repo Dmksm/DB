@@ -6,7 +6,7 @@ namespace App\Api\StaffInfo;
 use App\App\Query\DTO\StaffInfo;
 use App\App\Query\StaffInfoQueryServiceInterface;
 use App\App\Service\Command\StaffInfoCommand;
-use App\App\Service\AddStaffInfoCommandHandler;
+use App\App\Service\AddCommandsHandlers\AddStaffInfoCommandHandler;
 use App\Infrastructure\Repositories\Repository\StaffInfoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
