@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\RegisterClientCommand;
+use App\App\Service\Command\AddClientCommand;
 use App\Domain\Service\ClientRepositoryInterface;
 use App\Domain\Service\ClientService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RegisterClientCommandHandler
+class AddClientCommandHandler
 {
     private ClientService $clientService;
     
@@ -25,10 +25,10 @@ class RegisterClientCommandHandler
     }
 
     /**
-     * @param  RegisterClientCommand $command
+     * @param  AddClientCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(RegisterClientCommand $command): void
+    public function handle(AddClientCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
@@ -37,7 +37,7 @@ class RegisterClientCommandHandler
             throw new BadRequestHttpException($error, null, 400);
         }
         
-        $this->clientService->registerClient(
+        $this->clientService->addClient(
             $command->getFirstName(),
             $command->getLastName(),
             $command->getBirthday(),

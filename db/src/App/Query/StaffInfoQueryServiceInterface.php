@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace App\App\Query;
 
-use App\App\Query\DTO\UserInfo;
+use App\App\Query\DTO\StaffInfo;
 
 interface StaffInfoQueryServiceInterface
 {
-    public function getUserInfo(int $id): UserInfo;
+    public function getStaffInfo(int $id): StaffInfo;
 }

@@ -11,7 +11,7 @@ class StaffInfoService
     {
     }
 
-    public function registerRespondent(
+    public function addStaffInfo(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,

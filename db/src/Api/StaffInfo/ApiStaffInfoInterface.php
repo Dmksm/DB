@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace App\Api\User;
+namespace App\Api\StaffInfo;
 
-use App\App\Query\DTO\UserInfo;
+use App\App\Query\DTO\StaffInfo;
 
-interface ApiInterface
+interface ApiStaffInfoInterface
 {
-    public function getUserInfo(int $id): UserInfo;
+    public function getStaffInfo(int $id): StaffInfo;
 
-    public function registerUser(
+    public function addStaffInfo(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,

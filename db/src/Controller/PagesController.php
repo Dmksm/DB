@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 
-use App\Api\User\ApiInterface as UserApi;
+use App\Api\StaffInfo\ApiStaffInfoInterface as StaffInfoApi;
 use App\Api\Client\ApiClientInterface as ClientApi;
 use App\Api\Order\ApiOrderInterface as OrderApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
-    private UserApi $userApi;
+    private StaffInfoApi $staffInfoApi;
     private ClientApi $clientApi;
     private OrderApi $orderApi;
     private ProductCategoryApi $productCategoryApi;
@@ -29,7 +29,7 @@ class PagesController extends AbstractController
     private ProductInStorageApi $productInStorageApi;
     private StaffInStorageApi $staffInStorageApi;
     public function __construct(
-        UserApi $userApi, 
+        StaffInfoApi $staffInfoApi, 
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         ProductPurchaseApi $productPurchaseApi,
@@ -40,7 +40,7 @@ class PagesController extends AbstractController
         OrderApi $orderApi,
         )
     {
-        $this->userApi = $userApi;
+        $this->staffInfoApi = $staffInfoApi;
         $this->clientApi = $clientApi;
         $this->orderApi = $orderApi;
         $this->productCategoryApi = $productCategoryApi;
@@ -55,12 +55,12 @@ class PagesController extends AbstractController
     public function loginPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
+        $staffInfo = $this->staffInfoApi->getStaffInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        $name = ($staffInfo) ? $staffInfo->getFirstName() : 'anonymous';
         return $this->render('mockPages/loginPage.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -73,12 +73,10 @@ class PagesController extends AbstractController
     public function mainPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/mainPage.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -91,13 +89,10 @@ class PagesController extends AbstractController
     public function productPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
-        $products = $this->productApi->getAllProducts();
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/productPage.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -110,13 +105,10 @@ class PagesController extends AbstractController
     public function basketPage(): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
-        $products = $this->productApi->getAllProducts();
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('mockPages/basketPage.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -128,7 +120,7 @@ class PagesController extends AbstractController
     #[Route('/register')]
     public function register(Request $request): Response
     {
-        $this->userApi->registerUser(
+        $this->staffInfoApi->addStaffInfo(
             'Алена',
             'Золотцева',
             (new \DateTimeImmutable()),
@@ -288,7 +280,7 @@ class PagesController extends AbstractController
     public function addStaffInStorage(Request $request): Response
     {
         $this->staffInStorageApi->addStaffInStorage(
-            $this->userApi->getUserInfo(1)->getId(),
+            $this->staffInfoApi->getStaffInfo(1)->getId(),
             $this->storageApi->getStorage(1)->getId(),
         );
 
@@ -306,7 +298,7 @@ class PagesController extends AbstractController
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $staffInStorage = $this->staffInStorageApi->getStaffInStorage(1);
-        $name = ($staffInStorage) ? $this->userApi->getUserInfo(1)->getFirstName() : 'anonymous';
+        $name = ($staffInStorage) ? $this->staffInfoApi->getStaffInfo(1)->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'name' => $this->generateUrl('basketPage'),
         ]);

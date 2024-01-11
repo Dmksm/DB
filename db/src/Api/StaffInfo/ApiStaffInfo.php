@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\User;
+namespace App\Api\StaffInfo;
 
-use App\App\Query\DTO\UserInfo;
+use App\App\Query\DTO\StaffInfo;
 use App\App\Query\StaffInfoQueryServiceInterface;
-use App\App\Service\Command\RegisterUserInfoCommand;
-use App\App\Service\RegisterUserInfoCommandHandler;
+use App\App\Service\Command\AddStaffInfoCommand;
+use App\App\Service\AddStaffInfoCommandHandler;
 use App\Infrastructure\Repositories\Repository\StaffInfoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class Api implements ApiInterface
+class ApiStaffInfo implements ApiStaffInfoInterface
 {
     public function __construct(
         private readonly ManagerRegistry                $doctrine,
@@ -21,12 +21,12 @@ class Api implements ApiInterface
     {
     }
 
-    public function getUserInfo(int $id): UserInfo
+    public function getStaffInfo(int $id): StaffInfo
     {
-        return $this->staffInfoQueryService->getUserInfo($id);
+        return $this->staffInfoQueryService->getStaffInfo($id);
     }
 
-    public function registerUser(
+    public function addStaffInfo(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -39,8 +39,8 @@ class Api implements ApiInterface
     ): void
     {
         $staffInfoRepository = new StaffInfoRepository($this->doctrine);
-        $handler = new RegisterUserInfoCommandHandler($this->validator, $staffInfoRepository);
-        $command = new RegisterUserInfoCommand(
+        $handler = new AddStaffInfoCommandHandler($this->validator, $staffInfoRepository);
+        $command = new AddStaffInfoCommand(
             $firstName,
             $lastName,
             $birthday,

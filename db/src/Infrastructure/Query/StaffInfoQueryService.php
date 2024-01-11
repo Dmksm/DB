@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Infrastructure\Query;
 
-use App\App\Query\DTO\UserInfo;
+use App\App\Query\DTO\StaffInfo;
 use App\App\Query\StaffInfoQueryServiceInterface;
 use App\Infrastructure\Hydrator\Hydrator;
 use App\Infrastructure\Repositories\Entity\StaffInfo as ORMStaffInfo;
@@ -17,15 +17,15 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
         parent::__construct($registry, ORMStaffInfo::class);
     }
 
-    public function getUserInfo(int $id): UserInfo
+    public function getStaffInfo(int $id): StaffInfo
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): UserInfo
+    private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): StaffInfo
     {
         $hydrator = new Hydrator();
-        return $hydrator->hydrate(UserInfo::class, [
+        return $hydrator->hydrate(StaffInfo::class, [
             'id' => $ORMStaffInfo->getId(),
             'firstName' => $ORMStaffInfo->getFirstName(),
             'lastName' => $ORMStaffInfo->getLastName(),

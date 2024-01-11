@@ -4,7 +4,7 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RegisterClientCommand
+class AddStaffInfoCommand
 {
     #[Assert\NotBlank]
     private string $firstName;
@@ -22,6 +22,8 @@ class RegisterClientCommand
     private ?string $photo;
     #[Assert\NotBlank]
     private ?string $telephone;
+    #[Assert\NotBlank]
+    private ?string $position;
 
     public function __construct(
         string             $firstName,
@@ -32,6 +34,7 @@ class RegisterClientCommand
         ?string            $patronymic = null,
         ?string            $photo = null,
         ?string            $telephone = null,
+        ?string            $position = null,
     )
     {
         $this->firstName = $firstName;
@@ -42,6 +45,12 @@ class RegisterClientCommand
         $this->patronymic = $patronymic;
         $this->photo = $photo;
         $this->telephone = $telephone;
+        $this->position = $position;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
     }
 
     public function getFirstName(): ?string

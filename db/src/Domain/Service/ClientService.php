@@ -11,7 +11,7 @@ class ClientService
     {
     }
 
-    public function registerClient(
+    public function addClient(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Query\DTO;
 
-class UserInfo
+class StaffInfo
 {
     private int $id;
     private string $firstName;

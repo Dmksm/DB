@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\RegisterUserInfoCommand;
+use App\App\Service\Command\AddStaffInfoCommand;
 use App\Domain\Service\StaffInfoRepositoryInterface;
 use App\Domain\Service\StaffInfoService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RegisterUserInfoCommandHandler
+class AddStaffInfoCommandHandler
 {
     private StaffInfoService $staffInfoService;
     
@@ -25,10 +25,10 @@ class RegisterUserInfoCommandHandler
     }
 
     /**
-     * @param  RegisterUserInfoCommand $command
+     * @param  AddStaffInfoCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(RegisterUserInfoCommand $command): void
+    public function handle(AddStaffInfoCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
@@ -37,7 +37,7 @@ class RegisterUserInfoCommandHandler
             throw new BadRequestHttpException($error, null, 400);
         }
         
-        $this->staffInfoService->registerRespondent(
+        $this->staffInfoService->AddStaffInfo(
             $command->getFirstName(),
             $command->getLastName(),
             $command->getBirthday(),
