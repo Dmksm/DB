@@ -4,7 +4,7 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddClientCommand
+class ClientCommand
 {
     #[Assert\NotBlank]
     private string $firstName;

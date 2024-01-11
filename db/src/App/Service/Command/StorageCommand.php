@@ -4,7 +4,7 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddStorageCommand
+class StorageCommand
 {
     #[Assert\NotBlank]
     private string $city;

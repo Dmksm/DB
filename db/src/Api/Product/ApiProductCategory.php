@@ -5,7 +5,7 @@ namespace App\Api\Product;
 
 use App\App\Query\DTO\ProductCategory;
 use App\App\Query\ProductCategoryQueryServiceInterface;
-use App\App\Service\Command\AddProductCategoryCommand;
+use App\App\Service\Command\ProductCategoryCommand;
 use App\App\Service\AddProductCategoryCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductCategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +30,7 @@ class ApiProductCategory implements ApiProductCategoryInterface
     {
         $productCategoryRepository = new ProductCategoryRepository($this->doctrine);
         $handler = new AddProductCategoryCommandHandler($this->validator, $productCategoryRepository);
-        $command = new AddProductCategoryCommand(
+        $command = new ProductCategoryCommand(
             $name,
         );
         $handler->handle($command);

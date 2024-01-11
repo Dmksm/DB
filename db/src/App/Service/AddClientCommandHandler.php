@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\AddClientCommand;
+use App\App\Service\Command\ClientCommand;
 use App\Domain\Service\ClientRepositoryInterface;
 use App\Domain\Service\ClientService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddClientCommandHandler
     }
 
     /**
-     * @param  AddClientCommand $command
+     * @param ClientCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddClientCommand $command): void
+    public function handle(ClientCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

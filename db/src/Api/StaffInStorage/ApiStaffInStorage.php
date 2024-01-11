@@ -5,7 +5,7 @@ namespace App\Api\StaffInStorage;
 
 use App\App\Query\DTO\StaffInStorage;
 use App\App\Query\StaffInStorageQueryServiceInterface;
-use App\App\Service\Command\AddStaffInStorageCommand;
+use App\App\Service\Command\StaffInStorageCommand;
 use App\App\Service\AddStaffInStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\StaffInStorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -33,7 +33,7 @@ class ApiStaffInStorage implements ApiStaffInStorageInterface
     {
         $staffInStorageRepository = new StaffInStorageRepository($this->doctrine);  
         $handler = new AddStaffInStorageCommandHandler($this->validator, $staffInStorageRepository); 
-        $command = new AddStaffInStorageCommand(
+        $command = new StaffInStorageCommand(
             $id_staff,
             $id_storage,
         );

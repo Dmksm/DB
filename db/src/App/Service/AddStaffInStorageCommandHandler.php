@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\AddStaffInStorageCommand;
+use App\App\Service\Command\StaffInStorageCommand;
 use App\Domain\Service\StaffInStorageRepositoryInterface;
 use App\Domain\Service\StaffInStorageService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddStaffInStorageCommandHandler
     }
 
     /**
-     * @param  AddStaffInStorageCommand $command
+     * @param  StaffInStorageCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddStaffInStorageCommand $command): void
+    public function handle(StaffInStorageCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

@@ -5,7 +5,7 @@ namespace App\Api\Storage;
 
 use App\App\Query\DTO\Storage;
 use App\App\Query\StorageQueryServiceInterface;
-use App\App\Service\Command\AddStorageCommand;
+use App\App\Service\Command\StorageCommand;
 use App\App\Service\AddStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\StorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,7 +34,7 @@ class ApiStorage implements ApiStorageInterface
     {
         $storageRepository = new StorageRepository($this->doctrine);  
         $handler = new AddStorageCommandHandler($this->validator, $storageRepository); 
-        $command = new AddStorageCommand(
+        $command = new StorageCommand(
             $city,
             $street,
             $house,

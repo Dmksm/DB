@@ -4,7 +4,7 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddProductCommand
+class ProductCommand
 {
     #[Assert\NotBlank]
     private string $name;

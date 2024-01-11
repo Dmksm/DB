@@ -5,7 +5,7 @@ namespace App\Api\StaffInfo;
 
 use App\App\Query\DTO\StaffInfo;
 use App\App\Query\StaffInfoQueryServiceInterface;
-use App\App\Service\Command\AddStaffInfoCommand;
+use App\App\Service\Command\StaffInfoCommand;
 use App\App\Service\AddStaffInfoCommandHandler;
 use App\Infrastructure\Repositories\Repository\StaffInfoRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,7 +40,7 @@ class ApiStaffInfo implements ApiStaffInfoInterface
     {
         $staffInfoRepository = new StaffInfoRepository($this->doctrine);
         $handler = new AddStaffInfoCommandHandler($this->validator, $staffInfoRepository);
-        $command = new AddStaffInfoCommand(
+        $command = new StaffInfoCommand(
             $firstName,
             $lastName,
             $birthday,

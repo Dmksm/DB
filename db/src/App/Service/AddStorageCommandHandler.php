@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\AddStorageCommand;
+use App\App\Service\Command\StorageCommand;
 use App\Domain\Service\StorageRepositoryInterface;
 use App\Domain\Service\StorageService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddStorageCommandHandler
     }
 
     /**
-     * @param  AddStorageCommand $command
+     * @param  StorageCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddStorageCommand $command): void
+    public function handle(StorageCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

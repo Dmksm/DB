@@ -5,7 +5,7 @@ namespace App\Api\ProductPurchase;
 
 use App\App\Query\DTO\ProductPurchase;
 use App\App\Query\ProductPurchaseQueryServiceInterface;
-use App\App\Service\Command\AddProductPurchaseCommand;
+use App\App\Service\Command\ProductPurchaseCommand;
 use App\App\Service\AddProductPurchaseCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductPurchaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,7 +37,7 @@ class ApiProductPurchase implements ApiProductPurchaseInterface
     {
         $ProductPurchaseRepository = new ProductPurchaseRepository($this->doctrine);
         $handler = new AddProductPurchaseCommandHandler($this->validator, $ProductPurchaseRepository);
-        $command = new AddProductPurchaseCommand(
+        $command = new ProductPurchaseCommand(
             $id_product,
             $id_order,
             $id_storage,

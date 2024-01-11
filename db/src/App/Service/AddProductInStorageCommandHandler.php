@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\AddProductInStorageCommand;
+use App\App\Service\Command\ProductInStorageCommand;
 use App\Domain\Service\ProductInStorageRepositoryInterface;
 use App\Domain\Service\ProductInStorageService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddProductInStorageCommandHandler
     }
 
     /**
-     * @param  AddProductInStorageCommand $command
+     * @param  ProductInStorageCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddProductInStorageCommand $command): void
+    public function handle(ProductInStorageCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

@@ -5,7 +5,7 @@ namespace App\Api\ProductInStorage;
 
 use App\App\Query\DTO\ProductInStorage;
 use App\App\Query\ProductInStorageQueryServiceInterface;
-use App\App\Service\Command\AddProductInStorageCommand;
+use App\App\Service\Command\ProductInStorageCommand;
 use App\App\Service\AddProductInStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductInStorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,7 +34,7 @@ class ApiProductInStorage implements ApiProductInStorageInterface
     {
         $productInStorageRepository = new ProductInStorageRepository($this->doctrine);  
         $handler = new AddProductInStorageCommandHandler($this->validator, $productInStorageRepository); 
-        $command = new AddProductInStorageCommand(
+        $command = new ProductInStorageCommand(
             $id_product,
             $id_storage,
             $count,

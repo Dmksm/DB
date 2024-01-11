@@ -4,7 +4,7 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddProductInStorageCommand
+class ProductInStorageCommand
 {
     #[Assert\NotBlank]
     private int $id_product;

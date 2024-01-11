@@ -5,7 +5,7 @@ namespace App\Api\Product;
 
 use App\App\Query\DTO\Product;
 use App\App\Query\ProductQueryServiceInterface;
-use App\App\Service\Command\AddProductCommand;
+use App\App\Service\Command\ProductCommand;
 use App\App\Service\AddProductCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -48,7 +48,7 @@ class ApiProduct implements ApiProductInterface
     {
         $productRepository = new ProductRepository($this->doctrine);  
         $handler = new AddProductCommandHandler($this->validator, $productRepository); 
-        $command = new AddProductCommand(
+        $command = new ProductCommand(
             $name,
             $descryption,
             $category,

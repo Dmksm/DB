@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\App\Service;
 
-use App\App\Service\Command\AddStaffInfoCommand;
+use App\App\Service\Command\StaffInfoCommand;
 use App\Domain\Service\StaffInfoRepositoryInterface;
 use App\Domain\Service\StaffInfoService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddStaffInfoCommandHandler
     }
 
     /**
-     * @param  AddStaffInfoCommand $command
+     * @param  StaffInfoCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddStaffInfoCommand $command): void
+    public function handle(StaffInfoCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
