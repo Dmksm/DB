@@ -19,26 +19,7 @@ class ProductPurchaseQueryService extends ServiceEntityRepository implements Pro
 
     public function getProductPurchase(int $id): ProductPurchase
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\ProductPurchase s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMProductPurchase = $query->getResult();
-
-        if (empty($ORMProductPurchase))
-        {
-            throw new QueryException("User with id $id not found!", 404);
-        }
-        if (count($ORMProductPurchase) > 1)
-        {
-            throw new QueryException("User with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMProductPurchase[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
     private function hydrateAttempt(ORMProductPurchase $ORMProductPurchase): ProductPurchase

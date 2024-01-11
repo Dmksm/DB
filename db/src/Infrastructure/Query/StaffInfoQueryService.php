@@ -19,26 +19,7 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
 
     public function getUserInfo(int $id): UserInfo
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\StaffInfo s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMStaffInfo = $query->getResult();
-
-        if (empty($ORMStaffInfo))
-        {
-            throw new QueryException("User with id $id not found!", 404);
-        }
-        if (count($ORMStaffInfo) > 1)
-        {
-            throw new QueryException("User with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMStaffInfo[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
     private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): UserInfo

@@ -19,41 +19,12 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
 
     public function getProduct(int $id): Product
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Product s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMProduct = $query->getResult();
-
-        if (empty($ORMProduct))
-        {
-            throw new QueryException("Product with id $id not found!", 404);
-        }
-        if (count($ORMProduct) > 1)
-        {
-            throw new QueryException("Product with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMProduct[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
     public function getProductsByCategory(int $categoryId): array
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Product s
-          WHERE s.category_id = :categoryId'
-        )->setParameters([
-            'categoryId' => $categoryId
-        ]);
-        $ORMProduct = $query->getResult();
-
-        return $ORMProduct;
+        return $this->findBy(['category_id' => $categoryId]);
     }
 
     
@@ -74,13 +45,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
     }
     public function getAllProducts(): array
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Product s'
-        );
-        $ORMProduct = $query->getResult();
-        return $ORMProduct;
+        return $this->findAll();
     }
 
     private function hydrateAttempt(ORMProduct $ORMProduct): Product

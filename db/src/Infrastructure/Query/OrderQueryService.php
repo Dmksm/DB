@@ -19,26 +19,7 @@ class OrderQueryService extends ServiceEntityRepository implements OrderQuerySer
 
     public function getOrder(int $id): Order
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Order s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMOrder = $query->getResult();
-
-        if (empty($ORMOrder))
-        {
-            throw new QueryException("User with id $id not found!", 404);
-        }
-        if (count($ORMOrder) > 1)
-        {
-            throw new QueryException("User with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMOrder[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
     private function hydrateAttempt(ORMOrder $ORMOrder): Order

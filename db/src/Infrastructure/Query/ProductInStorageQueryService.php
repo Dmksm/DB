@@ -19,26 +19,7 @@ class ProductInStorageQueryService extends ServiceEntityRepository implements Pr
 
     public function getProductInStorage(int $id): ProductInStorage
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\ProductInStorage s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMProductInStorage = $query->getResult();
-
-        if (empty($ORMProductInStorage))
-        {
-            throw new QueryException("ProductInStorage with id $id not found!", 404);
-        }
-        if (count($ORMProductInStorage) > 1)
-        {
-            throw new QueryException("ProductInStorage with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMProductInStorage[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
     private function hydrateAttempt(ORMProductInStorage $ORMProductInStorage): ProductInStorage
