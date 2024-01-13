@@ -1,20 +1,36 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+    <script>
+        function search(url) {
+            const data = JSON.stringify({
+                searchText: document.getElementById('general-search-value').value,
+                completed: false
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(`Ok: ${xhr.status} ${data}`);
+                } else {
+                    console.log(`Error: ${xhr.status}`);
+                }
+            };
+            xhr.send(data);
+            return false;
+        }
+    </script>
     <div class="page_content">
         {{ include('components/sidebar/sidebar.html.twig') }}
         <div class="general_content">
-            <form class="widget-search" action="" method="get">
-                <input class="widget-input" placeholder="Search some..." type="email" name="email" id="email" required />
+            <form class="widget-search" onsubmit=search('{{ mainPage }}') method="post">
+                <input class="widget-input" placeholder="Search some..." type="text" name="text" id="general-search-value" />
             </form>
             <div class="general_products">
-                <div class="widget_product">Product 1</div>
-                <div class="widget_product">Product 2</div>
-                <div class="widget_product">Product 3</div>
-                <div class="widget_product">Product 4</div>
-                <div class="widget_product">Product 5</div>
-                <div class="widget_product">Product 6</div>
-                <div class="widget_product">Product 7</div>
-                <div class="widget_product">Product 8</div>
+            {% for product in products %}
+                <div class="widget_product">Имя
+                </div>
+            {% endfor %}
             </div>
         </div>
     </div>

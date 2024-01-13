@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ES5",
+    "lib": [
+      "es5",
+      "es6",
+      "dom"
+    ],
+    "declaration": false,
+    "sourceMap": false,
+    "outDir": "./var/ts_build",
+    "strict": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+  },
+}

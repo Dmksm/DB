@@ -1,16 +1,37 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+    <script>
+        function login(url, authUrl) {
+            const data = JSON.stringify({
+                email: document.getElementById('login-email-value').value,
+                password: document.getElementById('login-password-value').value,
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", authUrl);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    location.href = url;
+                    localStorage['id'] = xhr.response['id'] || "1";
+                    console.log( xhr.response['id']);
+                } else {
+                    console.log(`Error: ${xhr.status}`);
+                }
+            };
+            xhr.send(data);
+        }
+    </script>
     <div class="login_content">
         <h1 id="welcome_text">Welcome</h1>
-        <form action="" method="get" class="login-form">
+        <form action="" method="post" class="login-form">
             <div>
-                <input class="login-input" placeholder="Email" type="email" name="email" id="email" required />
+                <input id="login-email-value" class="login-input" placeholder="Email" type="email" name="email" required />
             </div>
             <div>
-                <input class="login-input" placeholder="Password" type="password" name="password" id="password" required />
+                <input id="login-password-value" class="login-input" placeholder="Password" type="password" name="password" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="Log in" />
+                <input class="login-submit" type="submit" value="Log in" onclick="login('{{ mainPage }}', '{{ authorizationUrl }}')" />
             </div>
         </form>
     </div>
