@@ -19,4 +19,17 @@ interface ApiStaffInfoInterface
         ?string            $telephone,
         ?string            $position,
     ): void;
+
+    public function updateStaffInfo(
+        int                $id,
+        string             $firstName,
+        string             $lastName,
+        \DateTimeImmutable $birthday,
+        string             $email,
+        string             $password,
+        ?string            $patronymic,
+        ?string            $photo,
+        ?string            $telephone,
+        ?string            $position,
+    ): void;
 }

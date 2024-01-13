@@ -141,6 +141,31 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_staff_info')]
+    public function updateStaffInfo(Request $request): Response
+    {
+        $this->staffInfoApi->updateStaffInfo(
+            1,
+            'Алена',
+            'Золотцева',
+            (new \DateTimeImmutable()),
+            'alena123@mail.com',
+            '123456Alena',
+            'Vecheslavovna',
+            '/newpath',
+            '+71239870010',
+            'reseller'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/get_product_category')]
     public function getProductCategory(): Response
     {
