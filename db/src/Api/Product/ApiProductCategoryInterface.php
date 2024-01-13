@@ -11,4 +11,9 @@ interface ApiProductCategoryInterface
     public function addProductCategory(
         string $name,
     ): void;
+
+    public function updateProductCategory(
+        int    $id,
+        string $name,
+    ): void;
 } 

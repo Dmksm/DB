@@ -8,6 +8,9 @@ class OrderCommand
 {
 
     #[Assert\NotBlank]
+    private int $id;
+
+    #[Assert\NotBlank]
     private int $id_client;
 
     #[Assert\NotBlank]
@@ -23,6 +26,7 @@ class OrderCommand
     private string $address;
 
     public function __construct(
+        int                $id,
         int                $id_client,
         float              $sum,
         \DateTimeImmutable $order_date,
@@ -30,11 +34,17 @@ class OrderCommand
         string             $address,
     )
     {
+        $this->id = $id;
         $this->id_client = $id_client;
         $this->sum = $sum;
         $this->order_date = $order_date;
         $this->status = $status;
         $this->address = $address;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getIdClient(): int

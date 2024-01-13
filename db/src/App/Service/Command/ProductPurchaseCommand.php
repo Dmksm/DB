@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductPurchaseCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private int $id_product;
 
@@ -25,6 +28,7 @@ class ProductPurchaseCommand
     private int $status;
 
     public function __construct(
+        int                $id,
         int                $id_product,
         int                $id_order,
         int                $id_storage,
@@ -33,12 +37,18 @@ class ProductPurchaseCommand
         int                $status,
     )
     {
+        $this->id = $id;
         $this->id_product = $id_product;
         $this->id_order = $id_order;
         $this->id_storage = $id_storage;
         $this->order_date = $order_date;
         $this->delivery_date = $delivery_date;
         $this->status = $status;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getIdProduct(): int

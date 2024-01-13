@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
-use App\Domain\Entity\Order;
+use App\Domain\Entity\Order as DomainOrder;
 use App\Infrastructure\Repositories\Entity\Order as ORMOrder;
 use App\Domain\Service\OrderRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -10,7 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Order>
+ * @extends ServiceEntityRepository<ORMOrder>
  *
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
  * @method Order|null findOneBy(array $criteria, array $orderBy = null)
@@ -35,7 +35,7 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         return $query->getResult()[0][1] + 1;
     }
 
-    public function add(Order $order): void
+    public function add(DomainOrder $order): void
     {
         $entityManager = $this->getEntityManager();
         
@@ -43,7 +43,28 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         $entityManager->flush();
     }
 
-    private function hydrateOrder(Order $order): ORMOrder
+    public function update(DomainOrder $newOrder): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $order = $this->find($newOrder->getId());
+
+        if (!$order) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newOrder->getId()
+            );
+        }
+
+        $order->setIdClient($newOrder->getIdClient());
+        $order->setSum($newOrder->getSum());
+        $order->setOrderDate($newOrder->getOrderDate());
+        $order->setStatus($newOrder->getStatus());
+        $order->setAddress($newOrder->getAddress());
+
+        $entityManager->flush();
+    }
+
+    private function hydrateOrder(DomainOrder $order): ORMOrder
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMOrder::class, [

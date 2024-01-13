@@ -15,4 +15,12 @@ interface ApiOrderInterface
         int                $status,
         string             $address,
     ): void;
+    public function updateOrder(
+        int                $id,
+        int                $id_client,
+        float              $sum,
+        \DateTimeImmutable $order_date,
+        int                $status,
+        string             $address,
+    ): void;
 }

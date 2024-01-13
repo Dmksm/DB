@@ -186,6 +186,23 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_product_category')]
+    public function updateProductCategory(Request $request): Response
+    {
+        $this->productCategoryApi->updateProductCategory(
+            2,
+            'Овощи'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/get_product')]
     public function getProduct(): Response
     {
@@ -398,6 +415,27 @@ class PagesController extends AbstractController
             new \DateTimeImmutable(),
             0,
             'address'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+    
+    #[Route('/update_order')]
+    public function updateOrder(Request $request): Response
+    {
+        $this->orderApi->updateOrder(
+            1,
+            1,
+            100,
+            new \DateTimeImmutable(),
+            0,
+            'newAddress'
         );
 
         $response = new Response(

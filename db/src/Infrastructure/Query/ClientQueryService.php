@@ -21,7 +21,7 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
-
+//swagger
     private function hydrateAttempt(ORMClient $ORMClient): Client
     {
         $hydrator = new Hydrator();

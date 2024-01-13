@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class StaffInfoCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private string $firstName;
     #[Assert\NotBlank]
@@ -26,6 +29,7 @@ class StaffInfoCommand
     private ?string $position;
 
     public function __construct(
+        int                $id,
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -37,6 +41,7 @@ class StaffInfoCommand
         ?string            $position = null,
     )
     {
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthday = $birthday;
@@ -46,6 +51,11 @@ class StaffInfoCommand
         $this->photo = $photo;
         $this->telephone = $telephone;
         $this->position = $position;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getPosition(): ?string

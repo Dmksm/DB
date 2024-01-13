@@ -29,4 +29,24 @@ class OrderService
         );
         $this->orderRepository->add($order);
     }
+
+    public function updateOrder(
+        int                $id,
+        int                $id_client,
+        float              $sum,
+        \DateTimeImmutable $order_date,
+        int                $status,
+        string             $address,
+    ): void
+    {
+        $order = new Order(
+            $id,
+            $id_client,
+            $sum,
+            $order_date,
+            $status,
+            $address,
+        );
+        $this->orderRepository->update($order);
+    }
 }

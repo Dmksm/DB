@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
-use App\Domain\Entity\ProductCategory;
+use App\Domain\Entity\ProductCategory as DomainProductCategory;
 use App\Infrastructure\Repositories\Entity\ProductCategory as ORMProductCategory;
 use App\Domain\Service\ProductCategoryRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -10,7 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ProductCategory>
+ * @extends ServiceEntityRepository<ORMProductCategory>
  *
  * @method ProductCategory|null find($id, $lockMode = null, $lockVersion = null)
  * @method ProductCategory|null findOneBy(array $criteria, array $orderBy = null)
@@ -35,7 +35,7 @@ class ProductCategoryRepository extends ServiceEntityRepository implements Produ
         return $query->getResult()[0][1] + 1;
     }
 
-    public function addProductCategory(ProductCategory $productCategory): void
+    public function addProductCategory(DomainProductCategory $productCategory): void
     {
         $entityManager = $this->getEntityManager();
 
@@ -43,7 +43,24 @@ class ProductCategoryRepository extends ServiceEntityRepository implements Produ
         $entityManager->flush();
     }
 
-    private function hydrateProductCategory(ProductCategory $productCategory): ORMProductCategory
+    public function update(DomainProductCategory $newOrder): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        $order = $this->find($newOrder->getId());
+
+        if (!$order) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newOrder->getId()
+            );
+        }
+
+        $order->setname($newOrder->getname());
+
+        $entityManager->flush();
+    }
+
+    private function hydrateProductCategory(DomainProductCategory $productCategory): ORMProductCategory
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMProductCategory::class, [
