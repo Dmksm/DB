@@ -38,7 +38,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
             throw new QueryException("Product with id $id are not unique!", 500);
         }
 
-        return $this->hydrateAttempt($ORMProduct[0]);
+        return $this->hydrateProduct($ORMProduct[0]);
     }
 
     public function getProductsByCategory(int $categoryId): array
@@ -51,9 +51,13 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         )->setParameters([
             'categoryId' => $categoryId
         ]);
-        $ORMProduct = $query->getResult();
-
-        return $ORMProduct;
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
 
     
@@ -68,9 +72,13 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         )->setParameters([
             'subString' => $subString
         ]);
-        $ORMProduct = $query->getResult();
-
-        return $ORMProduct;
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
     public function getAllProducts(): array
     {
@@ -79,11 +87,16 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
           'SELECT s
           FROM App\Infrastructure\Repositories\Entity\Product s'
         );
-        $ORMProduct = $query->getResult();
-        return $ORMProduct;
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
 
-    private function hydrateAttempt(ORMProduct $ORMProduct): Product
+    private function hydrateProduct(ORMProduct $ORMProduct): Product
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Product::class, [

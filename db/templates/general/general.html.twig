@@ -1,34 +1,22 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <script>
-        function search(url) {
-            const data = JSON.stringify({
-                searchText: document.getElementById('general-search-value').value,
-                completed: false
-            });
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", url);
-            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-            xhr.onload = () => {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(`Ok: ${xhr.status} ${data}`);
-                } else {
-                    console.log(`Error: ${xhr.status}`);
-                }
-            };
-            xhr.send(data);
-            return false;
+        function redirectToUrl(url) {
+            location.href = url;
         }
     </script>
     <div class="page_content">
         {{ include('components/sidebar/sidebar.html.twig') }}
         <div class="general_content">
-            <form class="widget-search" onsubmit=search('{{ mainPage }}') method="post">
-                <input class="widget-input" placeholder="Search some..." type="text" name="text" id="general-search-value" />
+            <form class="widget-search" method="get">
+                <input class="widget-input" placeholder="Search some..." type="text" name="searchText" id="general-search-value" />
             </form>
             <div class="general_products">
             {% for product in products %}
-                <div class="widget_product">Имя
+                <div class="widget_product" onclick="redirectToUrl('{{ product.link }}')">
+                    <img class="product-image product-image-preview" src="{{ asset(product.image) }}" alt="Картинка не загрузилась"/>
+                    Наименование: {{ product.name }}
+                    Стоимость: {{ product.cost }}
                 </div>
             {% endfor %}
             </div>

@@ -93,23 +93,25 @@ class PagesController extends AbstractController
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $data = json_decode($request->getContent(), true);
-        try
-        {
-            $text = $data['searchText'];
-        }
-        catch (\Throwable $e)
-        {
-            $text = "";
-        }
+        $text = $request->query->get('searchText');
         $this->logger->alert("text $text " . $request->getContent());
         $products = (empty($text)) ?  $this->productApi->getAllProducts() :
             $this->productApi->getProductsByIncludingString($text);
+        $productsView = [];
+        foreach ($products as $product)
+        {
+            $productsView[] = [
+                'name' => $product->getName(),
+                'image' => "images/" . $product->getPhoto(),
+                'cost' => $product->getCost(),
+                'link' => $this->generateUrl('productPage',['id' => $product->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+            ];
+        }
         return $this->render('general/general.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
-            'products' => $products,
+            'products' => $productsView,
         ]);
     }
 
