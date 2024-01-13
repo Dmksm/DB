@@ -1,22 +1,18 @@
+<script>
+    function redirectToUrl(url) {
+        location.href = url;
+    }
+</script>
 <div class="sidebar">
-    <form action="" method="get" class="widget-form">
+    <div class="widget-form">
         <div>
-            <input class="widget" type="submit" value="page 1" />
+            <input class="widget" type="submit" value="mainPage" onclick="redirectToUrl('mainPage')"/>
         </div>
         <div>
-            <input class="widget" type="submit" value="page 2" />
+            <input class="widget" type="submit" value="login" onclick="redirectToUrl('loginPage')"/>
         </div>
         <div>
-            <input class="widget" type="submit" value="page 3" />
+            <input class="widget" type="submit" value="basket" onclick="redirectToUrl('basketPage')"/>
         </div>
-        <div>
-            <input class="widget" type="submit" value="page 4" />
-        </div>
-        <div>
-            <input class="widget" type="submit" value="page 5" />
-        </div>
-        <div>
-            <input class="widget" type="submit" value="page 6" />
-        </div>
-    </form>
+    </div>
 </div>

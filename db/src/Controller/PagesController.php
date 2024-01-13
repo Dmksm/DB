@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use function PHPUnit\Framework\throwException;
 
 class PagesController extends AbstractController
 {
@@ -151,7 +150,7 @@ class PagesController extends AbstractController
         ]);
     }
 
-    #[Route('/register')]
+    #[Route('/register', 'register')]
     public function register(Request $request): Response
     {
         $this->userApi->registerUser(
