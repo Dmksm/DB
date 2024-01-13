@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ClientCommand
 {
     #[Assert\NotBlank]
+    private int $id;
+    #[Assert\NotBlank]
     private string $firstName;
     #[Assert\NotBlank]
     private string $lastName;
@@ -24,6 +26,7 @@ class ClientCommand
     private ?string $telephone;
 
     public function __construct(
+        int                $id,
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -34,6 +37,7 @@ class ClientCommand
         ?string            $telephone = null,
     )
     {
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthday = $birthday;
@@ -44,7 +48,12 @@ class ClientCommand
         $this->telephone = $telephone;
     }
 
-    public function getFirstName(): ?string
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getFirstName(): string
     {
         return $this->firstName;
     }

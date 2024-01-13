@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repositories\Repository;
 
-use App\Domain\Entity\Client;
+use App\Domain\Entity\Client as DomainClient;
 use App\Infrastructure\Repositories\Entity\Client as ORMClient;
 use App\Domain\Service\ClientRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -11,7 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Client>
+ * @extends ServiceEntityRepository<ORMClient>
  *
  * @method Client|null find($id, $lockMode = null, $lockVersion = null)
  * @method Client|null findOneBy(array $criteria, array $orderBy = null)
@@ -36,7 +36,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
         return $query->getResult()[0][1] + 1;
     }
 
-    public function add(Client $client): void
+    public function add(DomainClient $client): void
     {
         $entityManager = $this->getEntityManager();
         
@@ -44,7 +44,31 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
         $entityManager->flush();
     }
 
-    private function hydrateClient(Client $client): ORMClient
+    public function update(DomainClient $newClient): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        //$product = $entityManager->getRepository(Product::class)->find($id);
+        $client = $this->find($newClient->getId());
+
+        if (!$client) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newClient->getId()
+            );
+        }
+
+        $client->setFirstName($newClient->getFirstName());
+        $client->setLastName($newClient->getLastName());
+        $client->setBirthday($newClient->getBirthday());
+        $client->setEmail($newClient->getEmail());
+        $client->setPassword($newClient->getPassword());
+        $client->setPatronymic($newClient->getPatronymic());
+        $client->setPhoto($newClient->getPhoto());
+        $client->setTelephone($newClient->getTelephone());
+        $entityManager->flush();
+    }
+
+    private function hydrateClient(DomainClient $client): ORMClient
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMClient::class, [

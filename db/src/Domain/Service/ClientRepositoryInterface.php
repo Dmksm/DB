@@ -8,4 +8,5 @@ interface ClientRepositoryInterface
 {
     public function getNextId(): int;
     public function add(Client $client): void;
+    public function update(Client $client): void;
 }

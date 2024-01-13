@@ -18,4 +18,16 @@ interface ApiClientInterface
         ?string            $photo,
         ?string            $telephone,
     ): void;
+
+    public function updateClient(
+        int                $id,
+        string             $firstName,
+        string             $lastName,
+        \DateTimeImmutable $birthday,
+        string             $email,
+        string             $password,
+        ?string            $patronymic,
+        ?string            $photo,
+        ?string            $telephone,
+    ): void;
 }

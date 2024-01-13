@@ -326,6 +326,30 @@ class PagesController extends AbstractController
 
         return $response;
     }
+    
+    #[Route('/update_client')]
+    public function updateClient(Request $request): Response
+    {
+        $this->clientApi->updateClient(
+            1,
+            'Роман',
+            'Смирнов',
+            (new \DateTimeImmutable()),
+            'roman123@mail.com',
+            '123456Roman',
+            'Vecheslavovich',
+            '/newPath',
+            '+71239870010',
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
 
     #[Route('/get_client')]
     public function getClient(): Response

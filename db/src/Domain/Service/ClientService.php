@@ -35,4 +35,30 @@ class ClientService
         );
         $this->clientRepository->add($client);
     }
+
+    public function updateClient(
+        int                $id,
+        string             $firstName,
+        string             $lastName,
+        \DateTimeImmutable $birthday,
+        string             $email,
+        string             $password,
+        ?string            $patronymic,
+        ?string            $photo,
+        ?string            $telephone,
+    ): void
+    {
+        $client = new Client(
+            $id,
+            $firstName,
+            $lastName,
+            $birthday,
+            $email,
+            $password,
+            $patronymic,
+            $photo,
+            $telephone,
+        );
+        $this->clientRepository->update($client);
+    }
 }
