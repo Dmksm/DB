@@ -12,6 +12,7 @@ use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -94,15 +95,25 @@ class PagesController extends AbstractController
         }
         $email = $data['email'];
         $password = $data['password'];
-        $response = new Response(
-            json_encode(['id' => '1'])
-        );
+        //добавить метод проверки на пользователя, метод вернет id который зашьется в куки
+        $expire = time() + 36000;
+        $cookie = new Cookie('id', '1', $expire);
+        $response = new Response();
+        $response->headers->setCookie($cookie);
         return $response;
     }
 
     #[Route('/mainPage', 'mainPage')]
     public function mainPage(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -663,5 +674,10 @@ class PagesController extends AbstractController
         return $this->render('authorization/login.html.twig', [
             'name' => $this->productApi->getProduct($productPurchase->getIdProduct())->getName(),
         ]);
+    }
+
+    private function isUserExist(int $id): bool
+    {
+        return !empty($this->clientApi->getClient(($id)) || !empty($this->staffInfoApi->getStaffInfo($id)));
     }
 }
