@@ -101,7 +101,7 @@ class PagesController extends AbstractController
 
         $client = $this->clientApi->getClientByEmailAndPassword($email, $password);
 
-        if($client)
+        if ($client)
         {
             $expire = time() + 36000;
             $cookie = new Cookie('id', strval($client->getId()), $expire);
@@ -114,10 +114,10 @@ class PagesController extends AbstractController
 
         $admin = $this->staffInfoApi->getStaffInfoByEmailAndPassword($email, $password);
 
-        if($admin)
+        if ($admin)
         {
             $expire = time() + 36000;
-            $cookie = new Cookie('id', strval($client->getId()), $expire);
+            $cookie = new Cookie('id', strval($admin->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
             $cookie = new Cookie('admin', strval(1), $expire);
@@ -187,21 +187,14 @@ class PagesController extends AbstractController
         $sum = $data['cost'];
         $address = $data['address'];
 
-
-        foreach($products as $key => $value)
+        foreach($products as $productId => $count)
         {
-            $this->productPurchaseApi->addProductPurchase($key, $id, 1, new \DateTimeImmutable, null, 0);
+            $this->productPurchaseApi->addProductPurchase($productId, $id, 1, new \DateTimeImmutable, null, 0);
             $this->productInStorageApi->updateProductInStorage(
-                $this->productInStorageApi->getProductInStorageByProductAndStorage(
-                        $key,
-                        1
-                    )->getId(),
-                $key,
+                $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getId(),
+                $productId,
                 1,
-                (int)($this->productInStorageApi->getProductInStorageByProductAndStorage(
-                        $key,
-                        1
-                    )->getCount() - $value)
+                $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getCount() - (int)$count
             );
         }
 
