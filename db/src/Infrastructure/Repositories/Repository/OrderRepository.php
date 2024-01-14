@@ -35,12 +35,13 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         return $query->getResult()[0][1] + 1;
     }
 
-    public function add(DomainOrder $order): void
+    public function add(DomainOrder $order): int
     {
         $entityManager = $this->getEntityManager();
         
         $entityManager->persist($this->hydrateOrder($order));
         $entityManager->flush();
+        return $order->getId();
     }
 
     public function update(DomainOrder $newOrder): void
