@@ -22,8 +22,11 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): ?StaffInfo
+    private function hydrateAttempt(?ORMStaffInfo $ORMStaffInfo): ?StaffInfo
     {
+        if (empty($ORMStaffInfo)) {
+            return null;
+        }
         $hydrator = new Hydrator();
         return $hydrator->hydrate(StaffInfo::class, [
             'id' => $ORMStaffInfo->getId(),

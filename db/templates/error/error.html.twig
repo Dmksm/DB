@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="login_content">
+        <h1 id="welcome_text">Oops, something went wrong!</h1>
+        <h1 id="welcome_text">{{ statusCode }}</h1>
+        <form action="{{ loginPage }}" method="get" class="login-form">
+            <div>
+                <input class="login-submit" type="submit" value="Return"/>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="page_content">
+        {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="success-order-content">
+            <div class="success-order-content-row">
+                <h1 id="welcome_text">Success confirm order!</h1>
+                <form action="{{ mainPage }}" method="get" class="login-form">
+                    <div>
+                        <input class="login-submit" type="submit" value="Return"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

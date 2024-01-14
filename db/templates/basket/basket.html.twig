@@ -1,6 +1,103 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+    <script>
+        function clearAll() {
+            localStorage.removeItem('product');
+            window.location.reload();
+        }
+        function removeProduct(name) {
+            let retrievedObject = localStorage.getItem('product');
+            let parsedData = JSON.parse(retrievedObject);
+            let isNeedAddNewProduct = true;
+            if (parsedData !== null)
+            {
+                parsedData.forEach(function(item, index) {
+                    if (isNeedAddNewProduct && item.name === name)
+                    {
+                        if (this[index].count > 1) {
+                            this[index].count = this[index].count - 1;
+                        } else {
+                            this.splice(index, 1);
+                        }
+                    }
+                }, parsedData);
+            } else {
+                parsedData = [];
+            }
+            localStorage.setItem('product', JSON.stringify(parsedData));
+            window.location.reload();
+        }
+        function insertAllProducts() {
+            let retrievedObject = localStorage.getItem('product');
+            let parsedData = JSON.parse(retrievedObject);
+            if (parsedData !== null) {
+                let totalCost = 0;
+                parsedData.forEach((item, index) => {
+                    let count = '';
+                    let cost = item.cost;
+                    if (item.count > 1) {
+                        count = ' x' + item.count;
+                        cost *= item.count;
+                    }
+                    if (parsedData.length === 1)
+                    {
+                        totalCost = cost;
+                    } else {
+                        totalCost += cost;
+                    }
+                    let text = 'Наименоване: ' + item.name + count + ' Стоимость: ' + cost;
+                    document.getElementById("basket-products-list").innerHTML += '' +
+                        '<div class="basket-product"> <div class="basket-product-title">' + text + '</div>' +
+                        '<div class="product-button" onclick="removeProduct(`' + item.name + '`)">' +
+                        '<button class="button button-deny" type="button">X</button></div></div>';
+                });
+
+                document.getElementById("basket-review-total-cost-body").textContent = 'Общая стоимость: ' + totalCost;
+            }
+        }
+        function submitOrder(url, successUrl, errorPageUrl) {
+            let retrievedObject = localStorage.getItem('product');
+            let parsedData = JSON.parse(retrievedObject);
+            let productIDs = [];
+            parsedData.forEach((item, index) => {
+                productIDs.push(item.id);
+            });
+            const data = JSON.stringify({
+                productIDs: productIDs
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    location.href = successUrl;
+                } else {
+                    location.href = errorPageUrl;
+                }
+            };
+            xhr.send(data);
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            insertAllProducts();
+        });
+    </script>
     <div class="page_content">
         {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="basket-content">
+            <div class="basket-list">
+                <div id="basket-products-list" class="basket-products"></div>
+            </div>
+            <div class="basket-review">
+                <div id="basket-review-total-cost-body" class="basket-review-total-cost"></div>
+                <div class="basket-review-menu">
+                    <div class="product-button" onclick="clearAll()">
+                        {{ component('Button', { message: 'Очистить', type: 'deny'}) }}
+                    </div>
+                    <div class="product-button" onclick="submitOrder('{{ submitOrderUrl }}', '{{ successOrderPageUrl }}', '{{ errorPageUrl }}')">
+                        {{ component('Button', { message: 'Оплатить' }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
