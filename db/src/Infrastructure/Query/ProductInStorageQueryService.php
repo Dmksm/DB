@@ -17,12 +17,12 @@ class ProductInStorageQueryService extends ServiceEntityRepository implements Pr
         parent::__construct($registry, ORMProductInStorage::class); 
     }
 
-    public function getProductInStorage(int $id): ProductInStorage
+    public function getProductInStorage(int $id): ?ProductInStorage
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMProductInStorage $ORMProductInStorage): ProductInStorage
+    private function hydrateAttempt(ORMProductInStorage $ORMProductInStorage): ?ProductInStorage
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ProductInStorage::class, [

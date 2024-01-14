@@ -17,12 +17,12 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
         parent::__construct($registry, ORMStaffInfo::class);
     }
 
-    public function getStaffInfo(int $id): StaffInfo
+    public function getStaffInfo(int $id): ?StaffInfo
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): StaffInfo
+    private function hydrateAttempt(ORMStaffInfo $ORMStaffInfo): ?StaffInfo
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(StaffInfo::class, [

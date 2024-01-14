@@ -22,7 +22,7 @@ class ApiProduct implements ApiProductInterface
     {
     }
     
-    public function getProduct(int $id): Product
+    public function getProduct(int $id): ?Product
     {
         return $this->productQueryService->getProduct($id);
     }

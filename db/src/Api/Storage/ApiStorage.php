@@ -21,7 +21,7 @@ class ApiStorage implements ApiStorageInterface
     {
     }
 
-    public function getStorage(int $id): Storage
+    public function getStorage(int $id): ?Storage
     {
         return $this->storageQueryService->getStorage($id);
     }
@@ -35,6 +35,7 @@ class ApiStorage implements ApiStorageInterface
         $storageRepository = new StorageRepository($this->doctrine);  
         $handler = new AddStorageCommandHandler($this->validator, $storageRepository); 
         $command = new StorageCommand(
+            0,
             $city,
             $street,
             $house,

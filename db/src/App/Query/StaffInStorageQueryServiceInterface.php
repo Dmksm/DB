@@ -6,5 +6,5 @@ use App\App\Query\DTO\StaffInStorage;
 
 interface StaffInStorageQueryServiceInterface
 {
-    public function getStaffInStorage(int $id): StaffInStorage;
+    public function getStaffInStorage(int $id): ?StaffInStorage;
 }

@@ -21,7 +21,7 @@ class ApiStaffInStorage implements ApiStaffInStorageInterface
     {
     }
 
-    public function getStaffInStorage(int $id): StaffInStorage
+    public function getStaffInStorage(int $id): ?StaffInStorage
     {
         return $this->staffInStorageQueryService->getStaffInStorage($id);
     }
@@ -34,6 +34,7 @@ class ApiStaffInStorage implements ApiStaffInStorageInterface
         $staffInStorageRepository = new StaffInStorageRepository($this->doctrine);  
         $handler = new AddStaffInStorageCommandHandler($this->validator, $staffInStorageRepository); 
         $command = new StaffInStorageCommand(
+            0,
             $id_staff,
             $id_storage,
         );

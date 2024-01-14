@@ -22,7 +22,7 @@ class ApiOrder implements ApiOrderInterface
     {
     }
 
-    public function getOrder(int $id): Order
+    public function getOrder(int $id): ?Order
     {
         return $this->OrderQueryService->getOrder($id);
     }

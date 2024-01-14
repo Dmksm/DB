@@ -17,12 +17,12 @@ class ProductCategoryQueryService extends ServiceEntityRepository implements Pro
         parent::__construct($registry, ORMProductCategory::class);
     }
 
-    public function getProductCategory(int $id): ProductCategory
+    public function getProductCategory(int $id): ?ProductCategory
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMProductCategory $ORMProductCategory): ProductCategory
+    private function hydrateAttempt(ORMProductCategory $ORMProductCategory): ?ProductCategory
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ProductCategory::class, [

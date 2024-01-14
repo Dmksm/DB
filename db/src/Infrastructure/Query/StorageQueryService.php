@@ -17,12 +17,12 @@ class StorageQueryService extends ServiceEntityRepository implements StorageQuer
         parent::__construct($registry, ORMStorage::class); 
     }
 
-    public function getStorage(int $id): Storage
+    public function getStorage(int $id): ?Storage
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStorage $ORMStorage): Storage
+    private function hydrateAttempt(ORMStorage $ORMStorage): ?Storage
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Storage::class, [

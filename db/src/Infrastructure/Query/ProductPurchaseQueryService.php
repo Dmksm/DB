@@ -17,12 +17,12 @@ class ProductPurchaseQueryService extends ServiceEntityRepository implements Pro
         parent::__construct($registry, ORMProductPurchase::class);
     }
 
-    public function getProductPurchase(int $id): ProductPurchase
+    public function getProductPurchase(int $id): ?ProductPurchase
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMProductPurchase $ORMProductPurchase): ProductPurchase
+    private function hydrateAttempt(ORMProductPurchase $ORMProductPurchase): ?ProductPurchase
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ProductPurchase::class, [

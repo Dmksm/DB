@@ -6,7 +6,7 @@ use App\App\Query\DTO\ProductCategory;
 
 interface ApiProductCategoryInterface
 {
-    public function getProductCategory(int $id): ProductCategory;
+    public function getProductCategory(int $id): ?ProductCategory;
 
     public function addProductCategory(
         string $name,

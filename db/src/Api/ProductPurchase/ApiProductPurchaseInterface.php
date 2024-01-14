@@ -6,7 +6,7 @@ use App\App\Query\DTO\ProductPurchase;
 
 interface ApiProductPurchaseInterface
 {
-    public function getProductPurchase(int $id): ProductPurchase;
+    public function getProductPurchase(int $id): ?ProductPurchase;
 
     public function addProductPurchase(
         int                $id_product,

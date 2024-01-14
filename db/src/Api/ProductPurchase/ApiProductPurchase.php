@@ -22,7 +22,7 @@ class ApiProductPurchase implements ApiProductPurchaseInterface
     {
     }
 
-    public function getProductPurchase(int $id): ProductPurchase
+    public function getProductPurchase(int $id): ?ProductPurchase
     {
         return $this->productPurchaseQueryService->getProductPurchase($id);
     }

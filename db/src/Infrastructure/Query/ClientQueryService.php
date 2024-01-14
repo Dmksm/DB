@@ -17,12 +17,12 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
         parent::__construct($registry, ORMClient::class);
     }
 
-    public function getClient(int $id): Client
+    public function getClient(int $id): ?Client
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 //swagger
-    private function hydrateAttempt(ORMClient $ORMClient): Client
+    private function hydrateAttempt(ORMClient $ORMClient): ?Client
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Client::class, [

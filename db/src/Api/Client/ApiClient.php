@@ -22,7 +22,7 @@ class ApiClient implements ApiClientInterface
     {
     }
 
-    public function getClient(int $id): Client
+    public function getClient(int $id): ?Client
     {
         return $this->clientQueryService->getClient($id);
     }

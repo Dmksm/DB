@@ -17,12 +17,12 @@ class OrderQueryService extends ServiceEntityRepository implements OrderQuerySer
         parent::__construct($registry, ORMOrder::class);
     }
 
-    public function getOrder(int $id): Order
+    public function getOrder(int $id): ?Order
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMOrder $ORMOrder): Order
+    private function hydrateAttempt(ORMOrder $ORMOrder): ?Order
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Order::class, [

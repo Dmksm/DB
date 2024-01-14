@@ -6,7 +6,7 @@ use App\App\Query\DTO\Client;
 
 interface ApiClientInterface
 {
-    public function getClient(int $id): Client;
+    public function getClient(int $id): ?Client;
 
     public function addClient(
         string             $firstName,

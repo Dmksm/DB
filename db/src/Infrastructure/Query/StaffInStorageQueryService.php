@@ -17,12 +17,12 @@ class StaffInStorageQueryService extends ServiceEntityRepository implements Staf
         parent::__construct($registry, ORMStaffInStorage::class); 
     }
 
-    public function getStaffInStorage(int $id): StaffInStorage
+    public function getStaffInStorage(int $id): ?StaffInStorage
     {
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStaffInStorage $ORMStaffInStorage): StaffInStorage
+    private function hydrateAttempt(ORMStaffInStorage $ORMStaffInStorage): ?StaffInStorage
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(StaffInStorage::class, [

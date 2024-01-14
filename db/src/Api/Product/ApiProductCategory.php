@@ -22,7 +22,7 @@ class ApiProductCategory implements ApiProductCategoryInterface
     {
     }
     
-    public function getProductCategory(int $id): ProductCategory
+    public function getProductCategory(int $id): ?ProductCategory
     {
         return $this->productCategoryQueryService->getProductCategory($id);
     }

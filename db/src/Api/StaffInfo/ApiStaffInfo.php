@@ -22,7 +22,7 @@ class ApiStaffInfo implements ApiStaffInfoInterface
     {
     }
 
-    public function getStaffInfo(int $id): StaffInfo
+    public function getStaffInfo(int $id): ?StaffInfo
     {
         return $this->staffInfoQueryService->getStaffInfo($id);
     }

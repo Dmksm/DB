@@ -17,7 +17,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         parent::__construct($registry, ORMProduct::class); 
     }
 
-    public function getProduct(int $id): Product
+    public function getProduct(int $id): ?Product
     {
         return $this->hydrateProduct($this->findOneBy(['id' => $id]));
     }
@@ -77,7 +77,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         return $products;
     }
 
-    private function hydrateProduct(ORMProduct $ORMProduct): Product
+    private function hydrateProduct(ORMProduct $ORMProduct): ?Product
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Product::class, [

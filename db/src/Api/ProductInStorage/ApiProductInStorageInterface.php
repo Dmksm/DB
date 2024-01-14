@@ -6,7 +6,7 @@ use App\App\Query\DTO\ProductInStorage;
 
 interface ApiProductInStorageInterface
 {
-    public function getProductInStorage(int $id): ProductInStorage;
+    public function getProductInStorage(int $id): ?ProductInStorage;
 
     public function addProductInStorage(
         int $id_product,
