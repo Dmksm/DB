@@ -14,7 +14,7 @@ interface ApiOrderInterface
         \DateTimeImmutable $order_date,
         int                $status,
         string             $address,
-    ): void;
+    ): int;
     public function updateOrder(
         int                $id,
         int                $id_client,

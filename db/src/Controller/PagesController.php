@@ -95,11 +95,35 @@ class PagesController extends AbstractController
         }
         $email = $data['email'];
         $password = $data['password'];
-        //добавить метод проверки на пользователя, метод вернет id который зашьется в куки
-        $expire = time() + 36000;
-        $cookie = new Cookie('id', '1', $expire);
+
+        $client = $this->clientApi->getClientByEmailAndPassword($email, $password);
+        
+        if($client)
+        {
+            $expire = time() + 36000;
+            $cookie = new Cookie('id', strval($client->getId()), $expire);
+            $response = new Response();
+            $response->headers->setCookie($cookie);
+            $cookie = new Cookie('admin', strval(0), $expire);
+            $response->headers->setCookie($cookie);
+            return $response;
+        }
+
+        $admin = $this->staffInfoApi->getStaffInfoByEmailAndPassword($email, $password);
+
+        if($admin)
+        {
+            $expire = time() + 36000;
+            $cookie = new Cookie('id', strval($client->getId()), $expire);
+            $response = new Response();
+            $response->headers->setCookie($cookie);
+            $cookie = new Cookie('admin', strval(1), $expire);
+            $response->headers->setCookie($cookie);
+            return $response;
+        }
+
         $response = new Response();
-        $response->headers->setCookie($cookie);
+        $response->setStatusCode(401, 'неверная почта или пароль');
         return $response;
     }
 
@@ -142,12 +166,56 @@ class PagesController extends AbstractController
     #[Route('/submitOrder', 'submitOrder')]
     public function submitOrder(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+
+        $products = $data['products'];
+        $sum = $data['cost'];
+        $address = $data['address'];
+
+
+        foreach($products as $key => $value)
+        {
+            $this->productPurchaseApi->addProductPurchase($key, $id, 1, new \DateTimeImmutable, null, 0);
+            $this->productInStorageApi->updateProductInStorage(
+                $this->productInStorageApi->getProductInStorageByProductAndStorage(
+                        $key,
+                        1
+                    )->getId(),
+                $key,
+                1,
+                (int)($this->productInStorageApi->getProductInStorageByProductAndStorage(
+                        $key,
+                        1
+                    )->getCount() - $value)
+            );
+        }
+
         return new Response();
     }
 
     #[Route('/successOrderPage', 'successOrderPage')]
-    public function successOrderPage(): Response
+    public function successOrderPage(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('basket/success_order.html.twig', [
             'mainPage' => $mainPageUrl,
@@ -157,6 +225,14 @@ class PagesController extends AbstractController
     #[Route('/profilePage', 'profilePage')]
     public function profilePage(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
         $client = $this->clientApi->getClient(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -178,8 +254,16 @@ class PagesController extends AbstractController
     }
 
     #[Route('/basketPage', 'basketPage')]
-    public function basketPage(): Response
+    public function basketPage(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
         $loginPageUrl = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPageUrl = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -199,6 +283,14 @@ class PagesController extends AbstractController
     #[Route('/product/{id}', 'productPage')]
     public function productPage(Request $request): Response
     {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
         $id = $request->attributes->get('id');
         $product = $this->productApi->getProduct((int)$id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -501,16 +593,21 @@ class PagesController extends AbstractController
     #[Route('/update_client')]
     public function updateClient(Request $request): Response
     {
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+
         $this->clientApi->updateClient(
-            1,
-            'Роман',
-            'Смирнов',
-            (new \DateTimeImmutable()),
-            'roman123@mail.com',
-            '123456Roman',
-            'Vecheslavovich',
-            '/newPath',
-            '+71239870010',
+            $data['id'],
+            $data['first_name'],
+            $data['last_name'],
+            $data['birthday'],
+            $data['email'],
+            $data['password'],
+            $data['patronymic'],
+            $data['photo'],
+            $data['telephone'],
         );
 
         $response = new Response(

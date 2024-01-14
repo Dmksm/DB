@@ -33,7 +33,7 @@ class ApiOrder implements ApiOrderInterface
         \DateTimeImmutable $order_date,
         int                $status,
         string             $address,
-    ): void
+    ): int
     {
         $OrderRepository = new OrderRepository($this->doctrine);
         $handler = new AddOrderCommandHandler($this->validator, $OrderRepository);
@@ -45,7 +45,7 @@ class ApiOrder implements ApiOrderInterface
             $status,
             $address,
         );
-        $handler->handle($command);
+        return $handler->handle($command);
     }
 
     public function updateOrder(

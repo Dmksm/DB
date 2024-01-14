@@ -22,6 +22,14 @@ class ProductInStorageQueryService extends ServiceEntityRepository implements Pr
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
+    public function getProductInStorageByProductAndStorage(
+        int $id_product,
+        int $id_storage,
+    ): ProductInStorage
+    {
+        return $this->hydrateAttempt($this->findOneBy(['id_product' => $id_product,'id_storage' => $id_storage]));
+    }
+
     private function hydrateAttempt(ORMProductInStorage $ORMProductInStorage): ?ProductInStorage
     {
         $hydrator = new Hydrator();

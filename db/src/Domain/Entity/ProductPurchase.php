@@ -14,7 +14,7 @@ class ProductPurchase
 
     private \DateTimeImmutable $order_date;
 
-    private \DateTimeImmutable $delivery_date;
+    private ?\DateTimeImmutable $delivery_date;
 
     private int $status;
 
@@ -24,7 +24,7 @@ class ProductPurchase
         int                $id_order,
         int                $id_storage,
         \DateTimeImmutable $order_date,
-        \DateTimeImmutable $delivery_date,
+        ?\DateTimeImmutable $delivery_date,
         int                $status,
     )
     {
@@ -62,7 +62,7 @@ class ProductPurchase
         return $this->order_date;
     }
 
-    public function getDeliveryDate(): \DateTimeImmutable
+    public function getDeliveryDate(): ?\DateTimeImmutable
     {
         return $this->delivery_date;
     }

@@ -27,6 +27,13 @@ class ApiStaffInfo implements ApiStaffInfoInterface
         return $this->staffInfoQueryService->getStaffInfo($id);
     }
 
+    
+    public function getStaffInfoByEmailAndPassword(string $email,string $password): ?StaffInfo
+    {
+        return $this->staffInfoQueryService->getStaffInfoByEmailAndPassword($email,$password);
+
+    }
+
     public function addStaffInfo(
         string             $firstName,
         string             $lastName,

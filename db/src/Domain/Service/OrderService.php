@@ -17,7 +17,7 @@ class OrderService
         \DateTimeImmutable $order_date,
         int                $status,
         string             $address,
-    ): void
+    ): int
     {
         $order = new Order(
             $this->orderRepository->getNextId(),
@@ -28,6 +28,7 @@ class OrderService
             $address,
         );
         $this->orderRepository->add($order);
+        return $order->getId();
     }
 
     public function updateOrder(

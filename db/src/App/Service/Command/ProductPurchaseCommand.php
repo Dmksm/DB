@@ -22,7 +22,7 @@ class ProductPurchaseCommand
     private \DateTimeImmutable $order_date;
 
     #[Assert\NotBlank]
-    private \DateTimeImmutable $delivery_date;
+    private ?\DateTimeImmutable $delivery_date;
 
     #[Assert\NotBlank]
     private int $status;
@@ -33,7 +33,7 @@ class ProductPurchaseCommand
         int                $id_order,
         int                $id_storage,
         \DateTimeImmutable $order_date,
-        \DateTimeImmutable $delivery_date,
+        ?\DateTimeImmutable $delivery_date,
         int                $status,
     )
     {
@@ -71,7 +71,7 @@ class ProductPurchaseCommand
         return $this->order_date;
     }
 
-    public function getDeliveryDate(): \DateTimeImmutable
+    public function getDeliveryDate(): ?\DateTimeImmutable
     {
         return $this->delivery_date;
     }

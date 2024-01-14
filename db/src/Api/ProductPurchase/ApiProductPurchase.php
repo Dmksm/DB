@@ -32,7 +32,7 @@ class ApiProductPurchase implements ApiProductPurchaseInterface
         int                $id_order,
         int                $id_storage,
         \DateTimeImmutable $order_date,
-        \DateTimeImmutable $delivery_date,
+        ?\DateTimeImmutable $delivery_date,
         int                $status,
     ): void
     {

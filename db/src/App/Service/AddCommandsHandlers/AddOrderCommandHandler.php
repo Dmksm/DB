@@ -28,7 +28,7 @@ class AddOrderCommandHandler
      * @param  OrderCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(OrderCommand $command): void
+    public function handle(OrderCommand $command): int
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)
@@ -37,7 +37,7 @@ class AddOrderCommandHandler
             throw new BadRequestHttpException($error, null, 400);
         }
         
-        $this->orderService->AddOrder(
+        return $this->orderService->AddOrder(
             $command->getIdClient(),
             $command->getSum(),
             $command->getOrderDate(),

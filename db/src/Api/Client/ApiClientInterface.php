@@ -7,6 +7,7 @@ use App\App\Query\DTO\Client;
 interface ApiClientInterface
 {
     public function getClient(int $id): ?Client;
+    public function getClientByEmailAndPassword(string $email, string $password): ?Client;
 
     public function addClient(
         string             $firstName,

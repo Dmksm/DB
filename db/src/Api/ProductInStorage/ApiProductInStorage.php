@@ -27,6 +27,14 @@ class ApiProductInStorage implements ApiProductInStorageInterface
         return $this->productInStorageQueryService->getProductInStorage($id);
     }
 
+    public function getProductInStorageByProductAndStorage(
+        int $id_product,
+        int $id_storage,
+    ): ProductInStorage
+    {
+        return $this->productInStorageQueryService->getProductInStorageByProductAndStorage($id_product,$id_storage);
+    }
+
     public function addProductInStorage(
         int $id_product,
         int $id_storage,

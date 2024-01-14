@@ -7,6 +7,6 @@ use App\Domain\Entity\Order;
 interface OrderRepositoryInterface
 {
     public function getNextId(): int;
-    public function add(Order $order): void;
+    public function add(Order $order): int;
     public function update(Order $order): void;
 }
