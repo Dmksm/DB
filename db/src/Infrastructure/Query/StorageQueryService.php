@@ -17,31 +17,12 @@ class StorageQueryService extends ServiceEntityRepository implements StorageQuer
         parent::__construct($registry, ORMStorage::class); 
     }
 
-    public function getStorage(int $id): Storage
+    public function getStorage(int $id): ?Storage
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Storage s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMStorage = $query->getResult();
-
-        if (empty($ORMStorage))
-        {
-            throw new QueryException("Storage with id $id not found!", 404);
-        }
-        if (count($ORMStorage) > 1)
-        {
-            throw new QueryException("Storage with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMStorage[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStorage $ORMStorage): Storage
+    private function hydrateAttempt(ORMStorage $ORMStorage): ?Storage
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Storage::class, [

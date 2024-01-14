@@ -17,31 +17,12 @@ class StaffInStorageQueryService extends ServiceEntityRepository implements Staf
         parent::__construct($registry, ORMStaffInStorage::class); 
     }
 
-    public function getStaffInStorage(int $id): StaffInStorage
+    public function getStaffInStorage(int $id): ?StaffInStorage
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\StaffInStorage s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMStaffInStorage = $query->getResult();
-
-        if (empty($ORMStaffInStorage))
-        {
-            throw new QueryException("StaffInStorage with id $id not found!", 404);
-        }
-        if (count($ORMStaffInStorage) > 1)
-        {
-            throw new QueryException("StaffInStorage with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMStaffInStorage[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMStaffInStorage $ORMStaffInStorage): StaffInStorage
+    private function hydrateAttempt(ORMStaffInStorage $ORMStaffInStorage): ?StaffInStorage
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(StaffInStorage::class, [

@@ -6,7 +6,7 @@ use App\App\Query\DTO\Storage;
 
 interface ApiStorageInterface
 {
-    public function getStorage(int $id): Storage;
+    public function getStorage(int $id): ?Storage;
 
     public function addStorage(
         string $city,

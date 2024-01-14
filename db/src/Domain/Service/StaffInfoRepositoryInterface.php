@@ -8,4 +8,5 @@ interface StaffInfoRepositoryInterface
 {
     public function getNextId(): int;
     public function add(StaffInfo $staffInfo): void;
+    public function update(StaffInfo $staffInfo): void;
 }

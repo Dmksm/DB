@@ -1,33 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Api\Client;
+namespace App\Api\StaffInfo;
 
-use App\App\Query\DTO\Client;
-use App\App\Query\ClientQueryServiceInterface;
-use App\App\Service\Command\ClientCommand;
-use App\App\Service\AddCommandsHandlers\AddClientCommandHandler;
-use App\App\Service\UpdateCommandsHandlers\UpdateClientCommandHandler;
-use App\Infrastructure\Repositories\Repository\ClientRepository;
+use App\App\Query\DTO\StaffInfo;
+use App\App\Query\StaffInfoQueryServiceInterface;
+use App\App\Service\Command\StaffInfoCommand;
+use App\App\Service\AddCommandsHandlers\AddStaffInfoCommandHandler;
+use App\App\Service\UpdateCommandsHandlers\UpdateStaffInfoCommandHandler;
+use App\Infrastructure\Repositories\Repository\StaffInfoRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ApiClient implements ApiClientInterface
+class ApiStaffInfo implements ApiStaffInfoInterface
 {
     public function __construct(
         private readonly ManagerRegistry                $doctrine,
         private readonly ValidatorInterface             $validator,
-        private readonly ClientQueryServiceInterface    $clientQueryService,
+        private readonly StaffInfoQueryServiceInterface $staffInfoQueryService,
     )
     {
     }
 
-    public function getClient(int $id): ?Client
+    public function getStaffInfo(int $id): ?StaffInfo
     {
-        return $this->clientQueryService->getClient($id);
+        return $this->staffInfoQueryService->getStaffInfo($id);
     }
 
-    public function addClient(
+    public function addStaffInfo(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -36,11 +36,12 @@ class ApiClient implements ApiClientInterface
         ?string            $patronymic,
         ?string            $photo,
         ?string            $telephone,
+        ?string            $position,
     ): void
     {
-        $clientRepository = new ClientRepository($this->doctrine);
-        $handler = new AddClientCommandHandler($this->validator, $clientRepository);
-        $command = new ClientCommand(
+        $staffInfoRepository = new StaffInfoRepository($this->doctrine);
+        $handler = new AddStaffInfoCommandHandler($this->validator, $staffInfoRepository);
+        $command = new StaffInfoCommand(
             0,
             $firstName,
             $lastName,
@@ -50,11 +51,12 @@ class ApiClient implements ApiClientInterface
             $patronymic,
             $photo,
             $telephone,
+            $position,
         );
         $handler->handle($command);
     }
 
-    public function updateClient(
+    public function updateStaffInfo(
         int                $id,
         string             $firstName,
         string             $lastName,
@@ -64,11 +66,12 @@ class ApiClient implements ApiClientInterface
         ?string            $patronymic,
         ?string            $photo,
         ?string            $telephone,
+        ?string            $position,
     ): void
     {
-        $clientRepository = new ClientRepository($this->doctrine);
-        $handler = new UpdateClientCommandHandler($this->validator, $clientRepository);
-        $command = new ClientCommand(
+        $staffInfoRepository = new StaffInfoRepository($this->doctrine);
+        $handler = new UpdateStaffInfoCommandHandler($this->validator, $staffInfoRepository);
+        $command = new StaffInfoCommand(
             $id,
             $firstName,
             $lastName,
@@ -78,6 +81,7 @@ class ApiClient implements ApiClientInterface
             $patronymic,
             $photo,
             $telephone,
+            $position,
         );
         $handler->handle($command);
     }

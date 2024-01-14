@@ -5,8 +5,9 @@ namespace App\Api\ProductInStorage;
 
 use App\App\Query\DTO\ProductInStorage;
 use App\App\Query\ProductInStorageQueryServiceInterface;
-use App\App\Service\Command\AddProductInStorageCommand;
-use App\App\Service\AddProductInStorageCommandHandler;
+use App\App\Service\Command\ProductInStorageCommand;
+use App\App\Service\AddCommandsHandlers\AddProductInStorageCommandHandler;
+use App\App\Service\UpdateCommandsHandlers\UpdateProductInStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\ProductInStorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +22,7 @@ class ApiProductInStorage implements ApiProductInStorageInterface
     {
     }
 
-    public function getProductInStorage(int $id): ProductInStorage
+    public function getProductInStorage(int $id): ?ProductInStorage
     {
         return $this->productInStorageQueryService->getProductInStorage($id);
     }
@@ -34,7 +35,27 @@ class ApiProductInStorage implements ApiProductInStorageInterface
     {
         $productInStorageRepository = new ProductInStorageRepository($this->doctrine);  
         $handler = new AddProductInStorageCommandHandler($this->validator, $productInStorageRepository); 
-        $command = new AddProductInStorageCommand(
+        $command = new ProductInStorageCommand(
+            0,
+            $id_product,
+            $id_storage,
+            $count,
+        );
+        $handler->handle($command);
+
+    }
+
+    public function updateProductInStorage(
+        int $id,
+        int $id_product,
+        int $id_storage,
+        int $count,
+    ): void
+    {
+        $productInStorageRepository = new ProductInStorageRepository($this->doctrine);  
+        $handler = new UpdateProductInStorageCommandHandler($this->validator, $productInStorageRepository); 
+        $command = new ProductInStorageCommand(
+            $id,
             $id_product,
             $id_storage,
             $count,

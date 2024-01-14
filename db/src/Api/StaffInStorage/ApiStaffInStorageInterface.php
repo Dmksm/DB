@@ -6,7 +6,7 @@ use App\App\Query\DTO\StaffInStorage;
 
 interface ApiStaffInStorageInterface
 {
-    public function getStaffInStorage(int $id): StaffInStorage;
+    public function getStaffInStorage(int $id): ?StaffInStorage;
 
     public function addStaffInStorage(
         int $id_staff,

@@ -6,5 +6,5 @@ use App\App\Query\DTO\Client;
 
 interface ClientQueryServiceInterface
 {
-    public function getClient(int $id): Client;
+    public function getClient(int $id): ?Client;
 }

@@ -8,4 +8,5 @@ interface ProductInStorageRepositoryInterface
 {
     public function getNextId(): int;
     public function addProductInStorage(ProductInStorage $productInstorage): void;
+    public function updateProductInStorage(ProductInStorage $productInstorage): void;
 }

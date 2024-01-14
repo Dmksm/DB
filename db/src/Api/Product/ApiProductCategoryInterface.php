@@ -6,9 +6,14 @@ use App\App\Query\DTO\ProductCategory;
 
 interface ApiProductCategoryInterface
 {
-    public function getProductCategory(int $id): ProductCategory;
+    public function getProductCategory(int $id): ?ProductCategory;
 
     public function addProductCategory(
+        string $name,
+    ): void;
+
+    public function updateProductCategory(
+        int    $id,
         string $name,
     ): void;
 } 

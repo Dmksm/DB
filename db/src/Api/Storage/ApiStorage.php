@@ -5,8 +5,8 @@ namespace App\Api\Storage;
 
 use App\App\Query\DTO\Storage;
 use App\App\Query\StorageQueryServiceInterface;
-use App\App\Service\Command\AddStorageCommand;
-use App\App\Service\AddStorageCommandHandler;
+use App\App\Service\Command\StorageCommand;
+use App\App\Service\AddCommandsHandlers\AddStorageCommandHandler;
 use App\Infrastructure\Repositories\Repository\StorageRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +21,7 @@ class ApiStorage implements ApiStorageInterface
     {
     }
 
-    public function getStorage(int $id): Storage
+    public function getStorage(int $id): ?Storage
     {
         return $this->storageQueryService->getStorage($id);
     }
@@ -34,7 +34,8 @@ class ApiStorage implements ApiStorageInterface
     {
         $storageRepository = new StorageRepository($this->doctrine);  
         $handler = new AddStorageCommandHandler($this->validator, $storageRepository); 
-        $command = new AddStorageCommand(
+        $command = new StorageCommand(
+            0,
             $city,
             $street,
             $house,

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
-use App\App\Service\Command\AddOrderCommand;
+use App\App\Service\Command\OrderCommand;
 use App\Domain\Service\OrderRepositoryInterface;
 use App\Domain\Service\OrderService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddOrderCommandHandler
     }
 
     /**
-     * @param  AddOrderCommand $command
+     * @param  OrderCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddOrderCommand $command): void
+    public function handle(OrderCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

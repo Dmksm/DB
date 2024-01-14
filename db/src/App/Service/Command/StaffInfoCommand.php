@@ -1,18 +1,31 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Query\DTO;
+namespace App\App\Service\Command;
 
-class UserInfo
+use Symfony\Component\Validator\Constraints as Assert;
+
+class StaffInfoCommand
 {
+
+    #[Assert\NotBlank]
     private int $id;
+    #[Assert\NotBlank]
     private string $firstName;
+    #[Assert\NotBlank]
     private string $lastName;
+    #[Assert\NotBlank]
     private \DateTimeImmutable $birthday;
+    #[Assert\NotBlank]
     private string $email;
+    #[Assert\NotBlank]
     private string $password;
+    #[Assert\NotBlank]
     private ?string $patronymic;
+    #[Assert\NotBlank]
     private ?string $photo;
+    #[Assert\NotBlank]
     private ?string $telephone;
+    #[Assert\NotBlank]
     private ?string $position;
 
     public function __construct(

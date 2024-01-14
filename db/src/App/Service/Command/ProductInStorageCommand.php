@@ -4,8 +4,11 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddProductInStorageCommand
+class ProductInStorageCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private int $id_product;
     #[Assert\NotBlank]
@@ -14,14 +17,21 @@ class AddProductInStorageCommand
     private int $count;
 
     public function __construct(
+        int     $id,
         int     $id_product,
         int     $id_storage,
         int     $count
     )
     {
+        $this->id = $id;
         $this->id_product = $id_product;
         $this->id_storage = $id_storage;
         $this->count = $count;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getIdProduct(): int

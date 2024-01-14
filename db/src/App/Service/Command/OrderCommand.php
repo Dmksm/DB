@@ -4,8 +4,11 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddOrderCommand
+class OrderCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
 
     #[Assert\NotBlank]
     private int $id_client;
@@ -23,6 +26,7 @@ class AddOrderCommand
     private string $address;
 
     public function __construct(
+        int                $id,
         int                $id_client,
         float              $sum,
         \DateTimeImmutable $order_date,
@@ -30,11 +34,17 @@ class AddOrderCommand
         string             $address,
     )
     {
+        $this->id = $id;
         $this->id_client = $id_client;
         $this->sum = $sum;
         $this->order_date = $order_date;
         $this->status = $status;
         $this->address = $address;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getIdClient(): int

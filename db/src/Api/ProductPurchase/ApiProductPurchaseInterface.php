@@ -6,9 +6,19 @@ use App\App\Query\DTO\ProductPurchase;
 
 interface ApiProductPurchaseInterface
 {
-    public function getProductPurchase(int $id): ProductPurchase;
+    public function getProductPurchase(int $id): ?ProductPurchase;
 
     public function addProductPurchase(
+        int                $id_product,
+        int                $id_client,
+        int                $id_storage,
+        \DateTimeImmutable $order_date,
+        \DateTimeImmutable $delivery_date,
+        int                $status,
+    ): void;
+
+    public function updateProductPurchase(
+        int                $id,
         int                $id_product,
         int                $id_client,
         int                $id_storage,

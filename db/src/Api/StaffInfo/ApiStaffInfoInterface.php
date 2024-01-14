@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
-namespace App\Api\Client;
+namespace App\Api\StaffInfo;
 
-use App\App\Query\DTO\Client;
+use App\App\Query\DTO\StaffInfo;
 
-interface ApiClientInterface
+interface ApiStaffInfoInterface
 {
-    public function getClient(int $id): ?Client;
+    public function getStaffInfo(int $id): ?StaffInfo;
 
-    public function addClient(
+    public function addStaffInfo(
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -17,9 +17,10 @@ interface ApiClientInterface
         ?string            $patronymic,
         ?string            $photo,
         ?string            $telephone,
+        ?string            $position,
     ): void;
 
-    public function updateClient(
+    public function updateStaffInfo(
         int                $id,
         string             $firstName,
         string             $lastName,
@@ -29,5 +30,6 @@ interface ApiClientInterface
         ?string            $patronymic,
         ?string            $photo,
         ?string            $telephone,
+        ?string            $position,
     ): void;
 }

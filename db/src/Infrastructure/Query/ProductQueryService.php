@@ -17,28 +17,9 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         parent::__construct($registry, ORMProduct::class); 
     }
 
-    public function getProduct(int $id): Product
+    public function getProduct(int $id): ?Product
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Product s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMProduct = $query->getResult();
-
-        if (empty($ORMProduct))
-        {
-            throw new QueryException("Product with id $id not found!", 404);
-        }
-        if (count($ORMProduct) > 1)
-        {
-            throw new QueryException("Product with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateProduct($ORMProduct[0]);
+        return $this->hydrateProduct($this->findOneBy(['id' => $id]));
     }
 
     public function getProductsByCategory(int $categoryId): array
@@ -96,7 +77,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         return $products;
     }
 
-    private function hydrateProduct(ORMProduct $ORMProduct): Product
+    private function hydrateProduct(ORMProduct $ORMProduct): ?Product
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Product::class, [

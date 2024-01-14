@@ -6,5 +6,5 @@ use App\App\Query\DTO\ProductPurchase;
 
 interface ProductPurchaseQueryServiceInterface
 {
-    public function getProductPurchase(int $id): ProductPurchase;
+    public function getProductPurchase(int $id): ?ProductPurchase;
 }

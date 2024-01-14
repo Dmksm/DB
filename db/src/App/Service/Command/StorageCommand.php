@@ -4,8 +4,11 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddStorageCommand
+class StorageCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private string $city;
     #[Assert\NotBlank]
@@ -14,14 +17,21 @@ class AddStorageCommand
     private string $house;
 
     public function __construct(
+        int        $id,
         string     $city,
         string     $street,
         string     $house
     )
     {
+        $this->id = $id;
         $this->city = $city;
         $this->street = $street;
         $this->house = $house;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getCity(): string

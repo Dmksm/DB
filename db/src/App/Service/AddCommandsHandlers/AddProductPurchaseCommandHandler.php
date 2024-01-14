@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
-use App\App\Service\Command\AddProductPurchaseCommand;
+use App\App\Service\Command\ProductPurchaseCommand;
 use App\Domain\Service\ProductPurchaseRepositoryInterface;
 use App\Domain\Service\ProductPurchaseService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddProductPurchaseCommandHandler
     }
 
     /**
-     * @param  AddProductPurchaseCommand $command
+     * @param  ProductPurchaseCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddProductPurchaseCommand $command): void
+    public function handle(ProductPurchaseCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

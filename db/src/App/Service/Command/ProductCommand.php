@@ -4,8 +4,11 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class AddProductCommand
+class ProductCommand
 {
+
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private string $name;
     #[Assert\NotBlank]
@@ -18,6 +21,7 @@ class AddProductCommand
     private ?string $photo;
 
     public function __construct(
+        int     $id,
         string  $name,
         string  $descryption,
         int     $category,
@@ -25,11 +29,17 @@ class AddProductCommand
         ?string $photo = null,
     )
     {
+        $this->id = $id;
         $this->name = $name;
         $this->descryption = $descryption;
         $this->category = $category;
         $this->cost = $cost;
         $this->photo = $photo;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getName(): ?string

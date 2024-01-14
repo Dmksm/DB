@@ -6,5 +6,5 @@ use App\App\Query\DTO\ProductInStorage;
 
 interface ProductInStorageQueryServiceInterface
 {
-    public function getProductInStorage(int $id): ProductInStorage;
+    public function getProductInStorage(int $id): ?ProductInStorage;
 }

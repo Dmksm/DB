@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service;
+namespace App\App\Service\AddCommandsHandlers;
 
-use App\App\Service\Command\AddProductCategoryCommand;
+use App\App\Service\Command\ProductCategoryCommand;
 use App\Domain\Service\ProductCategoryRepositoryInterface;
 use App\Domain\Service\ProductCategoryService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -25,10 +25,10 @@ class AddProductCategoryCommandHandler
     }
 
     /**
-     * @param  AddProductCategoryCommand $command
+     * @param  ProductCategoryCommand $command
      * @throws BadRequestHttpException
      */
-    public function handle(AddProductCategoryCommand $command): void
+    public function handle(ProductCategoryCommand $command): void
     {
         $errors = $this->validator->validate($command);
         if (count($errors) != 0)

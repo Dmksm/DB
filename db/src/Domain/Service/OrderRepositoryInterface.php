@@ -8,4 +8,5 @@ interface OrderRepositoryInterface
 {
     public function getNextId(): int;
     public function add(Order $order): void;
+    public function update(Order $order): void;
 }

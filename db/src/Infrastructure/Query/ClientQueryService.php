@@ -17,31 +17,12 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
         parent::__construct($registry, ORMClient::class);
     }
 
-    public function getClient(int $id): Client
+    public function getClient(int $id): ?Client
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\Client s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMClient = $query->getResult();
-
-        if (empty($ORMClient))
-        {
-            throw new QueryException("User with id $id not found!", 404);
-        }
-        if (count($ORMClient) > 1)
-        {
-            throw new QueryException("User with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMClient[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
-
-    private function hydrateAttempt(ORMClient $ORMClient): Client
+//swagger
+    private function hydrateAttempt(ORMClient $ORMClient): ?Client
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Client::class, [

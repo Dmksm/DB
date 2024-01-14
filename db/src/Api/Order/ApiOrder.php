@@ -5,8 +5,9 @@ namespace App\Api\Order;
 
 use App\App\Query\DTO\Order;
 use App\App\Query\OrderQueryServiceInterface;
-use App\App\Service\Command\AddOrderCommand;
-use App\App\Service\AddOrderCommandHandler;
+use App\App\Service\Command\OrderCommand;
+use App\App\Service\AddCommandsHandlers\AddOrderCommandHandler;
+use App\App\Service\UpdateCommandsHandlers\UpdateOrderCommandHandler;
 use App\Infrastructure\Repositories\Repository\OrderRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +22,7 @@ class ApiOrder implements ApiOrderInterface
     {
     }
 
-    public function getOrder(int $id): Order
+    public function getOrder(int $id): ?Order
     {
         return $this->OrderQueryService->getOrder($id);
     }
@@ -36,7 +37,30 @@ class ApiOrder implements ApiOrderInterface
     {
         $OrderRepository = new OrderRepository($this->doctrine);
         $handler = new AddOrderCommandHandler($this->validator, $OrderRepository);
-        $command = new AddOrderCommand(
+        $command = new OrderCommand(
+            0,
+            $id_client,
+            $sum,
+            $order_date,
+            $status,
+            $address,
+        );
+        $handler->handle($command);
+    }
+
+    public function updateOrder(
+        int                $id,
+        int                $id_client,
+        float              $sum,
+        \DateTimeImmutable $order_date,
+        int                $status,
+        string             $address,
+    ): void
+    {
+        $OrderRepository = new OrderRepository($this->doctrine);
+        $handler = new UpdateOrderCommandHandler($this->validator, $OrderRepository);
+        $command = new OrderCommand(
+            $id,
             $id_client,
             $sum,
             $order_date,

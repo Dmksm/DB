@@ -6,5 +6,5 @@ use App\App\Query\DTO\ProductCategory;
 
 interface ProductCategoryQueryServiceInterface
 {
-    public function getProductCategory(int $id): ProductCategory;
+    public function getProductCategory(int $id): ?ProductCategory;
 }

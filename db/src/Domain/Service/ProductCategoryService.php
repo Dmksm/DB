@@ -21,4 +21,16 @@ class ProductCategoryService
         );
         $this->productCategoryRepository->addProductCategory($productCategory);
     }
+
+    public function update(
+        int                $id,
+        string             $name,
+    ): void
+    {
+        $productCategory = new ProductCategory(
+            $id,
+            $name,
+        );
+        $this->productCategoryRepository->update($productCategory);
+    }
 }

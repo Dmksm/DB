@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
-use App\Domain\Entity\StaffInfo;
+use App\Domain\Entity\StaffInfo as DomainStaffInfo;
 use App\Infrastructure\Repositories\Entity\StaffInfo as ORMStaffInfo;
 use App\Domain\Service\StaffInfoRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -10,7 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<StaffInfo>
+ * @extends ServiceEntityRepository<ORMStaffInfo>
  *
  * @method StaffInfo|null find($id, $lockMode = null, $lockVersion = null)
  * @method StaffInfo|null findOneBy(array $criteria, array $orderBy = null)
@@ -35,7 +35,7 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
         return $query->getResult()[0][1] + 1;
     }
 
-    public function add(StaffInfo $staffInfo): void
+    public function add(DomainStaffInfo $staffInfo): void
     {
         $entityManager = $this->getEntityManager();
         
@@ -43,7 +43,32 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
         $entityManager->flush();
     }
 
-    private function hydrateStaffInfo(StaffInfo $staffInfo): ORMStaffInfo
+    public function update(DomainStaffInfo $newClient): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        //$product = $entityManager->getRepository(Product::class)->find($id);
+        $client = $this->find($newClient->getId());
+
+        if (!$client) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newClient->getId()
+            );
+        }
+
+        $client->setFirstName($newClient->getFirstName());
+        $client->setLastName($newClient->getLastName());
+        $client->setBirthday($newClient->getBirthday());
+        $client->setEmail($newClient->getEmail());
+        $client->setPassword($newClient->getPassword());
+        $client->setPatronymic($newClient->getPatronymic());
+        $client->setPhoto($newClient->getPhoto());
+        $client->setTelephone($newClient->getTelephone());
+        $client->setPosition($newClient->getPosition());
+        $entityManager->flush();
+    }
+
+    private function hydrateStaffInfo(DomainStaffInfo $staffInfo): ORMStaffInfo
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMStaffInfo::class, [

@@ -4,8 +4,10 @@ namespace App\App\Service\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RegisterUserInfoCommand
+class ClientCommand
 {
+    #[Assert\NotBlank]
+    private int $id;
     #[Assert\NotBlank]
     private string $firstName;
     #[Assert\NotBlank]
@@ -22,10 +24,9 @@ class RegisterUserInfoCommand
     private ?string $photo;
     #[Assert\NotBlank]
     private ?string $telephone;
-    #[Assert\NotBlank]
-    private ?string $position;
 
     public function __construct(
+        int                $id,
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -34,9 +35,9 @@ class RegisterUserInfoCommand
         ?string            $patronymic = null,
         ?string            $photo = null,
         ?string            $telephone = null,
-        ?string            $position = null,
     )
     {
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthday = $birthday;
@@ -45,15 +46,14 @@ class RegisterUserInfoCommand
         $this->patronymic = $patronymic;
         $this->photo = $photo;
         $this->telephone = $telephone;
-        $this->position = $position;
     }
 
-    public function getPosition(): ?string
+    public function getId(): int
     {
-        return $this->position;
+        return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }

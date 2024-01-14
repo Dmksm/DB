@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="profile-page page_content">
+    {{ include('components/sidebar/sidebar.html.twig') }}
+    <div class="profile page_content">
+        <div class="profile-page">
+            <div class="profile-image" >
+                <img src="{{ asset(imagePath) }}" alt="Картинка не загрузилась"/>
+            </div>
+            <div>
+                <div class="profile-text"><h2>first_name</h2></div>
+                <div class="profile-text"><h2>last_name</h2></div>
+                <div class="profile-text"><h2>patronimyc</h2></div>
+                <div class="profile-text"><h2>birthday</h2></div>
+                <div class="profile-text"><h2>telephone</h2></div>
+            </div>
+        </div>
+        <div class="profile-buttons">
+            <div class="profile-button-container"><button class="profile-button">Изменить</button></div>
+            <div class="profile-button-container"><button class="profile-button">Назад</button></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

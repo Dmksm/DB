@@ -1,29 +1,22 @@
 <?php
 declare(strict_types=1);
-namespace App\App\Service\Command;
+namespace App\App\Query\DTO;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
-class RegisterClientCommand
+class StaffInfo
 {
-    #[Assert\NotBlank]
+    private int $id;
     private string $firstName;
-    #[Assert\NotBlank]
     private string $lastName;
-    #[Assert\NotBlank]
     private \DateTimeImmutable $birthday;
-    #[Assert\NotBlank]
     private string $email;
-    #[Assert\NotBlank]
     private string $password;
-    #[Assert\NotBlank]
     private ?string $patronymic;
-    #[Assert\NotBlank]
     private ?string $photo;
-    #[Assert\NotBlank]
     private ?string $telephone;
+    private ?string $position;
 
     public function __construct(
+        int                $id,
         string             $firstName,
         string             $lastName,
         \DateTimeImmutable $birthday,
@@ -32,8 +25,10 @@ class RegisterClientCommand
         ?string            $patronymic = null,
         ?string            $photo = null,
         ?string            $telephone = null,
+        ?string            $position = null,
     )
     {
+        $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->birthday = $birthday;
@@ -42,6 +37,17 @@ class RegisterClientCommand
         $this->patronymic = $patronymic;
         $this->photo = $photo;
         $this->telephone = $telephone;
+        $this->position = $position;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
     }
 
     public function getFirstName(): ?string

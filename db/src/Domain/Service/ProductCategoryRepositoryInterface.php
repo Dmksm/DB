@@ -8,4 +8,5 @@ interface ProductCategoryRepositoryInterface
 {
     public function getNextId(): int;
     public function addProductCategory(ProductCategory $productCategory): void;
+    public function update(ProductCategory $productCategory): void;
 }

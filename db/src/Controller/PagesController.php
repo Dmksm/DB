@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 
-use App\Api\User\ApiInterface as UserApi;
+use App\Api\StaffInfo\ApiStaffInfoInterface as StaffInfoApi;
 use App\Api\Client\ApiClientInterface as ClientApi;
 use App\Api\Order\ApiOrderInterface as OrderApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
-    private UserApi $userApi;
+    private StaffInfoApi $staffInfoApi;
     private ClientApi $clientApi;
     private OrderApi $orderApi;
     private ProductCategoryApi $productCategoryApi;
@@ -30,7 +30,7 @@ class PagesController extends AbstractController
     private ProductInStorageApi $productInStorageApi;
     private StaffInStorageApi $staffInStorageApi;
     public function __construct(
-        UserApi $userApi, 
+        StaffInfoApi $staffInfoApi,
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         ProductPurchaseApi $productPurchaseApi,
@@ -42,7 +42,7 @@ class PagesController extends AbstractController
         private readonly LoggerInterface $logger
         )
     {
-        $this->userApi = $userApi;
+        $this->staffInfoApi = $staffInfoApi;
         $this->clientApi = $clientApi;
         $this->orderApi = $orderApi;
         $this->productCategoryApi = $productCategoryApi;
@@ -69,13 +69,13 @@ class PagesController extends AbstractController
     public function loginPage(Request $request): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
+        $staffInfo = $this->staffInfoApi->getStaffInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $auth = $this->generateUrl('authorization',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        $name = ($staffInfo) ? $staffInfo->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -143,6 +143,22 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/profilePage', 'profilePage')]
+    public function profilePage(Request $request): Response
+    {
+        $client = $this->clientApi->getClient(1);
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->render('profile/profile.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
+            'imagePath' => "images/" . $client->getPhoto(),
+        ]);
+    }
+
     #[Route('/basketPage', 'basketPage')]
     public function basketPage(): Response
     {
@@ -177,7 +193,7 @@ class PagesController extends AbstractController
             'description' => $product->getDescryption(),
             'name' => $product->getName(),
             'cost' => $product->getCost(),
-            'category' => "Какая то категория",
+            'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
             'imagePath' => "images/" . $product->getPhoto(),
         ]);
     }
@@ -185,7 +201,7 @@ class PagesController extends AbstractController
     #[Route('/register', 'register')]
     public function register(Request $request): Response
     {
-        $this->userApi->registerUser(
+        $this->staffInfoApi->addStaffInfo(
             'Алена',
             'Золотцева',
             (new \DateTimeImmutable()),
@@ -193,6 +209,31 @@ class PagesController extends AbstractController
             '123456Alena',
             'Vecheslavovna',
             '/path',
+            '+71239870010',
+            'reseller'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/update_staff_info')]
+    public function updateStaffInfo(Request $request): Response
+    {
+        $this->staffInfoApi->updateStaffInfo(
+            1,
+            'Алена',
+            'Золотцева',
+            (new \DateTimeImmutable()),
+            'alena123@mail.com',
+            '123456Alena',
+            'Vecheslavovna',
+            '/newpath',
             '+71239870010',
             'reseller'
         );
@@ -241,6 +282,23 @@ class PagesController extends AbstractController
     {
         $this->productCategoryApi->addProductCategory(
             'Продукты'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/update_product_category')]
+    public function updateProductCategory(Request $request): Response
+    {
+        $this->productCategoryApi->updateProductCategory(
+            2,
+            'Овощи'
         );
 
         $response = new Response(
@@ -320,6 +378,27 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_product')]
+    public function updateProduct(Request $request): Response
+    {
+        $this->productApi->updateProduct(
+            2,
+            'картошка',
+            'Это картошка',
+            2,
+            300,
+            'path'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/add_storage')]
     public function addStorage(Request $request): Response
     {
@@ -354,7 +433,7 @@ class PagesController extends AbstractController
     public function addStaffInStorage(Request $request): Response
     {
         $this->staffInStorageApi->addStaffInStorage(
-            $this->userApi->getUserInfo(1)->getId(),
+            $this->staffInfoApi->getStaffInfo(1)->getId(),
             $this->storageApi->getStorage(1)->getId(),
         );
 
@@ -372,7 +451,7 @@ class PagesController extends AbstractController
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $staffInStorage = $this->staffInStorageApi->getStaffInStorage(1);
-        $name = ($staffInStorage) ? $this->userApi->getUserInfo(1)->getFirstName() : 'anonymous';
+        $name = ($staffInStorage) ? $this->staffInfoApi->getStaffInfo(1)->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'name' => $this->generateUrl('basketPage'),
         ]);
@@ -389,6 +468,30 @@ class PagesController extends AbstractController
             '123456Roman',
             'Vecheslavovich',
             '/path',
+            '+71239870010',
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/update_client')]
+    public function updateClient(Request $request): Response
+    {
+        $this->clientApi->updateClient(
+            1,
+            'Роман',
+            'Смирнов',
+            (new \DateTimeImmutable()),
+            'roman123@mail.com',
+            '123456Roman',
+            'Vecheslavovich',
+            '/newPath',
             '+71239870010',
         );
 
@@ -418,6 +521,25 @@ class PagesController extends AbstractController
             1,
             1,
             1
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/update_product_in_storage')]
+    public function updateProductInStorage(Request $request): Response
+    {
+        $this->productInStorageApi->updateProductInStorage(
+            1,
+            1,
+            1,
+            10
         );
 
         $response = new Response(
@@ -459,6 +581,27 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_order')]
+    public function updateOrder(Request $request): Response
+    {
+        $this->orderApi->updateOrder(
+            1,
+            1,
+            100,
+            new \DateTimeImmutable(),
+            0,
+            'newAddress'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/get_order')]
     public function getOrder(): Response
     {
@@ -479,6 +622,28 @@ class PagesController extends AbstractController
             new \DateTimeImmutable(),
             new \DateTimeImmutable(),
             0
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
+    #[Route('/update_product_purchase')]
+    public function updateProductPurchase(Request $request): Response
+    {
+        $this->productPurchaseApi->updateProductPurchase(
+            1,
+            1,
+            1,
+            1,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            1
         );
 
         $response = new Response(

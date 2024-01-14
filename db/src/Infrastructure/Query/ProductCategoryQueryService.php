@@ -17,31 +17,12 @@ class ProductCategoryQueryService extends ServiceEntityRepository implements Pro
         parent::__construct($registry, ORMProductCategory::class);
     }
 
-    public function getProductCategory(int $id): ProductCategory
+    public function getProductCategory(int $id): ?ProductCategory
     {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-          'SELECT s
-          FROM App\Infrastructure\Repositories\Entity\ProductCategory s
-          WHERE s.id = :id'
-        )->setParameters([
-            'id' => $id
-        ]);
-        $ORMProductCategory = $query->getResult();
-
-        if (empty($ORMProductCategory))
-        {
-            throw new QueryException("Product category with id $id not found!", 404);
-        }
-        if (count($ORMProductCategory) > 1)
-        {
-            throw new QueryException("Product category with id $id are not unique!", 500);
-        }
-
-        return $this->hydrateAttempt($ORMProductCategory[0]);
+        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
-    private function hydrateAttempt(ORMProductCategory $ORMProductCategory): ProductCategory
+    private function hydrateAttempt(ORMProductCategory $ORMProductCategory): ?ProductCategory
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ProductCategory::class, [
