@@ -13,4 +13,11 @@ interface ApiProductInStorageInterface
         int $id_storage,
         int $count,
     ): void;
+
+    public function updateProductInStorage(
+        int $id,
+        int $id_product,
+        int $id_storage,
+        int $count,
+    ): void;
 } 

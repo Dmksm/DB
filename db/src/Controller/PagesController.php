@@ -482,6 +482,25 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_product_in_storage')]
+    public function updateProductInStorage(Request $request): Response
+    {
+        $this->productInStorageApi->updateProductInStorage(
+            1,
+            1,
+            1,
+            10
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/get_product_in_storage')]
     public function getProductInStorage(): Response
     {

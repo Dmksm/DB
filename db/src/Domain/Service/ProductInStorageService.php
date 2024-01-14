@@ -25,4 +25,20 @@ class ProductInStorageService
         );
         $this->productInstorageRepository->addProductInStorage($productInstorage);
     }
+
+    public function updateProductInStorage(
+        int      $id,
+        int      $id_product,
+        int      $id_storage,
+        int      $count,
+    ): void
+    {
+        $productInstorage = new ProductInStorage(
+            $id,
+            $id_product,
+            $id_storage,
+            $count,
+        );
+        $this->productInstorageRepository->updateProductInStorage($productInstorage);
+    }
 }
