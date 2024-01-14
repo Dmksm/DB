@@ -2,5 +2,32 @@
 {% block body %}
     <div class="page_content">
         {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="basket-content">
+            <div class="basket-list">
+                <div class="basket-products">
+                    <div class="basket-product">
+                        <div class="basket-product-title">
+                            coffee
+                        </div>
+                        <div class="product-button" onclick="addToBasket()">
+                            {{ component('Button', { message: 'X', type: 'deny'}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="basket-review">
+                <div class="basket-review-total-cost">
+                    Общая стоимость: 1000
+                </div>
+                <div class="basket-review-menu">
+                    <div class="product-button" onclick="addToBasket()">
+                        {{ component('Button', { message: 'Очистить', type: 'deny'}) }}
+                    </div>
+                    <div class="product-button" onclick="addToBasket()">
+                        {{ component('Button', { message: 'Оплатить' }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
