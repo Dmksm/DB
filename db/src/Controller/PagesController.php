@@ -115,6 +115,22 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/profilePage', 'profilePage')]
+    public function profilePage(Request $request): Response
+    {
+        $client = $this->clientApi->getClient(1);
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        
+        return $this->render('profile/profile.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
+            'imagePath' => "images/" . $client->getPhoto(),
+        ]);
+    }
+
     #[Route('/basketPage', 'basketPage')]
     public function basketPage(): Response
     {

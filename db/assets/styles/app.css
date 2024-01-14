@@ -3,6 +3,7 @@
 @import url("sidebar/sidebar.css");
 @import url("general/general.css");
 @import url("product/product.css");
+@import url("profile/profile.css");
 
 body {
     background-color: #252A34;
