@@ -1,24 +1,52 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<div class="profile-page page_content">
-    {{ include('components/sidebar/sidebar.html.twig') }}
-    <div class="profile page_content">
-        <div class="profile-page">
-            <div class="profile-image" >
-                <img src="{{ asset(imagePath) }}" alt="Картинка не загрузилась"/>
+    <script>
+        function changeProfile(url, errorPageUrl) {
+            const data = JSON.stringify({
+                firstName: document.getElementById('profile-firstName').value,
+                lastName: document.getElementById('profile-lastName').value,
+                patronymic: document.getElementById('profile-patronymic').value,
+                birthday: document.getElementById('profile-birthday').value,
+                telephone: document.getElementById('profile-telephone').value,
+                email: document.getElementById('profile-email').value,
+                password: document.getElementById('profile-password').value,
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    window.location.reload();
+                } else {
+                    location.href = errorPageUrl;
+                    console.log(`Error: ${xhr.status}`);
+                }
+            };
+            xhr.send(data);
+        }
+    </script>
+    <div class="profile-page page_content">
+        {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="profile page_content">
+            <div class="profile page_content-row">
+                <div class="profile-page">
+                    <div class="profile-image" >
+                        <img src="{{ asset(userInfo.imagePath) }}" alt="Картинка не загрузилась"/>
+                    </div>
+                    <div class="profile-info-list">
+                        <div class="profile-text">Имя: <input id="profile-firstName" class="profile-text" value="{{ userInfo.firstName }}"/></div>
+                        <div class="profile-text">Фамилия: <input id="profile-lastName" class="profile-text" value="{{ userInfo.lastName }}"/></div>
+                        <div class="profile-text">Отчество: <input id="profile-patronymic" class="profile-text" value="{{ userInfo.patronymic }}"/></div>
+                        <div class="profile-text">Дата рождения: <input id="profile-birthday" class="profile-text" value="{{ userInfo.birthday }}"/></div>
+                        <div class="profile-text">Телефон: <input id="profile-telephone"  class="profile-text" value="{{ userInfo.telephone }}"/></div>
+                        <div class="profile-text">Почта: <input id="profile-email" class="profile-text" value="{{ userInfo.email }}"/></div>
+                        <div class="profile-text">Пароль: <input id="profile-password"  class="profile-text" value="{{ userInfo.password }}"/></div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <div class="profile-text"><h2>first_name</h2></div>
-                <div class="profile-text"><h2>last_name</h2></div>
-                <div class="profile-text"><h2>patronimyc</h2></div>
-                <div class="profile-text"><h2>birthday</h2></div>
-                <div class="profile-text"><h2>telephone</h2></div>
+            <div class="profile-button-container" onclick="changeProfile('{{ updateUserUrl }}', '{{ errorPageUrl }}')">
+                {{ component('Button', { message: 'Изменить'}) }}
             </div>
-        </div>
-        <div class="profile-buttons">
-            <div class="profile-button-container"><button class="profile-button">Изменить</button></div>
-            <div class="profile-button-container"><button class="profile-button">Назад</button></div>
         </div>
     </div>
-</div>
 {% endblock %}

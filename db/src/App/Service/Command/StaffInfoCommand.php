@@ -19,13 +19,9 @@ class StaffInfoCommand
     private string $email;
     #[Assert\NotBlank]
     private string $password;
-    #[Assert\NotBlank]
     private ?string $patronymic;
-    #[Assert\NotBlank]
     private ?string $photo;
-    #[Assert\NotBlank]
     private ?string $telephone;
-    #[Assert\NotBlank]
     private ?string $position;
 
     public function __construct(

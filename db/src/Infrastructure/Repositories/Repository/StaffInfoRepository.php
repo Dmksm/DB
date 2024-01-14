@@ -64,7 +64,7 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
         $client->setPatronymic($newClient->getPatronymic());
         $client->setPhoto($newClient->getPhoto());
         $client->setTelephone($newClient->getTelephone());
-        $client->setPosition($newClient->getPosition());
+        $client->setPosition($newClient->getPosition() ?? '');
         $entityManager->flush();
     }
 

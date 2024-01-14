@@ -11,6 +11,7 @@ use App\Api\ProductPurchase\ApiProductPurchaseInterface as ProductPurchaseApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
+    private const DATE_TIME_FORMAT = 'd/m/Y';
+
     private StaffInfoApi $staffInfoApi;
     private ClientApi $clientApi;
     private OrderApi $orderApi;
@@ -157,16 +160,40 @@ class PagesController extends AbstractController
     #[Route('/profilePage', 'profilePage')]
     public function profilePage(Request $request): Response
     {
-        $client = $this->clientApi->getClient(1);
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
+        $user = $this->clientApi->getClient($id) ?? $this->staffInfoApi->getStaffInfo($id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $updateUser = $this->generateUrl('updateUser',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
 
+        $userView = [
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'birthday' => $user->getBirthday()->format(self::DATE_TIME_FORMAT),
+            'email' => $user->getEmail(),
+            'password' => $user->getPassword(),
+            'patronymic' => $user->getPatronymic(),
+            'imagePath' => "images/" . $user->getPhoto(),
+            'telephone' => $user->getTelephone(),
+            'position' => $user->getPosition()
+        ];
+        
         return $this->render('profile/profile.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
-            'imagePath' => "images/" . $client->getPhoto(),
+            'userInfo' => $userView,
+            'updateUserUrl' => $updateUser,
+            'errorPageUrl' => $errorPageUrl,
         ]);
     }
 
@@ -491,26 +518,47 @@ class PagesController extends AbstractController
         return $response;
     }
 
-    #[Route('/update_client')]
-    public function updateClient(Request $request): Response
+    #[Route('/updateUser', 'updateUser')]
+    public function updateUser(Request $request): Response
     {
-        $this->clientApi->updateClient(
-            1,
-            'Роман',
-            'Смирнов',
-            (new \DateTimeImmutable()),
-            'roman123@mail.com',
-            '123456Roman',
-            'Vecheslavovich',
-            '/newPath',
-            '+71239870010',
-        );
-
         $response = new Response(
             'Ok',
             Response::HTTP_OK,
             ['content-type' => 'text/html']
         );
+
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+            return $this->render('error/error.html.twig', [
+                'loginPage' => $loginPage,
+                'statusCode' => 401,
+            ]);
+        }
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+
+        try
+        {
+            $this->staffInfoApi->updateStaffInfo(
+                $id,
+                $data['firstName'],
+                $data['lastName'],
+                \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
+                $data['email'],
+                $data['password'],
+                $data['patronymic'] ?? null,
+                $data['photo'] ?? null,
+                $data['telephone'] ?? null,
+                $data['position'] ?? null,
+            );
+        }
+        catch (\Throwable $e)
+        {
+            $response->setStatusCode(400);
+        }
 
         return $response;
     }
