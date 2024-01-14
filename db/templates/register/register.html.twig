@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="login_content">
+        <h1 id="welcome_text">Welcome</h1>
+        <form action="" method="post" class="login-form">
+            <div>
+                <input id="login-first_name-value" class="login-input" placeholder="First Name" type="text" name="first_name" required />
+            </div>
+            <div>
+                <input id="login-last_name-value" class="login-input" placeholder="Last Name" type="text" name="last_name" required />
+            </div>
+            <div>
+                <input id="login-birthday-value" class="login-input" placeholder="birthday" type="datetime-local" name="birthday" required />
+            </div>
+            <div>
+                <input id="login-patronymic-value" class="login-input" placeholder="patronymic" type="text" name="patronymic" required />
+            </div>
+            <div>
+                <input id="login-email-value" class="login-input" placeholder="Email" type="email" name="email" required />
+            </div>
+            <div>
+                <input id="login-password-value" class="login-input" placeholder="Password" type="password" name="password" required />
+            </div>
+            <div>
+                <input id="login-photo-value" class="login-input" placeholder="photo" type="file" name="photo" required />
+            </div>
+            <div>
+                <input id="login-telephone-value" class="login-input" placeholder="telephone" type="text" name="telephone" required />
+            </div>
+            <div>
+                <input class="login-submit" type="submit" value="register" onclick="" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

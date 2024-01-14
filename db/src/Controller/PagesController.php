@@ -131,6 +131,13 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/registerPage', 'registerPage')]
+    public function registerPage(Request $request): Response
+    {
+        return $this->render('register/register.html.twig', [
+        ]);
+    }
+
     #[Route('/basketPage', 'basketPage')]
     public function basketPage(): Response
     {
