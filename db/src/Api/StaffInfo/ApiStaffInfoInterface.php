@@ -7,6 +7,7 @@ use App\App\Query\DTO\StaffInfo;
 interface ApiStaffInfoInterface
 {
     public function getStaffInfo(int $id): ?StaffInfo;
+    public function getStaffInfoByEmailAndPassword(string $email,string $password): ?StaffInfo;
 
     public function addStaffInfo(
         string             $firstName,

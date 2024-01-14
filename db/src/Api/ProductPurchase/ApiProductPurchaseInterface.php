@@ -13,7 +13,7 @@ interface ApiProductPurchaseInterface
         int                $id_client,
         int                $id_storage,
         \DateTimeImmutable $order_date,
-        \DateTimeImmutable $delivery_date,
+        ?\DateTimeImmutable $delivery_date,
         int                $status,
     ): void;
 

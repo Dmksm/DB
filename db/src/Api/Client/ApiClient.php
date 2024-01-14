@@ -27,6 +27,13 @@ class ApiClient implements ApiClientInterface
         return $this->clientQueryService->getClient($id);
     }
 
+    
+    public function getClientByEmailAndPassword(string $email, string $password): ?Client
+    {
+        return $this->clientQueryService->getClientByEmailAndPassword($email, $password);
+
+    }
+
     public function addClient(
         string             $firstName,
         string             $lastName,

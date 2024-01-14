@@ -22,6 +22,14 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
+    
+    public function getStaffInfoByEmailAndPassword(string $email,string $password): ?StaffInfo
+    {
+        $staff = $this->findOneBy(['email' => $email,'password' => $password]) ?? null;
+        return $this->hydrateAttempt($staff);
+
+    }
+
     private function hydrateAttempt(?ORMStaffInfo $ORMStaffInfo): ?StaffInfo
     {
         if (empty($ORMStaffInfo)) {
