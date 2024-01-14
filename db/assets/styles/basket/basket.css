@@ -3,8 +3,21 @@
     margin: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     flex-grow: 6;
+}
+
+.success-order-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
+
+.success-order-content-row{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .basket-content {
@@ -40,6 +53,7 @@
 }
 
 .basket-product {
+    margin: 0 0 15px 0;
     display: flex;
     justify-content: space-between;
     padding: 15px 15px 15px 45px;

@@ -128,20 +128,37 @@ class PagesController extends AbstractController
         ]);
     }
 
+    #[Route('/submitOrder', 'submitOrder')]
+    public function submitOrder(Request $request): Response
+    {
+        return new Response();
+    }
+
+    #[Route('/successOrderPage', 'successOrderPage')]
+    public function successOrderPage(): Response
+    {
+        $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->render('basket/success_order.html.twig', [
+            'mainPage' => $mainPageUrl,
+        ]);
+    }
+
     #[Route('/basketPage', 'basketPage')]
     public function basketPage(): Response
     {
-        // TODO: удалить получение пользователя и поправить метод loginPage
-        $user = $this->userApi->getUserInfo(1);
-        $products = $this->productApi->getAllProducts();
-        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($user) ? $user->getFirstName() : 'anonymous';
+        $loginPageUrl = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPageUrl = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $submitOrderUrl = $this->generateUrl('submitOrder',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $successOrderPageUrl = $this->generateUrl('successOrderPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('basket/basket.html.twig', [
-            'loginPage' => $loginPage,
-            'mainPage' => $mainPage,
-            'basketPage' => $basketPage,
+            'loginPage' => $loginPageUrl,
+            'mainPage' => $mainPageUrl,
+            'basketPage' => $basketPageUrl,
+            'submitOrderUrl' => $submitOrderUrl,
+            'successOrderPageUrl' => $successOrderPageUrl,
+            'errorPageUrl' => $errorPageUrl
         ]);
     }
 
