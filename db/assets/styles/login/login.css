@@ -1,0 +1,55 @@
+
+#welcome_text {
+    margin: 0 0 50px 0;
+    color: #D9D9D9;
+
+    font-family: Inter, serif;
+    font-size: 128px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.login_content {
+    margin: 40px 0 40px;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-form {
+    width: 746px;
+    height: 368px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.login-input {
+    font-size: 32px;
+    padding: 0 0 0 15px;
+    width: 746px;
+    height: 76px;
+    background: #D9D9D9;
+}
+
+.login-submit {
+    font-size: 32px;
+    width: 764px;
+    height: 76px;
+    background: #D9D9D9;
+}
+
+.login-input::placeholder {
+    opacity: 0.5;
+    color: #000;
+
+    font-family: Inter, serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}

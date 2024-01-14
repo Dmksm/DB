@@ -19,12 +19,26 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
 
     public function getProduct(int $id): Product
     {
-        return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
+        return $this->hydrateProduct($this->findOneBy(['id' => $id]));
     }
 
     public function getProductsByCategory(int $categoryId): array
     {
-        return $this->findBy(['category_id' => $categoryId]);
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+          'SELECT s
+          FROM App\Infrastructure\Repositories\Entity\Product s
+          WHERE s.category_id = :categoryId'
+        )->setParameters([
+            'categoryId' => $categoryId
+        ]);
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
 
     
@@ -39,16 +53,31 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         )->setParameters([
             'subString' => $subString
         ]);
-        $ORMProduct = $query->getResult();
-
-        return $ORMProduct;
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
     public function getAllProducts(): array
     {
-        return $this->findAll();
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+          'SELECT s
+          FROM App\Infrastructure\Repositories\Entity\Product s'
+        );
+        $ORMProducts = $query->getResult();
+        $products = [];
+        foreach ($ORMProducts as $ORMProduct)
+        {
+            $products[] = $ORMProduct;
+        }
+        return $products;
     }
 
-    private function hydrateAttempt(ORMProduct $ORMProduct): Product
+    private function hydrateProduct(ORMProduct $ORMProduct): Product
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(Product::class, [

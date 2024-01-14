@@ -11,6 +11,7 @@ use App\Api\ProductPurchase\ApiProductPurchaseInterface as ProductPurchaseApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +30,7 @@ class PagesController extends AbstractController
     private ProductInStorageApi $productInStorageApi;
     private StaffInStorageApi $staffInStorageApi;
     public function __construct(
-        StaffInfoApi $staffInfoApi, 
+        StaffInfoApi $staffInfoApi,
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         ProductPurchaseApi $productPurchaseApi,
@@ -38,6 +39,7 @@ class PagesController extends AbstractController
         StaffInStorageApi $staffInStorageApi,
         ClientApi $clientApi,
         OrderApi $orderApi,
+        private readonly LoggerInterface $logger
         )
     {
         $this->staffInfoApi = $staffInfoApi;
@@ -52,52 +54,64 @@ class PagesController extends AbstractController
     }
 
     #[Route('/loginPage', 'loginPage')]
-    public function loginPage(): Response
+    #[Route('/')]
+    public function loginPage(Request $request): Response
     {
         // TODO: удалить получение пользователя и поправить метод loginPage
         $staffInfo = $this->staffInfoApi->getStaffInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $auth = $this->generateUrl('authorization',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($staffInfo) ? $staffInfo->getFirstName() : 'anonymous';
-        return $this->render('mockPages/loginPage.html.twig', [
+        return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
+            'authorizationUrl' => $auth,
         ]);
+    }
+
+    #[Route('/auth', 'authorization')]
+    public function auth(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+        $email = $data['email'];
+        $password = $data['password'];
+        $response = new Response(
+            json_encode(['id' => '1'])
+        );
+        return $response;
     }
 
     #[Route('/mainPage', 'mainPage')]
-    public function mainPage(): Response
+    public function mainPage(Request $request): Response
     {
-        // TODO: удалить получение пользователя и поправить метод loginPage
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        return $this->render('mockPages/mainPage.html.twig', [
+        $text = $request->query->get('searchText');
+        $this->logger->alert("text $text " . $request->getContent());
+        $products = (empty($text)) ?  $this->productApi->getAllProducts() :
+            $this->productApi->getProductsByIncludingString($text);
+        $productsView = [];
+        foreach ($products as $product)
+        {
+            $productsView[] = [
+                'name' => $product->getName(),
+                'image' => "images/" . $product->getPhoto(),
+                'cost' => $product->getCost(),
+                'link' => $this->generateUrl('productPage',['id' => $product->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+            ];
+        }
+        return $this->render('general/general.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
-        ]);
-    }
-
-    #[Route('/productPage', 'productPage')]
-    public function productPage(): Response
-    {
-        // TODO: удалить получение пользователя и поправить метод loginPage
-        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        return $this->render('mockPages/productPage.html.twig', [
-            'loginPage' => $loginPage,
-            'mainPage' => $mainPage,
-            'productPage' => $productPage,
-            'basketPage' => $basketPage,
+            'products' => $productsView,
         ]);
     }
 
@@ -107,17 +121,35 @@ class PagesController extends AbstractController
         // TODO: удалить получение пользователя и поправить метод loginPage
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $productPage = $this->generateUrl('productPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        return $this->render('mockPages/basketPage.html.twig', [
+        return $this->render('basket/basket.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
-            'productPage' => $productPage,
             'basketPage' => $basketPage,
         ]);
     }
 
-    #[Route('/register')]
+    #[Route('/product/{id}', 'productPage')]
+    public function productPage(int $id): Response
+    {
+        //TODO: передать категорию продукта
+        $product = $this->productApi->getProduct($id);
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->render('product/product.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
+            'description' => $product->getDescryption(),
+            'name' => $product->getName(),
+            'cost' => $product->getCost(),
+            'category' => "Какая то категория",
+            'imagePath' => "images/" . $product->getPhoto(),
+        ]);
+    }
+
+    #[Route('/register', 'register')]
     public function register(Request $request): Response
     {
         $this->staffInfoApi->addStaffInfo(
@@ -166,13 +198,14 @@ class PagesController extends AbstractController
         return $response;
     }
 
+
     #[Route('/get_product_category')]
     public function getProductCategory(): Response
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $productCategory = $this->productCategoryApi->getProductCategory(1);
         $name = ($productCategory) ? $productCategory->getname() : 'anonymous';
-        return $this->render('authorization/login.html.twig', [
+        return $this->render('product/product.html.twig', [
             'name' => $name,
         ]);
     }
@@ -181,16 +214,16 @@ class PagesController extends AbstractController
     public function getAllProducts(): Response
     {
         $products = $this->productApi->getAllProducts();
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('product/get_all_products.html.twig', [
             'products' => $products,
         ]);
     }
 
-    #[Route('/get_all_products_count', name:'get_all_products_count')]
+    #[Route('/get_all_products_count', 'get_all_products_count')]
     public function getAllProductsCount(): Response
     {
         $products = $this->productApi->getAllProducts();
-        return $this->render('Product/get_all_products_count.html.twig', [
+        return $this->render('product/get_all_products_count.html.twig', [
             'productsCount' => count($products),
         ]);
     }
@@ -239,7 +272,7 @@ class PagesController extends AbstractController
         $category = $this->productCategoryApi->getProductCategory($product->getCategory())->getName();
         $cost = $product->getCost();
         $photo = $product->getPhoto();
-        return $this->render('Product/login.html.twig', [
+        return $this->render('product/product.html.twig', [
             'id' => $id,
             'name' => $name,
             'descryption' => $descryption, 
@@ -254,18 +287,25 @@ class PagesController extends AbstractController
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
         $products = $this->productApi->getProductsByCategory(1);
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('product/get_all_products.html.twig', [
             'products' => $products,
         ]);
     }
 
-    #[Route('/get_products_by_including_string')]
-    public function getProductsByIncludingString(): Response
+    #[Route('/search', 'search')]
+    public function getProductsByIncludingString(Request $request): Response
     {
-        //TODO: удалить получение пользователя и поправить метод loginPage
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $search = $this->generateUrl('search',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $products = $this->productApi->getProductsByIncludingString('ан');
-        return $this->render('Product/get_all_products.html.twig', [
+        return $this->render('general/general.html.twig', [
+            'loginPage' => $loginPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
             'products' => $products,
+            'search' =>  ''
         ]);
     }
 
@@ -314,10 +354,11 @@ class PagesController extends AbstractController
         $storage = $this->storageApi->getStorage(1);
         $name = ($storage) ? $storage->getCity() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
+            'homePageLink' => $this->generateUrl(''),
             'name' => $name,
         ]);
-    } 
-    
+    }
+
     #[Route('/add_staff_in_storage')]
     public function addStaffInStorage(Request $request): Response
     {
@@ -345,7 +386,7 @@ class PagesController extends AbstractController
             'name' => $this->generateUrl('basketPage'),
         ]);
     }
-    
+
     #[Route('/add_client')]
     public function addClient(Request $request): Response
     {
@@ -368,7 +409,7 @@ class PagesController extends AbstractController
 
         return $response;
     }
-    
+
     #[Route('/update_client')]
     public function updateClient(Request $request): Response
     {
@@ -402,7 +443,7 @@ class PagesController extends AbstractController
             'name' => $client->getFirstName(),
         ]);
     }
-    
+
     #[Route('/add_product_in_storage')]
     public function addProductInStorage(Request $request): Response
     {
@@ -430,7 +471,7 @@ class PagesController extends AbstractController
             'name' => $this->storageApi->getStorage($productInStorageApi->getIdProduct())->getCity(),
         ]);
     }
-    
+
     #[Route('/add_order')]
     public function addOrder(Request $request): Response
     {
@@ -450,7 +491,7 @@ class PagesController extends AbstractController
 
         return $response;
     }
-    
+
     #[Route('/update_order')]
     public function updateOrder(Request $request): Response
     {
@@ -481,7 +522,7 @@ class PagesController extends AbstractController
             'name' => $order->getAddress(),
         ]);
     }
-    
+
     #[Route('/add_product_purchase')]
     public function addProductPurchase(Request $request): Response
     {

@@ -1,0 +1,12 @@
+.general_content {
+    padding: 45px 0 0 130px;
+    display: flex;
+    flex-direction: column;
+}
+
+.general_products {
+    padding: 0 30px 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}

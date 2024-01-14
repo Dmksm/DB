@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="page_content">
+        {{ include('components/sidebar/sidebar.html.twig') }}
+        <div class="product_content">
+            <div class="product-review">
+                <img class="product-image" src="{{ asset(imagePath) }}" alt="Картинка не загрузилась"/>
+                <div class="product-features"><h2>Характеристики</h2><br/>Наименование {{ name }}<br/>Стоимость {{ cost }}<br/>Категория {{ category }}</div>
+            </div>
+            <div class="product-description"><h2>Описание</h2>{{ description }}</div>
+        </div>
+        <div class="product-button">
+            {{ component('Button', { message: 'Добавить' }) }}
+        </div>
+    </div>
+{% endblock %}
