@@ -6,13 +6,13 @@
 <div class="sidebar">
     <div class="widget-form">
         <div>
-            <input class="widget" type="submit" value="general" onclick="redirectToUrl('mainPage')"/>
+            <input class="widget" type="submit" value="login" onclick="redirectToUrl('{{ absolute_url(path('loginPage')) }}')"/>
         </div>
         <div>
-            <input class="widget" type="submit" value="login" onclick="redirectToUrl('loginPage')"/>
+            <input class="widget" type="submit" value="general" onclick="redirectToUrl('{{ absolute_url(path('mainPage')) }}')"/>
         </div>
         <div>
-            <input class="widget" type="submit" value="basket" onclick="redirectToUrl('basketPage')"/>
+            <input class="widget" type="submit" value="basket" onclick="redirectToUrl('{{ absolute_url(path('basketPage')) }}')"/>
         </div>
     </div>
 </div>

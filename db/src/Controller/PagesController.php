@@ -133,10 +133,10 @@ class PagesController extends AbstractController
     }
 
     #[Route('/product/{id}', 'productPage')]
-    public function productPage(int $id): Response
+    public function productPage(Request $request): Response
     {
-        //TODO: передать категорию продукта
-        $product = $this->productApi->getProduct($id);
+        $id = $request->attributes->get('id');
+        $product = $this->productApi->getProduct((int)$id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
