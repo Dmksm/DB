@@ -132,7 +132,6 @@ class PagesController extends AbstractController
     #[Route('/product/{id}', 'productPage')]
     public function productPage(int $id): Response
     {
-        //TODO: передать категорию продукта
         $product = $this->productApi->getProduct($id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -144,7 +143,7 @@ class PagesController extends AbstractController
             'description' => $product->getDescryption(),
             'name' => $product->getName(),
             'cost' => $product->getCost(),
-            'category' => "Какая то категория",
+            'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
             'imagePath' => "images/" . $product->getPhoto(),
         ]);
     }
