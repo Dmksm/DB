@@ -8,4 +8,5 @@ interface ProductRepositoryInterface
 {
     public function getNextId(): int;
     public function addProduct(Product $product): void;
+    public function updateProduct(Product $product): void;
 }

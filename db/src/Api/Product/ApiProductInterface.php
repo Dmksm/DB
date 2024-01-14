@@ -20,5 +20,14 @@ interface ApiProductInterface
         string|null $photo = null
     ): void;
 
+    public function updateProduct(
+        int $id,
+        string $name,
+        string $descryption,
+        int $category,
+        int $cost,
+        string|null $photo = null
+    ): void;
+
     public function getAllProducts(): array;
 } 

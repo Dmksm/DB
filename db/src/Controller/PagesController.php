@@ -329,6 +329,27 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_product')]
+    public function updateProduct(Request $request): Response
+    {
+        $this->productApi->updateProduct(
+            2,
+            'картошка',
+            'Это картошка',
+            2,
+            300,
+            'path'
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/add_storage')]
     public function addStorage(Request $request): Response
     {

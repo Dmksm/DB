@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
-use App\Domain\Entity\Product;
+use App\Domain\Entity\Product as DomainProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Infrastructure\Repositories\Entity\Product as ORMProduct;
 use App\Domain\Service\ProductRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
 /**
- * @extends ServiceEntityRepository<Product>
+ * @extends ServiceEntityRepository<ORMProduct>
  *
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
@@ -34,7 +34,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         return $query->getResult()[0][1] + 1;
     }
 
-    public function addProduct(Product $product): void
+    public function addProduct(DomainProduct $product): void
     {
         $entityManager = $this->getEntityManager();
 
@@ -42,7 +42,28 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         $entityManager->flush();
     }
 
-    private function hydrateProduct(Product $product): ORMProduct
+    public function updateProduct(DomainProduct $newProduct): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        //$product = $entityManager->getRepository(Product::class)->find($id);
+        $product = $this->find($newProduct->getId());
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newProduct->getId()
+            );
+        }
+
+        $product->setName($newProduct->getName());
+        $product->setDescryption($newProduct->getDescryption());
+        $product->setCategory($newProduct->getCategory());
+        $product->setCost($newProduct->getCost());
+        $product->setPhoto($newProduct->getPhoto());
+        $entityManager->flush();
+    }
+
+    private function hydrateProduct(DomainProduct $product): ORMProduct
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMProduct::class, [
