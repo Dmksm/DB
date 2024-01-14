@@ -31,4 +31,26 @@ class ProductPurchaseService
         );
         $this->productPurchaseRepository->add($productPurchase);
     }
+
+    public function updateProductPurchase(
+        int                $id,
+        int                $id_product,
+        int                $id_order,
+        int                $id_storage,
+        \DateTimeImmutable $order_date,
+        \DateTimeImmutable $delivery_date,
+        int                $status,
+    ): void
+    {
+        $productPurchase = new ProductPurchase(
+            $id,
+            $id_product,
+            $id_order,
+            $id_storage,
+            $order_date,
+            $delivery_date,
+            $status,
+        );
+        $this->productPurchaseRepository->update($productPurchase);
+    }
 }

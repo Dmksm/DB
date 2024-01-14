@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
 
-use App\Domain\Entity\ProductPurchase;
+use App\Domain\Entity\ProductPurchase as DomainProductPurchase;
 use App\Infrastructure\Repositories\Entity\ProductPurchase as ORMProductPurchase;
 use App\Domain\Service\ProductPurchaseRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -11,7 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ProductPurchase>
+ * @extends ServiceEntityRepository<ORMProductPurchase>
  *
  * @method ProductPurchase|null find($id, $lockMode = null, $lockVersion = null)
  * @method ProductPurchase|null findOneBy(array $criteria, array $ProductPurchaseBy = null)
@@ -36,7 +36,7 @@ class ProductPurchaseRepository extends ServiceEntityRepository implements Produ
         return $query->getResult()[0][1] + 1;
     }
 
-    public function add(ProductPurchase $productPurchase): void
+    public function add(DomainProductPurchase $productPurchase): void
     {
         $entityManager = $this->getEntityManager();
         
@@ -44,7 +44,29 @@ class ProductPurchaseRepository extends ServiceEntityRepository implements Produ
         $entityManager->flush();
     }
 
-    private function hydrateProductPurchase(ProductPurchase $productPurchase): ORMProductPurchase
+    public function update(DomainProductPurchase $newProductPurchase): void
+    {
+        $entityManager = $this->getEntityManager();
+        
+        //$product = $entityManager->getRepository(Product::class)->find($id);
+        $ProductPurchase = $this->find($newProductPurchase->getId());
+
+        if (!$ProductPurchase) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$newProductPurchase->getId()
+            );
+        }
+
+        $ProductPurchase->setIdProduct($newProductPurchase->getIdProduct());
+        $ProductPurchase->setIdOrder($newProductPurchase->getIdOrder());
+        $ProductPurchase->setIdStorage($newProductPurchase->getIdStorage());
+        $ProductPurchase->setOrderDate($newProductPurchase->getOrderDate());
+        $ProductPurchase->setDeliveryDate($newProductPurchase->getDeliveryDate());
+        $ProductPurchase->setStatus($newProductPurchase->getStatus());
+        $entityManager->flush();
+    }
+
+    private function hydrateProductPurchase(DomainProductPurchase $productPurchase): ORMProductPurchase
     {
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ORMProductPurchase::class, [

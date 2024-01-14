@@ -583,6 +583,28 @@ class PagesController extends AbstractController
         return $response;
     }
 
+    #[Route('/update_product_purchase')]
+    public function updateProductPurchase(Request $request): Response
+    {
+        $this->productPurchaseApi->updateProductPurchase(
+            1,
+            1,
+            1,
+            1,
+            new \DateTimeImmutable(),
+            new \DateTimeImmutable(),
+            1
+        );
+
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        return $response;
+    }
+
     #[Route('/get_product_purchase')]
     public function getProductPurchase(): Response
     {

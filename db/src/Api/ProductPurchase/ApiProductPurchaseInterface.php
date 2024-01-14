@@ -16,4 +16,14 @@ interface ApiProductPurchaseInterface
         \DateTimeImmutable $delivery_date,
         int                $status,
     ): void;
+
+    public function updateProductPurchase(
+        int                $id,
+        int                $id_product,
+        int                $id_client,
+        int                $id_storage,
+        \DateTimeImmutable $order_date,
+        \DateTimeImmutable $delivery_date,
+        int                $status,
+    ): void;
 }
