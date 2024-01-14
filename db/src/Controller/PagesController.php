@@ -53,6 +53,17 @@ class PagesController extends AbstractController
         $this->staffInStorageApi = $staffInStorageApi;
     }
 
+    #[Route('/errorPage/{statusCode}', 'errorPage')]
+    public function errorPage(Request $request): Response
+    {
+        $statusCode = $request->attributes->get('statusCode');
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->render('error/error.html.twig', [
+            'loginPage' => $loginPage,
+            'statusCode' => $statusCode,
+        ]);
+    }
+
     #[Route('/loginPage', 'loginPage')]
     #[Route('/')]
     public function loginPage(Request $request): Response
@@ -63,12 +74,14 @@ class PagesController extends AbstractController
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $auth = $this->generateUrl('authorization',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
         $name = ($user) ? $user->getFirstName() : 'anonymous';
         return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
             'authorizationUrl' => $auth,
+            'errorPageUrl' => $errorPageUrl,
         ]);
     }
 

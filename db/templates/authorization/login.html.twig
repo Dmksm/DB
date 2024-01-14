@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <script>
-        function login(url, authUrl) {
+        function login(url, authUrl, errorPageUrl) {
             const data = JSON.stringify({
                 email: document.getElementById('login-email-value').value,
                 password: document.getElementById('login-password-value').value,
@@ -15,6 +15,7 @@
                     localStorage['id'] = xhr.response['id'] || "1";
                     console.log( xhr.response['id']);
                 } else {
+                    location.href = errorPageUrl;
                     console.log(`Error: ${xhr.status}`);
                 }
             };
@@ -31,7 +32,7 @@
                 <input id="login-password-value" class="login-input" placeholder="Password" type="password" name="password" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="Log in" onclick="login('{{ mainPage }}', '{{ authorizationUrl }}')" />
+                <input class="login-submit" type="submit" value="Log in" onclick="login('{{ mainPage }}', '{{ authorizationUrl }}', '{{ errorPageUrl }}')"/>
             </div>
         </form>
     </div>
