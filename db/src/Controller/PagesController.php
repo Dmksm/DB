@@ -616,8 +616,8 @@ class PagesController extends AbstractController
     public function addClient(Request $request): Response
     {
         $this->clientApi->addClient(
-            'Роман',
-            'Смирнов',
+            'Роман1',
+            'Смирнов1',
             (new \DateTimeImmutable()),
             'roman123@mail.com',
             '123456Roman',
@@ -668,9 +668,9 @@ class PagesController extends AbstractController
     public function getClient(): Response
     {
         //TODO: удалить получение пользователя и поправить метод loginPage
-        $client = $this->clientApi->getClient(1);
-        return $this->render('authorization/login.html.twig', [
-            'name' => $client->getFirstName(),
+        $client = $this->clientApi->getClient(3);
+        return $this->render('Product/get_all_products_count.html.twig', [
+            'productsCount' => $client->getPassword(),
         ]);
     }
 

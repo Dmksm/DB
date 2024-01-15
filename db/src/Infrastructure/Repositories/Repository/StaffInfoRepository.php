@@ -8,6 +8,7 @@ use App\Domain\Service\StaffInfoRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Infrastructure\DopClasses\Encrypt;
 
 /**
  * @extends ServiceEntityRepository<ORMStaffInfo>
@@ -43,28 +44,28 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
         $entityManager->flush();
     }
 
-    public function update(DomainStaffInfo $newClient): void
+    public function update(DomainStaffInfo $newStaff): void
     {
         $entityManager = $this->getEntityManager();
         
         //$product = $entityManager->getRepository(Product::class)->find($id);
-        $client = $this->find($newClient->getId());
+        $staff = $this->find($newStaff->getId());
 
-        if (!$client) {
+        if (!$staff) {
             throw $this->createNotFoundException(
-                'No product found for id '.$newClient->getId()
+                'No product found for id '.$newStaff->getId()
             );
         }
 
-        $client->setFirstName($newClient->getFirstName());
-        $client->setLastName($newClient->getLastName());
-        $client->setBirthday($newClient->getBirthday());
-        $client->setEmail($newClient->getEmail());
-        $client->setPassword($newClient->getPassword());
-        $client->setPatronymic($newClient->getPatronymic());
-        $client->setPhoto($newClient->getPhoto());
-        $client->setTelephone($newClient->getTelephone());
-        $client->setPosition($newClient->getPosition());
+        $staff->setFirstName($newStaff->getFirstName());
+        $staff->setLastName($newStaff->getLastName());
+        $staff->setBirthday($newStaff->getBirthday());
+        $staff->setEmail($newStaff->getEmail());
+        $staff->setPassword((new Encrypt())->encrypt_decrypt('encrypt', $newStaff->getPassword()));
+        $staff->setPatronymic($newStaff->getPatronymic());
+        $staff->setPhoto($newStaff->getPhoto());
+        $staff->setTelephone($newStaff->getTelephone());
+        $staff->setPosition($newStaff->getPosition());
         $entityManager->flush();
     }
 
@@ -77,7 +78,7 @@ class StaffInfoRepository extends ServiceEntityRepository implements StaffInfoRe
             'last_name' => $staffInfo->getLastName(),
             'birthday' => $staffInfo->getBirthday(),
             'email' => $staffInfo->getEmail(),
-            'password' => $staffInfo->getPassword(),
+            'password' => (new Encrypt())->encrypt_decrypt('encrypt', $staffInfo->getPassword()),
             'patronymic' => $staffInfo->getPatronymic(),
             'photo' => $staffInfo->getPhoto(),
             'telephone' => $staffInfo->getTelephone(),
