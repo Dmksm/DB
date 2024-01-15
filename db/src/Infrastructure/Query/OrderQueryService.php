@@ -22,6 +22,11 @@ class OrderQueryService extends ServiceEntityRepository implements OrderQuerySer
         return $this->hydrateAttempt($this->findOneBy(['id' => $id]));
     }
 
+    public function getAllOrders(): array
+    {
+        return $this->findAll();
+    }
+
     private function hydrateAttempt(ORMOrder $ORMOrder): ?Order
     {
         $hydrator = new Hydrator();

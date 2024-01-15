@@ -7,6 +7,7 @@ use App\App\Query\DTO\Order;
 interface ApiOrderInterface
 {
     public function getOrder(int $id): ?Order;
+    public function getAllOrders(): array;
 
     public function addOrder(
         int                $id_client,
