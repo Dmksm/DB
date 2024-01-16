@@ -4,8 +4,8 @@ namespace App\Common;
 
 enum CategoryType: int
 {
-    case Products = 0;
-    case Fruits = 1;
+    case Products = 1;
+    case Fruits = 2;
 
     static function toCategoryTypeName(self $categoryType): string
     {

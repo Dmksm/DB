@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
-
+    private const IMAGES_FOLDER = "images/";
     private const DATE_TIME_FORMAT = 'Y-m-d';
 
     private StaffInfoApi $staffInfoApi;
@@ -157,7 +157,7 @@ class PagesController extends AbstractController
         {
             $productsView[] = [
                 'name' => $product->getName(),
-                'image' => "images/" . $product->getPhoto(),
+                'image' => self::IMAGES_FOLDER . $product->getPhoto(),
                 'cost' => $product->getCost(),
                 'link' => $this->generateUrl('productPage',['id' => $product->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
             ];
@@ -353,7 +353,7 @@ class PagesController extends AbstractController
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
             'patronymic' => $user->getPatronymic(),
-            'imagePath' => "images/" . $user->getPhoto(),
+            'imagePath' => self::IMAGES_FOLDER . $user->getPhoto(),
             'telephone' => $user->getTelephone(),
             'position' => ($isAdmin) ? $user->getPosition() : "",
         ];
@@ -473,7 +473,7 @@ class PagesController extends AbstractController
             'name' => $product->getName(),
             'cost' => $product->getCost(),
             'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
-            'imagePath' => "images/" . $product->getPhoto(),
+            'imagePath' => self::IMAGES_FOLDER . $product->getPhoto(),
             'isAdmin' => $isAdmin,
             'updateProductUrl' => $updateProductUrl
         ]);
@@ -507,13 +507,14 @@ class PagesController extends AbstractController
         {
             return $this->redirectToErrorPage(403);
         }
+        $this->logger->alert("category " . CategoryType::fromCategoryTypeName($data['category'])->value);
         $this->productApi->updateProduct(
             (int)$data['id'],
             $data['name'],
             $data['description'],
             CategoryType::fromCategoryTypeName($data['category'])->value,
             (int)$data['cost'],
-            $data['photo'],
+            str_replace(self::IMAGES_FOLDER, "", $data['photo']),
         );
 
         return $response;
