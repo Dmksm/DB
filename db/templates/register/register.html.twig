@@ -1,24 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <script>
-
-    function validateEmail(email)
-    {
+    function validateEmail(email) {
         var re = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
-        var valid = re.test(email);
-        return valid;
+        return re.test(email);
     }
 
-    function validateTelephone(telephone)
-    {
-        var re = /^[\d\+][\d\(\)\-]{4,14}\d$/;
-        var valid = re.test(telephone);
-        return valid;
-        
+    function validateTelephone(telephone) {
+        var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+        return re.test(telephone);
     }
     function register(url, registerUrl) {
-
-        const validate = true;
+        let validate = true;
 
         const firstName = document.getElementById('login-first_name-value');
         const lastName = document.getElementById('login-last_name-value');
@@ -77,9 +70,11 @@
         {
             password.classList.remove("red-border");
         }
-        console.log(document.getElementById('login-photo-value').value);
         console.log(validate);
-        if(!validate) return;
+        if (!validate) {
+            alert('Неверные поля');
+            return;
+        }
 
         const data = JSON.stringify({
             email: document.getElementById('login-email-value').value,
@@ -95,21 +90,19 @@
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         xhr.onload = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                location.href = url;
+                alert('Создание успешно');
             } else {
                 alert('Создание не удалось');
             }
         };
         xhr.send(data);
-
-        
     }
     function redirectToUrl(url) {
         location.href = url;
     }
 </script>
     <div class="login_content">
-        <form action="" method="post" class="login-form">
+        <div class="login-form">
             <div>
                 <input id="login-first_name-value" class="login-input" placeholder="First Name" type="text" name="first_name" required />
             </div>
@@ -137,6 +130,6 @@
             <div>
                 <input class="login-register" type="submit" value="Back" onclick="redirectToUrl('{{ loginPage }}')"/>
             </div>
-        </form>
+        </div>
     </div>
 {% endblock %}

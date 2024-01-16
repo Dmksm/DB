@@ -1,25 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <script>
-
-        function validateEmail(email)
-        {
+        function validateEmail(email) {
             var re = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
-            var valid = re.test(email);
-            return valid;
+            return re.test(email);
         }
 
-        function validateTelephone(telephone)
-        {
-            var re = /^[\d\+][\d\(\)\-]{4,14}\d$/;
-            var valid = re.test(telephone);
-            return valid;
-            
+        function validateTelephone(telephone) {
+            var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+            return re.test(telephone);
         }
 
         function changeProfile(url, errorPageUrl) {
-
-            const validate = true;
+            let validate = true;
 
             const firstName = document.getElementById('profile-firstName');
             const lastName = document.getElementById('profile-lastName');
@@ -79,7 +72,10 @@
                 password.classList.remove("red-border");
             }
 
-            if(!validate) return;
+            if (!validate) {
+                alert('Неверные поля');
+                return;
+            }
 
             const data = JSON.stringify({
                 firstName: document.getElementById('profile-firstName').value,
@@ -95,7 +91,7 @@
             xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
             xhr.onload = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    window.location.reload();
+                    alert('Успешно');
                 } else {
                     alert('Изменение не удалось');
                     console.log(`Error: ${xhr.status}`);
