@@ -24,9 +24,11 @@
         };
         xhr.send(data);
     }
+    function redirectToUrl(url) {
+        location.href = url;
+    }
 </script>
     <div class="login_content">
-        <h1 id="welcome_text">Welcome</h1>
         <form action="" method="post" class="login-form">
             <div>
                 <input id="login-first_name-value" class="login-input" placeholder="First Name" type="text" name="first_name" required />
@@ -53,7 +55,10 @@
                 <input id="login-telephone-value" class="login-input" placeholder="telephone" type="text" name="telephone" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="register" onclick="register('{{ loginPage }}', '{{ registerUrl }}')"/>
+                <input class="login-submit" type="submit" value="send" onclick="register('{{ loginPage }}', '{{ registerUrl }}')"/>
+            </div>
+            <div>
+                <input class="login-register" type="submit" value="Back" onclick="redirectToUrl('{{ loginPage }}')"/>
             </div>
         </form>
     </div>

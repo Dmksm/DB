@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <script>
+        function redirectToUrl(url) {
+            location.href = url;
+        }
         function login(url, authUrl, errorPageUrl) {
             const data = JSON.stringify({
                 email: document.getElementById('login-email-value').value,
@@ -12,11 +15,8 @@
             xhr.onload = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     location.href = url;
-                    localStorage['id'] = xhr.response['id'] || "1";
-                    console.log( xhr.response['id']);
                 } else {
                     location.href = errorPageUrl;
-                    console.log(`Error: ${xhr.status}`);
                 }
             };
             xhr.send(data);
@@ -35,5 +35,7 @@
                 <input class="login-submit" type="submit" value="Log in" onclick="login('{{ mainPage }}', '{{ authorizationUrl }}', '{{ errorPageUrl }}')"/>
             </div>
         </form>
+
+        <input class="login-register" type="submit" value="Register" onclick="redirectToUrl('{{ registerPage }}')"/>
     </div>
 {% endblock %}

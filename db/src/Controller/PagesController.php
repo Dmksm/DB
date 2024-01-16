@@ -77,13 +77,14 @@ class PagesController extends AbstractController
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $auth = $this->generateUrl('authorization',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
-
+        $registerPageUrl = $this->generateUrl('registerPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
             'authorizationUrl' => $auth,
             'errorPageUrl' => $errorPageUrl,
+            'registerPage' => $registerPageUrl
         ]);
     }
 
@@ -105,7 +106,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($client->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', 'false', $expire);
+            $cookie = new Cookie('admin', strval(0), $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -118,7 +119,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($admin->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', 'true', $expire);
+            $cookie = new Cookie('admin', strval(1), $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -228,7 +229,10 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = (bool)($isAdmin);
-        $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        if (!$isAdmin)
+        {
+            return $this->redirectToErrorPage(404);
+        }
         $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
         $updateOrderUrl = $this->generateUrl('updateOrder', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $orders = $this->orderApi->getAllOrders();
@@ -418,6 +422,10 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = (bool)($isAdmin);
+        if ($isAdmin)
+        {
+            return $this->redirectToErrorPage(404);
+        }
         $loginPageUrl = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPageUrl = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -464,23 +472,6 @@ class PagesController extends AbstractController
             'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
             'imagePath' => "images/" . $product->getPhoto(),
             'isAdmin' => $isAdmin
-        ]);
-    }
-
-    #[Route('/search', 'search')]
-    public function getProductsByIncludingString(Request $request): Response
-    {
-        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $search = $this->generateUrl('search',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $products = $this->productApi->getProductsByIncludingString('ан');
-        return $this->render('general/general.html.twig', [
-            'loginPage' => $loginPage,
-            'mainPage' => $mainPage,
-            'basketPage' => $basketPage,
-            'products' => $products,
-            'search' =>  ''
         ]);
     }
 
