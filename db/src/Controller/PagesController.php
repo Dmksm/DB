@@ -8,11 +8,8 @@ use App\Api\Order\ApiOrderInterface as OrderApi;
 use App\Api\Product\ApiProductCategoryInterface as ProductCategoryApi;
 use App\Api\Product\ApiProductInterface as ProductApi;
 use App\Api\ProductPurchase\ApiProductPurchaseInterface as ProductPurchaseApi;
-use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
-use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
 use App\Common\CategoryType;
-use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,17 +30,13 @@ class PagesController extends AbstractController
     private ProductCategoryApi $productCategoryApi;
     private ProductApi $productApi;
     private ProductPurchaseApi $productPurchaseApi;
-    private StorageApi $storageApi;
     private ProductInStorageApi $productInStorageApi;
-    private StaffInStorageApi $staffInStorageApi;
     public function __construct(
         StaffInfoApi $staffInfoApi,
         ProductCategoryApi $productCategoryApi,
         ProductApi $productApi,
         ProductPurchaseApi $productPurchaseApi,
-        StorageApi $storageApi,
         ProductInStorageApi $productInStorageApi,
-        StaffInStorageApi $staffInStorageApi,
         ClientApi $clientApi,
         OrderApi $orderApi,
         private readonly LoggerInterface $logger
@@ -55,9 +48,7 @@ class PagesController extends AbstractController
         $this->productCategoryApi = $productCategoryApi;
         $this->productApi = $productApi;
         $this->productPurchaseApi = $productPurchaseApi;
-        $this->storageApi = $storageApi;
         $this->productInStorageApi = $productInStorageApi;
-        $this->staffInStorageApi = $staffInStorageApi;
     }
 
     #[Route('/errorPage/{statusCode}', 'errorPage')]
