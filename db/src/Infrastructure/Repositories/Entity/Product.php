@@ -18,7 +18,7 @@ class Product
     private string $name;
 
     #[ORM\Column(length: 255)]
-    private string $descryption;
+    private string $description;
 
     #[ORM\Column]
     private int $category_id;
@@ -46,14 +46,14 @@ class Product
         return $this;
     }
 
-    public function getDescryption(): string
+    public function getdescription(): string
     {
-        return $this->descryption;
+        return $this->description;
     }
 
-    public function setDescryption(string $descryption): static
+    public function setdescription(string $description): static
     {
-        $this->descryption = $descryption;
+        $this->description = $description;
 
         return $this;
     }

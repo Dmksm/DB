@@ -19,8 +19,7 @@
             }
             if (isNeedAddNewProduct) {
                 let data = {
-                    'link': 1,
-                    'id': {{ id }},
+                    'id': {{ productId }},
                     'name': '{{ name }}',
                     'cost': '{{ cost }}',
                     'category': '{{ category }}',
@@ -32,20 +31,66 @@
             localStorage.setItem('product',  JSON.stringify(parsedData));
             window.location.reload();
         }
+        function changeProduct(url, id) {
+            const data = JSON.stringify({
+                id: id,
+                name: document.getElementById('product-name').value,
+                cost: document.getElementById('product-cost').value,
+                category: document.getElementById('product-category').value,
+                description: document.getElementById('product-description').value,
+                photo: document.getElementById('product-image').getAttribute("src"),
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    window.location.reload();
+                } else {
+                    alert('Изменение не удалось');
+                    console.log(`Error: ${xhr.status}`);
+                }
+            };
+            xhr.send(data);
+        }
     </script>
     <div class="page_content">
         {{ include('components/sidebar/sidebar.html.twig') }}
         <div class="product_content">
             <div class="product-review">
-                <img class="product-image" src="{{ asset(imagePath) }}" alt="Картинка не загрузилась"/>
-                <div class="product-features"><h2>Характеристики</h2><br/>Наименование {{ name }}<br/>Стоимость {{ cost }}<br/>Категория {{ category }}</div>
+                <img id="product-image" class="product-image" src="{{ asset(imagePath) }}" alt="Картинка не загрузилась"/>
+                {% if not isAdmin %}
+                    <div class="product-features">
+                        <h2>Характеристики</h2>
+                        <br/>Наименование {{ name }}
+                        <br/>Стоимость {{ cost }}
+                        <br/>Категория {{ category }}
+                    </div>
+                {% else %}
+                    <div class="product-features">
+                        <h2>Характеристики</h2>
+                        <br/>Наименование <input id="product-name" type="text" class="product-edit-field" value="{{ name }}"/>
+                        <br/>Стоимость <input id="product-cost" type="number" class="product-edit-field" value="{{ cost }}"/>
+                        <br/>Категория <input id="product-category" type="text" class="product-edit-field" value="{{ category }}"/>
+                    </div>
+                {% endif %}
             </div>
-            <div class="product-description"><h2>Описание</h2>{{ description }}</div>
+            <div class="product-description">
+                {% if not isAdmin %}
+                    <h2>Описание</h2>{{ description }}
+                {% else %}
+                    <h2>Описание</h2><input id="product-description" type="text" class="product-edit-field product-edit-field-description" value="{{ description }}"/>
+                {% endif %}
+            </div>
         </div>
         {% if not isAdmin %}
-        <div class="product-button" onclick="addToBasket()">
-            {{ component('Button', { message: 'Добавить' }) }}
-        </div>
+            <div class="product-button" onclick="addToBasket()">
+                {{ component('Button', { message: 'Добавить' }) }}
+            </div>
+        {% else %}
+            <div onclick="changeProduct('{{ updateProductUrl }}', '{{ productId }}')" class="product-button" onclick="addToBasket()">
+                {{ component('Button', { message: 'Изменить' }) }}
+            </div>
         {% endif %}
     </div>
 {% endblock %}

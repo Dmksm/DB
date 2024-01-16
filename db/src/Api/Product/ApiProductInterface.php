@@ -14,7 +14,7 @@ interface ApiProductInterface
 
     public function addProduct(
         string $name,
-        string $descryption,
+        string $description,
         int $category,
         int $cost,
         string|null $photo = null
@@ -23,7 +23,7 @@ interface ApiProductInterface
     public function updateProduct(
         int $id,
         string $name,
-        string $descryption,
+        string $description,
         int $category,
         int $cost,
         string|null $photo = null

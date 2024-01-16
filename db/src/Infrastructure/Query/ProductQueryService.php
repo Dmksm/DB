@@ -83,7 +83,7 @@ class ProductQueryService extends ServiceEntityRepository implements ProductQuer
         return $hydrator->hydrate(Product::class, [
             'id' => $ORMProduct->getId(),
             'name' => $ORMProduct->getname(),
-            'descryption' => $ORMProduct->getDescryption(),
+            'description' => $ORMProduct->getdescription(),
             'category_id' => $ORMProduct->getCategory(),
             'cost' => $ORMProduct->getCost(),
             'photo' => $ORMProduct->getPhoto(),

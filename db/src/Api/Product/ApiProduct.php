@@ -41,7 +41,7 @@ class ApiProduct implements ApiProductInterface
 
     public function addProduct(
         string      $name,
-        string      $descryption,
+        string      $description,
         int         $category,
         int         $cost,
         string|null $photo = null
@@ -52,7 +52,7 @@ class ApiProduct implements ApiProductInterface
         $command = new ProductCommand(
             0,
             $name,
-            $descryption,
+            $description,
             $category,
             $cost,
             $photo,
@@ -64,7 +64,7 @@ class ApiProduct implements ApiProductInterface
     public function updateProduct(
         int         $id,
         string      $name,
-        string      $descryption,
+        string      $description,
         int         $category,
         int         $cost,
         string|null $photo = null
@@ -75,7 +75,7 @@ class ApiProduct implements ApiProductInterface
         $command = new ProductCommand(
             $id,
             $name,
-            $descryption,
+            $description,
             $category,
             $cost,
             $photo,

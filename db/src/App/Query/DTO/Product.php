@@ -9,7 +9,7 @@ class Product
 
     private string $name;
 
-    private string $descryption;
+    private string $description;
 
     private int $category_id;
 
@@ -19,14 +19,14 @@ class Product
 
     public function __construct(
         string  $name,
-        string  $descryption,
+        string  $description,
         int     $category_id,
         int     $cost,
         ?string $photo = null,
     )
     {
         $this->name = $name;
-        $this->descryption = $descryption;
+        $this->description = $description;
         $this->category_id = $category_id;
         $this->cost = $cost;
         $this->photo = $photo;
@@ -41,9 +41,9 @@ class Product
         return $this->name;
     }
 
-    public function getDescryption(): string
+    public function getdescription(): string
     {
-        return $this->descryption;
+        return $this->description;
     }
 
     public function getCategory(): int

@@ -13,7 +13,7 @@ class ProductService
 
     public function addProduct(
         string      $name,
-        string      $descryption,
+        string      $description,
         int         $category,
         int         $cost,
         string|null $photo = null
@@ -22,7 +22,7 @@ class ProductService
         $product = new  Product(
             $this->productRepository->getNextId(),
             $name,
-            $descryption,
+            $description,
             $category,
             $cost,
             $photo
@@ -33,7 +33,7 @@ class ProductService
     public function updateProduct(
         int         $id,
         string      $name,
-        string      $descryption,
+        string      $description,
         int         $category,
         int         $cost,
         string|null $photo = null
@@ -42,7 +42,7 @@ class ProductService
         $product = new  Product(
             $id,
             $name,
-            $descryption,
+            $description,
             $category,
             $cost,
             $photo

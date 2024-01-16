@@ -56,7 +56,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         }
 
         $product->setName($newProduct->getName());
-        $product->setDescryption($newProduct->getDescryption());
+        $product->setdescription($newProduct->getdescription());
         $product->setCategory($newProduct->getCategory());
         $product->setCost($newProduct->getCost());
         $product->setPhoto($newProduct->getPhoto());
@@ -69,7 +69,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         return $hydrator->hydrate(ORMProduct::class, [
             'id' => $product->getId(),
             'name' => $product->getName(),
-            'descryption' => $product->getDescryption(),
+            'description' => $product->getdescription(),
             'category_id' => $product->getCategory(),
             'cost' => $product->getCost(),
             'photo' => $product->getPhoto(),

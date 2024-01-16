@@ -39,7 +39,7 @@ class AddProductCommandHandler
         
         $this->productService->addProduct( 
             $command->getName(),
-            $command->getDescryption(),
+            $command->getdescription(),
             $command->getCategory(),
             $command->getCost(),
             $command->getPhoto(),

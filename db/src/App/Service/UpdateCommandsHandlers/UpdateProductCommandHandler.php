@@ -40,7 +40,7 @@ class UpdateProductCommandHandler
         $this->ProductService->updateProduct(
             $command->getId(),
             $command->getName(),
-            $command->getDescryption(),
+            $command->getdescription(),
             $command->getCategory(),
             $command->getCost(),
             $command->getPhoto(),

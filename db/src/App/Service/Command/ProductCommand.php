@@ -12,7 +12,7 @@ class ProductCommand
     #[Assert\NotBlank]
     private string $name;
     #[Assert\NotBlank]
-    private string $descryption;
+    private string $description;
     #[Assert\NotBlank]
     private int $category;
     #[Assert\NotBlank]
@@ -23,7 +23,7 @@ class ProductCommand
     public function __construct(
         int     $id,
         string  $name,
-        string  $descryption,
+        string  $description,
         int     $category,
         int     $cost,
         ?string $photo = null,
@@ -31,7 +31,7 @@ class ProductCommand
     {
         $this->id = $id;
         $this->name = $name;
-        $this->descryption = $descryption;
+        $this->description = $description;
         $this->category = $category;
         $this->cost = $cost;
         $this->photo = $photo;
@@ -47,9 +47,9 @@ class ProductCommand
         return $this->name;
     }
 
-    public function getDescryption(): string
+    public function getdescription(): string
     {
-        return $this->descryption;
+        return $this->description;
     }
 
     public function getCategory(): int

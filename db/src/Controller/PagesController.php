@@ -11,6 +11,7 @@ use App\Api\ProductPurchase\ApiProductPurchaseInterface as ProductPurchaseApi;
 use App\Api\Storage\ApiStorageInterface as StorageApi;
 use App\Api\ProductInStorage\ApiProductInStorageInterface as ProductInStorageApi;
 use App\Api\StaffInStorage\ApiStaffInStorageInterface as StaffInStorageApi;
+use App\Common\CategoryType;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
+
     private const DATE_TIME_FORMAT = 'Y-m-d';
 
     private StaffInfoApi $staffInfoApi;
@@ -461,18 +463,60 @@ class PagesController extends AbstractController
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $updateProductUrl = $this->generateUrl('updateProduct',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('product/product.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
-            'description' => $product->getDescryption(),
-            'id' => $product->getId(),
+            'description' => $product->getdescription(),
+            'productId' => $product->getId(),
             'name' => $product->getName(),
             'cost' => $product->getCost(),
             'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
             'imagePath' => "images/" . $product->getPhoto(),
-            'isAdmin' => $isAdmin
+            'isAdmin' => $isAdmin,
+            'updateProductUrl' => $updateProductUrl
         ]);
+    }
+
+    #[Route('/updateProduct', 'updateProduct')]
+    public function updateProduct(Request $request): Response
+    {
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = $request->cookies->get('admin');
+        if (!$request->cookies->has('admin'))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+        if (!$isAdmin)
+        {
+            return $this->redirectToErrorPage(403);
+        }
+        $this->productApi->updateProduct(
+            (int)$data['id'],
+            $data['name'],
+            $data['description'],
+            CategoryType::fromCategoryTypeName($data['category'])->value,
+            (int)$data['cost'],
+            $data['photo'],
+        );
+
+        return $response;
     }
 
     #[Route('/updateUser', 'updateUser')]
