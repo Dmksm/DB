@@ -72,14 +72,12 @@ class PagesController extends AbstractController
     #[Route('/')]
     public function loginPage(Request $request): Response
     {
-        // TODO: удалить получение пользователя и поправить метод loginPage
-        $staffInfo = $this->staffInfoApi->getStaffInfo(1);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $auth = $this->generateUrl('authorization',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
-        $name = ($staffInfo) ? $staffInfo->getFirstName() : 'anonymous';
+
         return $this->render('authorization/login.html.twig', [
             'loginPage' => $loginPage,
             'mainPage' => $mainPage,
@@ -170,13 +168,13 @@ class PagesController extends AbstractController
     public function submitOrder(Request $request): Response
     {
         $id = (int)$request->cookies->get('id');
-        if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
-        }
+        // if (empty($id) || !$this->isUserExist($id)) {
+        //     $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        //     return $this->render('error/error.html.twig', [
+        //         'loginPage' => $loginPage,
+        //         'statusCode' => 401,
+        //     ]);
+        // }
 
         $data = json_decode($request->getContent(), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -203,20 +201,24 @@ class PagesController extends AbstractController
             return new Response('', 400);
         }
 
-        return new Response();
+        return new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
     }
 
     #[Route('/successOrderPage', 'successOrderPage')]
     public function successOrderPage(Request $request): Response
     {
-        $id = (int)$request->cookies->get('id');
-        if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
-        }
+        // $id = (int)$request->cookies->get('id');
+        // if (empty($id) || !$this->isUserExist($id)) {
+        //     $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        //     return $this->render('error/error.html.twig', [
+        //         'loginPage' => $loginPage,
+        //         'statusCode' => 401,
+        //     ]);
+        // }
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('basket/success_order.html.twig', [
             'mainPage' => $mainPageUrl,
@@ -266,8 +268,46 @@ class PagesController extends AbstractController
     #[Route('/registerPage', 'registerPage')]
     public function registerPage(Request $request): Response
     {
+
+        $registerPage = $this->generateUrl('registerPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $auth = $this->generateUrl('reg',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
+
         return $this->render('register/register.html.twig', [
+            'registerPage' => $registerPage,
+            'mainPage' => $mainPage,
+            'basketPage' => $basketPage,
+            'authorizationUrl' => $auth,
+            //'errorPageUrl' => $errorPageUrl,
         ]);
+    }
+
+    #[Route('/reg', 'reg')]
+    public function reg(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+
+        $this->clientApi->addClient(
+            $data['first_name'],
+            $data['last_name'],
+            $data['birthday'],
+            $data['email'],
+            $data['password'],
+            $data['patronymic'],
+            $data['photo'],
+            $data['telephone']
+        );
+
+        return new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
     }
 
     #[Route('/basketPage', 'basketPage')]

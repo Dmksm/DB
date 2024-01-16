@@ -27,6 +27,11 @@ class ApiOrder implements ApiOrderInterface
         return $this->OrderQueryService->getOrder($id);
     }
 
+    public function getAllOrders(): array
+    {
+        return $this->OrderQueryService->getAllOrders();
+    }
+
     public function addOrder(
         int                $id_client,
         float              $sum,

@@ -9,6 +9,8 @@ use App\Infrastructure\Repositories\Entity\Client as ORMClient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Infrastructure\DopClasses\Encrypt;
+use SebastianBergmann\Environment\Console;
 
 class ClientQueryService extends ServiceEntityRepository implements ClientQueryServiceInterface
 {
@@ -27,8 +29,8 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
     public function getClientByEmailAndPassword(string $email, string $password): ?Client
     {
         $client = $this->findOneBy(['email' => $email,'password' => $password]) ?? null;
-        return $this->hydrateAttempt($client);
 
+        return $this->hydrateAttempt($client);
     }
 
     private function hydrateAttempt(?ORMClient $ORMClient): ?Client
@@ -44,7 +46,7 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
             'lastName' => $ORMClient->getLastName(),
             'birthday' => $ORMClient->getBirthday(),
             'email' => $ORMClient->getEmail(),
-            'password' => $ORMClient->getPassword(),
+            'password' => (new Encrypt())->encrypt_decrypt('decrypt', $ORMClient->getPassword()),
             'patronymic' => $ORMClient->getPatronymic(),
             'photo' => $ORMClient->getPhoto(),
             'telephone' => $ORMClient->getTelephone(),

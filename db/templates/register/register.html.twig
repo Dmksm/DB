@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <script>
-    function register(url, authUrl, errorPageUrl) {
+    function register(url, authUrl) {
         const data = JSON.stringify({
             email: document.getElementById('login-email-value').value,
             password: document.getElementById('login-password-value').value,
@@ -16,14 +16,9 @@
         xhr.open("POST", authUrl);
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         xhr.onload = () => {
-            if (xhr.readyState === 4 && xhr.status === 200) {
                 location.href = url;
                 localStorage['id'] = xhr.response['id'] || "1";
                 console.log( xhr.response['id']);
-            } else {
-                location.href = errorPageUrl;
-                console.log(`Error: ${xhr.status}`);
-            }
         };
         xhr.send(data);
     }
@@ -56,7 +51,7 @@
                 <input id="login-telephone-value" class="login-input" placeholder="telephone" type="text" name="telephone" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="register" onclick="register('{{ mainPage }}', '{{ authorizationUrl }}', '{{ errorPageUrl }}')"/>
+                <input class="login-submit" type="submit" value="register" onclick="register('{{ mainPage }}', '{{ authorizationUrl }}')"/>
             </div>
         </form>
     </div>

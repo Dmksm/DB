@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repositories\Repository;
 
 use App\Domain\Entity\Client as DomainClient;
+use App\Infrastructure\DopClasses\Encrypt;
 use App\Infrastructure\Repositories\Entity\Client as ORMClient;
 use App\Domain\Service\ClientRepositoryInterface;
 use App\Infrastructure\Hydrator\Hydrator;
@@ -61,7 +62,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
         $client->setLastName($newClient->getLastName());
         $client->setBirthday($newClient->getBirthday());
         $client->setEmail($newClient->getEmail());
-        $client->setPassword($newClient->getPassword());
+        $client->setPassword((new Encrypt())->encrypt_decrypt('encrypt', $newClient->getPassword()));
         $client->setPatronymic($newClient->getPatronymic());
         $client->setPhoto($newClient->getPhoto());
         $client->setTelephone($newClient->getTelephone());
@@ -77,7 +78,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
             'last_name' => $client->getLastName(),
             'birthday' => $client->getBirthday(),
             'email' => $client->getEmail(),
-            'password' => $client->getPassword(),
+            'password' => (new Encrypt())->encrypt_decrypt('encrypt', $client->getPassword()),
             'patronymic' => $client->getPatronymic(),
             'photo' => $client->getPhoto(),
             'telephone' => $client->getTelephone(),

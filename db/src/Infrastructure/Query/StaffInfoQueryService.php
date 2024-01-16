@@ -9,6 +9,7 @@ use App\Infrastructure\Repositories\Entity\StaffInfo as ORMStaffInfo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Infrastructure\DopClasses\Encrypt;
 
 class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfoQueryServiceInterface
 {
@@ -42,7 +43,7 @@ class StaffInfoQueryService extends ServiceEntityRepository implements StaffInfo
             'lastName' => $ORMStaffInfo->getLastName(),
             'birthday' => $ORMStaffInfo->getBirthday(),
             'email' => $ORMStaffInfo->getEmail(),
-            'password' => $ORMStaffInfo->getPassword(),
+            'password' => (new Encrypt())->encrypt_decrypt('decrypt', $ORMStaffInfo->getPassword()),
             'patronymic' => $ORMStaffInfo->getPatronymic(),
             'photo' => $ORMStaffInfo->getPhoto(),
             'telephone' => $ORMStaffInfo->getTelephone(),
