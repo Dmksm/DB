@@ -182,20 +182,25 @@ class PagesController extends AbstractController
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \InvalidArgumentException('Invalid JSON');
         }
-
-        $products = $data['products'];
-        $sum = $data['cost'];
-        $address = $data['address'];
-
-        foreach($products as $productId => $count)
+        try {
+            $products = $data['products'];
+            $sum = $data['cost'];
+            $this->orderApi->addOrder($id,$sum,new \DateTimeImmutable(),0, 'you-la');
+            foreach($products as $productId => $count)
+            {
+                $this->productPurchaseApi->addProductPurchase($productId, $id, 1, new \DateTimeImmutable, (new \DateTimeImmutable), 0);
+                $this->productInStorageApi->updateProductInStorage(
+                    $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getId(),
+                    $productId,
+                    1,
+                    $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getCount() - (int)$count
+                );
+            }
+        }
+        catch (\Throwable $e)
         {
-            $this->productPurchaseApi->addProductPurchase($productId, $id, 1, new \DateTimeImmutable, null, 0);
-            $this->productInStorageApi->updateProductInStorage(
-                $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getId(),
-                $productId,
-                1,
-                $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getCount() - (int)$count
-            );
+            $this->logger->alert("err $e");
+            return new Response('', 400);
         }
 
         return new Response();
@@ -313,6 +318,7 @@ class PagesController extends AbstractController
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
             'description' => $product->getDescryption(),
+            'id' => $product->getId(),
             'name' => $product->getName(),
             'cost' => $product->getCost(),
             'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
@@ -344,125 +350,6 @@ class PagesController extends AbstractController
         return $response;
     }
 
-    #[Route('/update_staff_info')]
-    public function updateStaffInfo(Request $request): Response
-    {
-        $this->staffInfoApi->updateStaffInfo(
-            1,
-            'Алена',
-            'Золотцева',
-            (new \DateTimeImmutable()),
-            'alena123@mail.com',
-            '123456Alena',
-            'Vecheslavovna',
-            '/newpath',
-            '+71239870010',
-            'reseller'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-
-    #[Route('/get_product_category')]
-    public function getProductCategory(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $productCategory = $this->productCategoryApi->getProductCategory(1);
-        $name = ($productCategory) ? $productCategory->getname() : 'anonymous';
-        return $this->render('product/product.html.twig', [
-            'name' => $name,
-        ]);
-    }
-
-    #[Route('/get_all_products')]
-    public function getAllProducts(): Response
-    {
-        $products = $this->productApi->getAllProducts();
-        return $this->render('product/get_all_products.html.twig', [
-            'products' => $products,
-        ]);
-    }
-
-    #[Route('/get_all_products_count', 'get_all_products_count')]
-    public function getAllProductsCount(): Response
-    {
-        $products = $this->productApi->getAllProducts();
-        return $this->render('product/get_all_products_count.html.twig', [
-            'productsCount' => count($products),
-        ]);
-    }
-
-    #[Route('/add_product_category')]
-    public function addProductCategory(Request $request): Response
-    {
-        $this->productCategoryApi->addProductCategory(
-            'Продукты'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/update_product_category')]
-    public function updateProductCategory(Request $request): Response
-    {
-        $this->productCategoryApi->updateProductCategory(
-            2,
-            'Овощи'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_product')]
-    public function getProduct(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $product = $this->productApi->getProduct(1);
-        $id = $product->getId();
-        $name = $product->getName();
-        $descryption = $product->getDescryption();
-        $category = $this->productCategoryApi->getProductCategory($product->getCategory())->getName();
-        $cost = $product->getCost();
-        $photo = $product->getPhoto();
-        return $this->render('product/product.html.twig', [
-            'id' => $id,
-            'name' => $name,
-            'descryption' => $descryption, 
-            'category' => $category, 
-            'cost' => $cost, 
-            'photo' => $photo
-        ]);
-    }
-
-    #[Route('/get_products_by_category')]
-    public function getProductsByCategory(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $products = $this->productApi->getProductsByCategory(1);
-        return $this->render('product/get_all_products.html.twig', [
-            'products' => $products,
-        ]);
-    }
-
     #[Route('/search', 'search')]
     public function getProductsByIncludingString(Request $request): Response
     {
@@ -478,128 +365,6 @@ class PagesController extends AbstractController
             'products' => $products,
             'search' =>  ''
         ]);
-    }
-
-    #[Route('/add_product')]
-    public function addProduct(Request $request): Response
-    {
-        $this->productApi->addProduct(
-            'яблоко',
-            'Это яблоко',
-            1,
-            200,
-            'path'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/update_product')]
-    public function updateProduct(Request $request): Response
-    {
-        $this->productApi->updateProduct(
-            2,
-            'картошка',
-            'Это картошка',
-            2,
-            300,
-            'path'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/add_storage')]
-    public function addStorage(Request $request): Response
-    {
-        $this->storageApi->addStorage(
-            'Йошкар-ола',
-            'Пушкина',
-            '10'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_storage')]
-    public function getStorage(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $storage = $this->storageApi->getStorage(1);
-        $name = ($storage) ? $storage->getCity() : 'anonymous';
-        return $this->render('authorization/login.html.twig', [
-            'homePageLink' => $this->generateUrl(''),
-            'name' => $name,
-        ]);
-    }
-
-    #[Route('/add_staff_in_storage')]
-    public function addStaffInStorage(Request $request): Response
-    {
-        $this->staffInStorageApi->addStaffInStorage(
-            $this->staffInfoApi->getStaffInfo(1)->getId(),
-            $this->storageApi->getStorage(1)->getId(),
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_staff_in_storage')]
-    public function getStaffInStorage(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $staffInStorage = $this->staffInStorageApi->getStaffInStorage(1);
-        $name = ($staffInStorage) ? $this->staffInfoApi->getStaffInfo(1)->getFirstName() : 'anonymous';
-        return $this->render('authorization/login.html.twig', [
-            'name' => $this->generateUrl('basketPage'),
-        ]);
-    }
-
-    #[Route('/add_client')]
-    public function addClient(Request $request): Response
-    {
-        $this->clientApi->addClient(
-            'Роман',
-            'Смирнов',
-            (new \DateTimeImmutable()),
-            'roman123@mail.com',
-            '123456Roman',
-            'Vecheslavovich',
-            '/path',
-            '+71239870010',
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
     }
 
     #[Route('/updateUser', 'updateUser')]
@@ -645,167 +410,6 @@ class PagesController extends AbstractController
         }
 
         return $response;
-    }
-
-    #[Route('/get_client')]
-    public function getClient(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $client = $this->clientApi->getClient(1);
-        return $this->render('authorization/login.html.twig', [
-            'name' => $client->getFirstName(),
-        ]);
-    }
-
-    #[Route('/add_product_in_storage')]
-    public function addProductInStorage(Request $request): Response
-    {
-        $this->productInStorageApi->addProductInStorage(
-            1,
-            1,
-            1
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/update_product_in_storage')]
-    public function updateProductInStorage(Request $request): Response
-    {
-        $this->productInStorageApi->updateProductInStorage(
-            1,
-            1,
-            1,
-            10
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_product_in_storage')]
-    public function getProductInStorage(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $productInStorageApi = $this->productInStorageApi->getProductInStorage(1);
-        return $this->render('authorization/login.html.twig', [
-            'name' => $this->storageApi->getStorage($productInStorageApi->getIdProduct())->getCity(),
-        ]);
-    }
-
-    #[Route('/add_order')]
-    public function addOrder(Request $request): Response
-    {
-        $this->orderApi->addOrder(
-            1,
-            100,
-            new \DateTimeImmutable(),
-            0,
-            'address'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/update_order')]
-    public function updateOrder(Request $request): Response
-    {
-        $this->orderApi->updateOrder(
-            1,
-            1,
-            100,
-            new \DateTimeImmutable(),
-            0,
-            'newAddress'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_order')]
-    public function getOrder(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $order = $this->orderApi->getOrder(1);
-        return $this->render('authorization/login.html.twig', [
-            'name' => $order->getAddress(),
-        ]);
-    }
-
-    #[Route('/add_product_purchase')]
-    public function addProductPurchase(Request $request): Response
-    {
-        $this->productPurchaseApi->addProductPurchase(
-            1,
-            1,
-            1,
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
-            0
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/update_product_purchase')]
-    public function updateProductPurchase(Request $request): Response
-    {
-        $this->productPurchaseApi->updateProductPurchase(
-            1,
-            1,
-            1,
-            1,
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
-            1
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
-    }
-
-    #[Route('/get_product_purchase')]
-    public function getProductPurchase(): Response
-    {
-        //TODO: удалить получение пользователя и поправить метод loginPage
-        $productPurchase = $this->productPurchaseApi->getProductPurchase(1);
-        return $this->render('authorization/login.html.twig', [
-            'name' => $this->productApi->getProduct($productPurchase->getIdProduct())->getName(),
-        ]);
     }
 
     private function isUserExist(int $id): bool

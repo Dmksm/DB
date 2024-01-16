@@ -30,8 +30,12 @@ class ProductInStorageQueryService extends ServiceEntityRepository implements Pr
         return $this->hydrateAttempt($this->findOneBy(['id_product' => $id_product,'id_storage' => $id_storage]));
     }
 
-    private function hydrateAttempt(ORMProductInStorage $ORMProductInStorage): ?ProductInStorage
+    private function hydrateAttempt(?ORMProductInStorage $ORMProductInStorage): ?ProductInStorage
     {
+        if (empty($ORMProductInStorage))
+        {
+            return null;
+        }
         $hydrator = new Hydrator();
         return $hydrator->hydrate(ProductInStorage::class, [
             'id' => $ORMProductInStorage->getId(),

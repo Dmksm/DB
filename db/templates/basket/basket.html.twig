@@ -31,7 +31,7 @@
             let retrievedObject = localStorage.getItem('product');
             let parsedData = JSON.parse(retrievedObject);
             if (parsedData !== null) {
-                let totalCost = 0;
+                let totalCost = Number(0);
                 parsedData.forEach((item, index) => {
                     let count = '';
                     let cost = item.cost;
@@ -41,9 +41,9 @@
                     }
                     if (parsedData.length === 1)
                     {
-                        totalCost = cost;
+                        totalCost = Number(cost);
                     } else {
-                        totalCost += cost;
+                        totalCost += Number(cost);
                     }
                     let text = 'Наименоване: ' + item.name + count + ' Стоимость: ' + cost;
                     document.getElementById("basket-products-list").innerHTML += '' +
@@ -58,12 +58,13 @@
         function submitOrder(url, successUrl, errorPageUrl) {
             let retrievedObject = localStorage.getItem('product');
             let parsedData = JSON.parse(retrievedObject);
-            let productIDs = [];
+            let productIDs = {};
             parsedData.forEach((item, index) => {
-                productIDs.push(item.id);
+                productIDs[item.id] = item.count;
             });
             const data = JSON.stringify({
-                productIDs: productIDs
+                products: productIDs,
+                cost: 200,
             });
             const xhr = new XMLHttpRequest();
             xhr.open("POST", url);

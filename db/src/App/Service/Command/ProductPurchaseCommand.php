@@ -21,7 +21,6 @@ class ProductPurchaseCommand
     #[Assert\NotBlank]
     private \DateTimeImmutable $order_date;
 
-    #[Assert\NotBlank]
     private ?\DateTimeImmutable $delivery_date;
 
     #[Assert\NotBlank]

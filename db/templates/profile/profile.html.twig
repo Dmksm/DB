@@ -30,9 +30,7 @@
         <div class="profile page_content">
             <div class="profile page_content-row">
                 <div class="profile-page">
-                    <div class="profile-image" >
-                        <img src="{{ asset(userInfo.imagePath) }}" alt="Картинка не загрузилась"/>
-                    </div>
+                    <img class="profile-image" src="{{ asset(userInfo.imagePath) }}" alt="Картинка не загрузилась"/>
                     <div class="profile-info-list">
                         <div class="profile-text">Имя: <input id="profile-firstName" class="profile-text" value="{{ userInfo.firstName }}"/></div>
                         <div class="profile-text">Фамилия: <input id="profile-lastName" class="profile-text" value="{{ userInfo.lastName }}"/></div>
