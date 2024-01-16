@@ -556,7 +556,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? null,
+                $data['photo'] ?? self::DEFAULT_IMAGE,
                 $data['telephone'] ?? null,
                 $data['position'] ?? null,
             );
@@ -571,7 +571,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? null,
+                $data['photo'] ?? self::DEFAULT_IMAGE,
                 $data['telephone'] ?? null,
             );
         }
