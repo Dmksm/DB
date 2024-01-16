@@ -42,8 +42,10 @@
             </div>
             <div class="product-description"><h2>Описание</h2>{{ description }}</div>
         </div>
+        {% if not isAdmin %}
         <div class="product-button" onclick="addToBasket()">
             {{ component('Button', { message: 'Добавить' }) }}
         </div>
+        {% endif %}
     </div>
 {% endblock %}
