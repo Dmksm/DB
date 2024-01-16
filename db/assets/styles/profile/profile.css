@@ -59,3 +59,8 @@
     display: flex;
     justify-content: end;
 }
+
+
+.red-border{
+    border-color: red;
+}

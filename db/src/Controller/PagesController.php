@@ -185,10 +185,10 @@ class PagesController extends AbstractController
         try {
             $products = $data['products'];
             $sum = $data['cost'];
-            $this->orderApi->addOrder($id,$sum,new \DateTimeImmutable(),0, 'you-la');
+            $idOrder = $this->orderApi->addOrder($id,$sum,new \DateTimeImmutable(),0, 'you-la');
             foreach($products as $productId => $count)
             {
-                $this->productPurchaseApi->addProductPurchase($productId, $id, 1, new \DateTimeImmutable, (new \DateTimeImmutable), 0);
+                $this->productPurchaseApi->addProductPurchase($productId, $idOrder, 1, new \DateTimeImmutable, (new \DateTimeImmutable), 0);
                 $this->productInStorageApi->updateProductInStorage(
                     $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getId(),
                     $productId,
@@ -385,20 +385,32 @@ class PagesController extends AbstractController
             throw new \InvalidArgumentException('Invalid JSON');
         }
 
-        $this->clientApi->addClient(
-            $data['first_name'],
-            $data['last_name'],
-            \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
-            $data['email'],
-            $data['password'],
-            $data['patronymic'],
-            $data['photo'] ?? self::DEFAULT_IMAGE,
-            $data['telephone']
-        );
+        $client = $this->clientApi->getClientByEmailAndPassword($data['email'],$data['password']);
+        $staff = $this->staffInfoApi->getStaffInfoByEmailAndPassword($data['email'],$data['password']);
+
+        if(!$client && !$staff)
+        {
+            $this->clientApi->addClient(
+                $data['first_name'],
+                $data['last_name'],
+                \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
+                $data['email'],
+                $data['password'],
+                $data['patronymic'],
+                $data['photo'] ?? self::DEFAULT_IMAGE,
+                $data['telephone']
+            );
+            $status = Response::HTTP_OK
+        }
+        else
+        {
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
 
         return new Response(
             'Ok',
-            Response::HTTP_OK,
+            $status,
             ['content-type' => 'text/html']
         );
     }
