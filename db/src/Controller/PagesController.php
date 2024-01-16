@@ -366,24 +366,21 @@ class PagesController extends AbstractController
     #[Route('/registerPage', 'registerPage')]
     public function registerPage(Request $request): Response
     {
-
         $registerPage = $this->generateUrl('registerPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $auth = $this->generateUrl('reg',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
+        $registerUrl = $this->generateUrl('register',[], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $this->render('register/register.html.twig', [
             'registerPage' => $registerPage,
-            'mainPage' => $mainPage,
+            'loginPage' => $loginPage,
             'basketPage' => $basketPage,
-            'authorizationUrl' => $auth,
-            //'errorPageUrl' => $errorPageUrl,
+            'registerUrl' => $registerUrl,
         ]);
     }
 
-    #[Route('/reg', 'reg')]
-    public function reg(Request $request): Response
+    #[Route('/register', 'register')]
+    public function register(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -393,7 +390,7 @@ class PagesController extends AbstractController
         $this->clientApi->addClient(
             $data['first_name'],
             $data['last_name'],
-            $data['birthday'],
+            \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
             $data['email'],
             $data['password'],
             $data['patronymic'],
@@ -468,30 +465,6 @@ class PagesController extends AbstractController
             'imagePath' => "images/" . $product->getPhoto(),
             'isAdmin' => $isAdmin
         ]);
-    }
-
-    #[Route('/register', 'register')]
-    public function register(Request $request): Response
-    {
-        $this->staffInfoApi->addStaffInfo(
-            'Алена',
-            'Золотцева',
-            (new \DateTimeImmutable()),
-            'alena123@mail.com',
-            '123456Alena',
-            'Vecheslavovna',
-            '/path',
-            '+71239870010',
-            'reseller'
-        );
-
-        $response = new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
-
-        return $response;
     }
 
     #[Route('/search', 'search')]

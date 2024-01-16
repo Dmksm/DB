@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <script>
-    function register(url, authUrl) {
+    function register(url, registerUrl) {
         const data = JSON.stringify({
             email: document.getElementById('login-email-value').value,
             password: document.getElementById('login-password-value').value,
@@ -13,12 +13,14 @@
             telephone: document.getElementById('login-telephone-value').value,
         });
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", authUrl);
+        xhr.open("POST", registerUrl);
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         xhr.onload = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
                 location.href = url;
-                localStorage['id'] = xhr.response['id'] || "1";
-                console.log( xhr.response['id']);
+            } else {
+                alert('Создание не удалось');
+            }
         };
         xhr.send(data);
     }
@@ -33,10 +35,10 @@
                 <input id="login-last_name-value" class="login-input" placeholder="Last Name" type="text" name="last_name" required />
             </div>
             <div>
-                <input id="login-birthday-value" class="login-input" placeholder="birthday" type="datetime-local" name="birthday" required />
+                <input id="login-birthday-value" class="login-input" placeholder="birthday" type="date" name="birthday" required />
             </div>
             <div>
-                <input id="login-patronymic-value" class="login-input" placeholder="patronymic" type="text" name="patronymic" required />
+                <input id="login-patronymic-value" class="login-input" placeholder="patronymic" type="text" name="patronymic" />
             </div>
             <div>
                 <input id="login-email-value" class="login-input" placeholder="Email" type="email" name="email" required />
@@ -45,13 +47,13 @@
                 <input id="login-password-value" class="login-input" placeholder="Password" type="password" name="password" required />
             </div>
             <div>
-                <input id="login-photo-value" class="login-input" placeholder="photo" type="file" name="photo" required />
+                <input id="login-photo-value" class="login-input" placeholder="photo" type="file" name="photo" />
             </div>
             <div>
                 <input id="login-telephone-value" class="login-input" placeholder="telephone" type="text" name="telephone" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="register" onclick="register('{{ mainPage }}', '{{ authorizationUrl }}')"/>
+                <input class="login-submit" type="submit" value="register" onclick="register('{{ loginPage }}', '{{ registerUrl }}')"/>
             </div>
         </form>
     </div>
