@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PagesController extends AbstractController
 {
     private const IMAGES_FOLDER = "images/";
+    private const DEFAULT_IMAGE = "unknown_person.jpg";
     private const DATE_TIME_FORMAT = 'Y-m-d';
 
     private StaffInfoApi $staffInfoApi;
@@ -400,7 +401,7 @@ class PagesController extends AbstractController
             $data['email'],
             $data['password'],
             $data['patronymic'],
-            $data['photo'],
+            $data['photo'] ?? self::DEFAULT_IMAGE,
             $data['telephone']
         );
 
