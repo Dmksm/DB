@@ -28,7 +28,7 @@ class ClientQueryService extends ServiceEntityRepository implements ClientQueryS
     
     public function getClientByEmailAndPassword(string $email, string $password): ?Client
     {
-        $client = $this->findOneBy(['email' => $email,'password' => $password]) ?? null;
+        $client = $this->findOneBy(['email' => $email,'password' => (new Encrypt())->encrypt_decrypt('encrypt', $password)]) ?? null;
 
         return $this->hydrateAttempt($client);
     }

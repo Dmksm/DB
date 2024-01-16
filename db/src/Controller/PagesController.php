@@ -105,7 +105,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($client->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', strval(false), $expire);
+            $cookie = new Cookie('admin', 'false', $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -118,7 +118,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($admin->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', strval(true), $expire);
+            $cookie = new Cookie('admin', 'true', $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -137,7 +137,7 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -177,7 +177,7 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -223,7 +223,7 @@ class PagesController extends AbstractController
             $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -273,7 +273,7 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -308,7 +308,7 @@ class PagesController extends AbstractController
             $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -328,12 +328,12 @@ class PagesController extends AbstractController
             $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = (bool)($isAdmin);
-        $user = $this->clientApi->getClient($id) ?? $this->staffInfoApi->getStaffInfo($id);
+        $user = ($isAdmin) ? $this->staffInfoApi->getStaffInfo($id) : $this->clientApi->getClient($id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -349,7 +349,7 @@ class PagesController extends AbstractController
             'patronymic' => $user->getPatronymic(),
             'imagePath' => "images/" . $user->getPhoto(),
             'telephone' => $user->getTelephone(),
-            'position' => $user->getPosition(),
+            'position' => ($isAdmin) ? $user->getPosition() : "",
         ];
 
         return $this->render('profile/profile.html.twig', [
@@ -413,7 +413,7 @@ class PagesController extends AbstractController
             $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -443,7 +443,7 @@ class PagesController extends AbstractController
             $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
@@ -499,7 +499,7 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = $request->cookies->get('admin');
-        if (empty($isAdmin))
+        if (!$request->cookies->has('admin'))
         {
             return $this->redirectToErrorPage(401);
         }
