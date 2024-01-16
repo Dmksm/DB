@@ -1,7 +1,86 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <script>
+
+    function validateEmail(email)
+    {
+        var re = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
+        var valid = re.test(email);
+        return valid;
+    }
+
+    function validateTelephone(telephone)
+    {
+        var re = /^[\d\+][\d\(\)\-]{4,14}\d$/;
+        var valid = re.test(telephone);
+        return valid;
+        
+    }
     function register(url, registerUrl) {
+
+        const validate = true;
+
+        const firstName = document.getElementById('login-first_name-value');
+        const lastName = document.getElementById('login-last_name-value');
+        const patronymic = document.getElementById('login-patronymic-value');
+        const birthday = document.getElementById('login-birthday-value');
+        const telephone = document.getElementById('login-telephone-value');
+        const email = document.getElementById('login-email-value');
+        const password = document.getElementById('login-password-value');
+
+        if(firstName.value == '')
+        {
+            firstName.classList.add("red-border");
+            validate = false;
+        }
+        else
+        {
+            firstName.classList.remove("red-border");
+        }
+
+        if(lastName.value == '')
+        {
+            lastName.classList.add("red-border");
+            validate = false;
+        }
+        else
+        {
+            lastName.classList.remove("red-border");
+        }
+
+        if(telephone.value == '' || !validateTelephone(telephone.value))
+        {
+            telephone.classList.add("red-border");
+            validate = false;
+        }
+        else
+        {
+            telephone.classList.remove("red-border");
+        }
+
+        if(email.value == '' || !validateEmail(email.value))
+        {
+            email.classList.add("red-border");
+            validate = false;
+        }
+        else
+        {
+            email.classList.remove("red-border");
+        }
+
+        if(password.value == '')
+        {
+            password.classList.add("red-border");
+            validate = false;
+        }
+        else
+        {
+            password.classList.remove("red-border");
+        }
+        console.log(document.getElementById('login-photo-value').value);
+        console.log(validate);
+        if(!validate) return;
+
         const data = JSON.stringify({
             email: document.getElementById('login-email-value').value,
             password: document.getElementById('login-password-value').value,
@@ -23,6 +102,8 @@
             }
         };
         xhr.send(data);
+
+        
     }
     function redirectToUrl(url) {
         location.href = url;

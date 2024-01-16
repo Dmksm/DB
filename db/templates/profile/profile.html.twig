@@ -1,7 +1,86 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <script>
+
+        function validateEmail(email)
+        {
+            var re = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
+            var valid = re.test(email);
+            return valid;
+        }
+
+        function validateTelephone(telephone)
+        {
+            var re = /^[\d\+][\d\(\)\-]{4,14}\d$/;
+            var valid = re.test(telephone);
+            return valid;
+            
+        }
+
         function changeProfile(url, errorPageUrl) {
+
+            const validate = true;
+
+            const firstName = document.getElementById('profile-firstName');
+            const lastName = document.getElementById('profile-lastName');
+            const patronymic = document.getElementById('profile-patronymic');
+            const birthday = document.getElementById('profile-birthday');
+            const telephone = document.getElementById('profile-telephone');
+            const email = document.getElementById('profile-email');
+            const password = document.getElementById('profile-password');
+
+            if(firstName.value == '')
+            {
+                firstName.classList.add("red-border");
+                validate = false;
+            }
+            else
+            {
+                firstName.classList.remove("red-border");
+            }
+
+            if(lastName.value == '')
+            {
+                lastName.classList.add("red-border");
+                validate = false;
+            }
+            else
+            {
+                lastName.classList.remove("red-border");
+            }
+
+            if(telephone.value == '' || !validateTelephone(telephone.value))
+            {
+                telephone.classList.add("red-border");
+                validate = false;
+            }
+            else
+            {
+                telephone.classList.remove("red-border");
+            }
+
+            if(email.value == '' || !validateEmail(email.value))
+            {
+                email.classList.add("red-border");
+                validate = false;
+            }
+            else
+            {
+                email.classList.remove("red-border");
+            }
+
+            if(password.value == '')
+            {
+                password.classList.add("red-border");
+                validate = false;
+            }
+            else
+            {
+                password.classList.remove("red-border");
+            }
+
+            if(!validate) return;
+
             const data = JSON.stringify({
                 firstName: document.getElementById('profile-firstName').value,
                 lastName: document.getElementById('profile-lastName').value,
@@ -36,7 +115,7 @@
                         <div class="profile-text">Фамилия: <input id="profile-lastName" class="profile-text" value="{{ userInfo.lastName }}"/></div>
                         <div class="profile-text">Отчество: <input id="profile-patronymic" class="profile-text" value="{{ userInfo.patronymic }}"/></div>
                         <div class="profile-text">Дата рождения: <input id="profile-birthday" type="date" class="profile-text" value="{{ userInfo.birthday }}"/></div>
-                        <div class="profile-text">Телефон: <input id="profile-telephone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required class="profile-text" value="{{ userInfo.telephone }}"/></div>
+                        <div class="profile-text">Телефон: <input id="profile-telephone" type="tel" required class="profile-text" value="{{ userInfo.telephone }}"/></div>
                         <div class="profile-text">Почта: <label for="profile-email"></label><input id="profile-email" type="email" class="profile-text" value="{{ userInfo.email }}"/></div>
                         <div class="profile-text">Пароль: <input id="profile-password" type="password" class="profile-text" value="{{ userInfo.password }}"/></div>
                     </div>

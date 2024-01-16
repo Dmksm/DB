@@ -391,22 +391,40 @@ class PagesController extends AbstractController
             throw new \InvalidArgumentException('Invalid JSON');
         }
 
-        $this->clientApi->addClient(
-            $data['first_name'],
-            $data['last_name'],
-            \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
-            $data['email'],
-            $data['password'],
-            $data['patronymic'],
-            $data['photo'],
-            $data['telephone']
-        );
+        $client = $this->clientApi->getClientByEmailAndPassword($data['email'],$data['password']);
+        $staff = $this->staffInfoApi->getStaffInfoByEmailAndPassword($data['email'],$data['password']);
 
-        return new Response(
-            'Ok',
-            Response::HTTP_OK,
-            ['content-type' => 'text/html']
-        );
+        if(!$client && !$staff)
+        {
+
+            $fileName = $this->generateRandomString().'.webp';
+            $this->clientApi->addClient(
+                $data['first_name'],
+                $data['last_name'],
+                \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
+                $data['email'],
+                $data['password'],
+                $data['patronymic'],
+                $fileName,
+                $data['telephone']
+            );
+
+            return new Response(
+                'Ok',
+                Response::HTTP_OK,
+                ['content-type' => 'text/html']
+            );
+
+        }
+        else
+        {
+
+            return new Response(
+                'this email allready exist',
+                Response::HTTP_BAD_REQUEST,
+                ['content-type' => 'text/html']
+            );
+        }
     }
 
     #[Route('/basketPage', 'basketPage')]
@@ -545,5 +563,24 @@ class PagesController extends AbstractController
             'loginPage' => $loginPage,
             'statusCode' => $statusCode,
         ]);
+    }
+
+    private function redirectToErrorPageWithRegisterPage(int $statusCode): Response
+    {
+        $registerPage = $this->generateUrl('registerPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->render('error/error.html.twig', [
+            'loginPage' => $registerPage,
+            'statusCode' => $statusCode,
+        ]);
+    }
+
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

@@ -53,3 +53,7 @@
     font-weight: 400;
     line-height: normal;
 }
+
+.red-border{
+    border-color: red;
+}
