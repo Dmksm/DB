@@ -400,7 +400,7 @@ class PagesController extends AbstractController
                 $data['photo'] ?? self::DEFAULT_IMAGE,
                 $data['telephone']
             );
-            $status = Response::HTTP_OK
+            $status = Response::HTTP_OK;
         }
         else
         {
