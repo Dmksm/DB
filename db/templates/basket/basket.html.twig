@@ -73,7 +73,7 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     location.href = successUrl;
                 } else {
-                    location.href = errorPageUrl;
+                    alert('Изменение не удалось');
                 }
             };
             xhr.send(data);

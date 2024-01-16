@@ -17,5 +17,10 @@
         <div>
             <input class="widget" type="submit" value="profile" onclick="redirectToUrl('{{ absolute_url(path('profilePage')) }}')"/>
         </div>
+        {% if isAdmin %}
+            <div>
+                <input class="widget" type="submit" value="report" onclick="redirectToUrl('{{ absolute_url(path('reportPage')) }}')"/>
+            </div>
+        {% endif %}
     </div>
 </div>

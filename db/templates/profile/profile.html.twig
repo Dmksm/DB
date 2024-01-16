@@ -18,7 +18,7 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     window.location.reload();
                 } else {
-                    location.href = errorPageUrl;
+                    alert('Изменение не удалось');
                     console.log(`Error: ${xhr.status}`);
                 }
             };
@@ -35,10 +35,10 @@
                         <div class="profile-text">Имя: <input id="profile-firstName" class="profile-text" value="{{ userInfo.firstName }}"/></div>
                         <div class="profile-text">Фамилия: <input id="profile-lastName" class="profile-text" value="{{ userInfo.lastName }}"/></div>
                         <div class="profile-text">Отчество: <input id="profile-patronymic" class="profile-text" value="{{ userInfo.patronymic }}"/></div>
-                        <div class="profile-text">Дата рождения: <input id="profile-birthday" class="profile-text" value="{{ userInfo.birthday }}"/></div>
-                        <div class="profile-text">Телефон: <input id="profile-telephone"  class="profile-text" value="{{ userInfo.telephone }}"/></div>
-                        <div class="profile-text">Почта: <input id="profile-email" class="profile-text" value="{{ userInfo.email }}"/></div>
-                        <div class="profile-text">Пароль: <input id="profile-password"  class="profile-text" value="{{ userInfo.password }}"/></div>
+                        <div class="profile-text">Дата рождения: <input id="profile-birthday" type="date" class="profile-text" value="{{ userInfo.birthday }}"/></div>
+                        <div class="profile-text">Телефон: <input id="profile-telephone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required class="profile-text" value="{{ userInfo.telephone }}"/></div>
+                        <div class="profile-text">Почта: <label for="profile-email"></label><input id="profile-email" type="email" class="profile-text" value="{{ userInfo.email }}"/></div>
+                        <div class="profile-text">Пароль: <input id="profile-password" type="password" class="profile-text" value="{{ userInfo.password }}"/></div>
                     </div>
                 </div>
             </div>

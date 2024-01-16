@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
-    private const DATE_TIME_FORMAT = 'd/m/Y';
+    private const DATE_TIME_FORMAT = 'Y-m-d';
 
     private StaffInfoApi $staffInfoApi;
     private ClientApi $clientApi;
@@ -105,7 +105,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($client->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', strval(0), $expire);
+            $cookie = new Cookie('admin', strval(false), $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -118,7 +118,7 @@ class PagesController extends AbstractController
             $cookie = new Cookie('id', strval($admin->getId()), $expire);
             $response = new Response();
             $response->headers->setCookie($cookie);
-            $cookie = new Cookie('admin', strval(1), $expire);
+            $cookie = new Cookie('admin', strval(true), $expire);
             $response->headers->setCookie($cookie);
             return $response;
         }
@@ -132,13 +132,16 @@ class PagesController extends AbstractController
     public function mainPage(Request $request): Response
     {
         $id = (int)$request->cookies->get('id');
-        if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
+        if (empty($id) || !$this->isUserExist($id))
+        {
+            return $this->redirectToErrorPage(401);
         }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -161,6 +164,7 @@ class PagesController extends AbstractController
             'mainPage' => $mainPage,
             'basketPage' => $basketPage,
             'products' => $productsView,
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -168,13 +172,16 @@ class PagesController extends AbstractController
     public function submitOrder(Request $request): Response
     {
         $id = (int)$request->cookies->get('id');
-        // if (empty($id) || !$this->isUserExist($id)) {
-        //     $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        //     return $this->render('error/error.html.twig', [
-        //         'loginPage' => $loginPage,
-        //         'statusCode' => 401,
-        //     ]);
-        // }
+        if (empty($id) || !$this->isUserExist($id))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
 
         $data = json_decode($request->getContent(), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -208,20 +215,108 @@ class PagesController extends AbstractController
         );
     }
 
+    #[Route('/reportPage', 'reportPage')]
+    public function reportPage(Request $request): Response
+    {
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $this->redirectToErrorPage(401);
+        }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
+        $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        $errorPageUrl = $this->generateUrl('errorPage', ['statusCode' => 401], UrlGeneratorInterface::ABSOLUTE_URL);
+        $updateOrderUrl = $this->generateUrl('updateOrder', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $orders = $this->orderApi->getAllOrders();
+        $reports = [];
+        foreach ($orders as $order)
+        {
+            $client = $this->clientApi->getClient($order->getIdClient());
+            if (empty($client))
+            {
+                $client = $this->staffInfoApi->getStaffInfo($order->getIdClient());
+            }
+            $reports[] = [
+                'id' => $order->getId(),
+                'clientId' => $order->getIdClient(),
+                'orderDate' => ($order->getOrderDate())->format(self::DATE_TIME_FORMAT),
+                'totalCost' => $order->getSum(),
+                'status' => $order->getStatus(),
+                'address' => $order->getAddress(),
+                'clientName' => $client->getFirstName()
+            ];
+        }
+        return $this->render('report/report_page.html.twig', [
+            'updateOrderUrl' => $updateOrderUrl,
+            'errorPageUrl' => $errorPageUrl,
+            'isAdmin' => $isAdmin,
+            'reports' => $reports,
+        ]);
+    }
+
+    #[Route('/updateOrder', 'updateOrder')]
+    public function updateOrder(Request $request): Response
+    {
+        $response = new Response(
+            'Ok',
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
+
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
+        if (!$isAdmin)
+        {
+            throw new \InvalidArgumentException('User can not change status');
+        }
+        $data = json_decode($request->getContent(), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \InvalidArgumentException('Invalid JSON');
+        }
+        $statusOrder = $data['status'];
+        $orderId = $data['id'];
+        $order = $this->orderApi->getOrder((int)$orderId);
+        $this->orderApi->updateOrder(
+            $order->getId(),
+            $order->getIdClient(),
+            $order->getSum(),
+            $order->getOrderDate(),
+            (int)$statusOrder,
+            $order->getAddress(),
+        );
+        return $response;
+    }
+
     #[Route('/successOrderPage', 'successOrderPage')]
     public function successOrderPage(Request $request): Response
     {
-        // $id = (int)$request->cookies->get('id');
-        // if (empty($id) || !$this->isUserExist($id)) {
-        //     $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-        //     return $this->render('error/error.html.twig', [
-        //         'loginPage' => $loginPage,
-        //         'statusCode' => 401,
-        //     ]);
-        // }
+        $id = (int)$request->cookies->get('id');
+        if (empty($id) || !$this->isUserExist($id)) {
+            $this->redirectToErrorPage(401);
+        }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         return $this->render('basket/success_order.html.twig', [
             'mainPage' => $mainPageUrl,
+            'isAdmin' => $isAdmin
         ]);
     }
 
@@ -230,12 +325,14 @@ class PagesController extends AbstractController
     {
         $id = (int)$request->cookies->get('id');
         if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
+            $this->redirectToErrorPage(401);
         }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
         $user = $this->clientApi->getClient($id) ?? $this->staffInfoApi->getStaffInfo($id);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -252,7 +349,7 @@ class PagesController extends AbstractController
             'patronymic' => $user->getPatronymic(),
             'imagePath' => "images/" . $user->getPhoto(),
             'telephone' => $user->getTelephone(),
-            'position' => $user->getPosition()
+            'position' => $user->getPosition(),
         ];
 
         return $this->render('profile/profile.html.twig', [
@@ -262,6 +359,7 @@ class PagesController extends AbstractController
             'userInfo' => $userView,
             'updateUserUrl' => $updateUser,
             'errorPageUrl' => $errorPageUrl,
+            'isAdmin' => $isAdmin
         ]);
     }
 
@@ -315,12 +413,14 @@ class PagesController extends AbstractController
     {
         $id = (int)$request->cookies->get('id');
         if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
+            $this->redirectToErrorPage(401);
         }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
         $loginPageUrl = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPageUrl = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPageUrl = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -333,7 +433,8 @@ class PagesController extends AbstractController
             'basketPage' => $basketPageUrl,
             'submitOrderUrl' => $submitOrderUrl,
             'successOrderPageUrl' => $successOrderPageUrl,
-            'errorPageUrl' => $errorPageUrl
+            'errorPageUrl' => $errorPageUrl,
+            'isAdmin' => $isAdmin,
         ]);
     }
 
@@ -342,14 +443,16 @@ class PagesController extends AbstractController
     {
         $id = (int)$request->cookies->get('id');
         if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
+            $this->redirectToErrorPage(401);
         }
-        $id = $request->attributes->get('id');
-        $product = $this->productApi->getProduct((int)$id);
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
+        $productId = $request->attributes->get('id');
+        $product = $this->productApi->getProduct((int)$productId);
         $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $mainPage = $this->generateUrl('mainPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
         $basketPage = $this->generateUrl('basketPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -363,6 +466,7 @@ class PagesController extends AbstractController
             'cost' => $product->getCost(),
             'category' => $this->productCategoryApi->getProductCategory($product->getCategory())->getName(),
             'imagePath' => "images/" . $product->getPhoto(),
+            'isAdmin' => $isAdmin
         ]);
     }
 
@@ -417,19 +521,22 @@ class PagesController extends AbstractController
         );
 
         $id = (int)$request->cookies->get('id');
-        if (empty($id) || !$this->isUserExist($id)) {
-            $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
-            return $this->render('error/error.html.twig', [
-                'loginPage' => $loginPage,
-                'statusCode' => 401,
-            ]);
+        if (empty($id) || !$this->isUserExist($id))
+        {
+            return $this->redirectToErrorPage(401);
         }
+        $isAdmin = $request->cookies->get('admin');
+        if (empty($isAdmin))
+        {
+            return $this->redirectToErrorPage(401);
+        }
+        $isAdmin = (bool)($isAdmin);
         $data = json_decode($request->getContent(), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \InvalidArgumentException('Invalid JSON');
         }
 
-        try
+        if ($isAdmin)
         {
             $this->staffInfoApi->updateStaffInfo(
                 $id,
@@ -444,9 +551,19 @@ class PagesController extends AbstractController
                 $data['position'] ?? null,
             );
         }
-        catch (\Throwable $e)
+        else
         {
-            $response->setStatusCode(400);
+            $this->clientApi->updateClient(
+                $id,
+                $data['firstName'],
+                $data['lastName'],
+                \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $data['birthday']),
+                $data['email'],
+                $data['password'],
+                $data['patronymic'] ?? null,
+                $data['photo'] ?? null,
+                $data['telephone'] ?? null,
+            );
         }
 
         return $response;
@@ -455,5 +572,14 @@ class PagesController extends AbstractController
     private function isUserExist(int $id): bool
     {
         return !empty($this->clientApi->getClient(($id)) || !empty($this->staffInfoApi->getStaffInfo($id)));
+    }
+
+    private function redirectToErrorPage(int $statusCode): Response
+    {
+        $loginPage = $this->generateUrl('loginPage',[], UrlGeneratorInterface::ABSOLUTE_URL);
+        return $this->render('error/error.html.twig', [
+            'loginPage' => $loginPage,
+            'statusCode' => $statusCode,
+        ]);
     }
 }

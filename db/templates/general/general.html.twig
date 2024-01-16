@@ -6,7 +6,9 @@
         }
     </script>
     <div class="page_content">
-        {{ include('components/sidebar/sidebar.html.twig') }}
+        {{ isAdmin }}
+        {% include 'components/sidebar/sidebar.html.twig'
+            with {'isAdmin': isAdmin } %}
         <div class="general_content">
             <form class="widget-search" method="get">
                 <input class="widget-input" placeholder="Search some..." type="text" name="searchText" id="general-search-value" />

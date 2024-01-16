@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <script>
+        function changeOrder(url, id) {
+            let statusName = document.getElementById('report-status_' + id).value;
+            const data = JSON.stringify({
+                id: id,
+                status: statusName,
+            });
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    window.location.reload();
+                } else {
+                    alert('Изменение не удалось');
+                    console.log(`Error: ${xhr.status}`);
+                }
+            };
+            xhr.send(data);
+        }
+    </script>
+    <div class="page_content">
+        {% include 'components/sidebar/sidebar.html.twig'
+            with {'isAdmin': isAdmin} %}
+        <div class="general_content">
+            <div class="general_products">
+                {% for report in reports %}
+                    <form onsubmit="changeOrder('{{ updateOrderUrl }}', '{{ report.id }}')" action="" method="post" class="widget_product">
+                        Статус: <input id="report-status_{{ report.id }}" class="report-text" value="{{ report.status }}"/><br>
+                        Общая стоимость: {{ report.totalCost }}<br>
+                        Адресс доставки: {{ report.address }}<br>
+                        Дата заказа: {{ report.orderDate }}<br>
+                        Имя покупателя: {{ report.clientName }}<br>
+                    </form>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
