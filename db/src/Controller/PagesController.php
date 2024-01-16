@@ -191,10 +191,10 @@ class PagesController extends AbstractController
         try {
             $products = $data['products'];
             $sum = $data['cost'];
-            $this->orderApi->addOrder($id,$sum,new \DateTimeImmutable(),0, 'you-la');
+            $idOrder = $this->orderApi->addOrder($id,$sum,new \DateTimeImmutable(),0, 'you-la');
             foreach($products as $productId => $count)
             {
-                $this->productPurchaseApi->addProductPurchase($productId, $id, 1, new \DateTimeImmutable, (new \DateTimeImmutable), 0);
+                $this->productPurchaseApi->addProductPurchase($productId, $idOrder, 1, new \DateTimeImmutable, (new \DateTimeImmutable), 0);
                 $this->productInStorageApi->updateProductInStorage(
                     $this->productInStorageApi->getProductInStorageByProductAndStorage($productId, 1)->getId(),
                     $productId,
@@ -206,7 +206,7 @@ class PagesController extends AbstractController
         catch (\Throwable $e)
         {
             $this->logger->alert("err $e");
-            return new Response('', 400);
+            return new Response('', 401);
         }
 
         return new Response(

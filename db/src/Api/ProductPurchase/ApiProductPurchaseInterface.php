@@ -10,7 +10,7 @@ interface ApiProductPurchaseInterface
 
     public function addProductPurchase(
         int                $id_product,
-        int                $id_client,
+        int                $id_order,
         int                $id_storage,
         \DateTimeImmutable $order_date,
         ?\DateTimeImmutable $delivery_date,
@@ -20,7 +20,7 @@ interface ApiProductPurchaseInterface
     public function updateProductPurchase(
         int                $id,
         int                $id_product,
-        int                $id_client,
+        int                $id_order,
         int                $id_storage,
         \DateTimeImmutable $order_date,
         \DateTimeImmutable $delivery_date,
