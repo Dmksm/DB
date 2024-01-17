@@ -408,16 +408,10 @@ class PagesController extends AbstractController
         {
             try
             {
-
             $file = $request->files->get('photo');
-            
             $fileName = md5(uniqid()).'.webp';
-            
             $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
-            
-
             $file->move($uploadDir, $fileName);
-
 
             $this->clientApi->addClient(
                 $data['first_name'],
@@ -451,7 +445,7 @@ class PagesController extends AbstractController
         {
 
             return new Response(
-                'aaa',
+                'this allready used',
                 Response::HTTP_BAD_REQUEST,
                 ['content-type' => 'text/html']
             );
@@ -551,6 +545,17 @@ class PagesController extends AbstractController
 
         if ($isAdmin)
         {
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+
+            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
+            {
+                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
+            }
+
+            $file = $request->files->get('photo');
+            $fileName = md5(uniqid()).'.webp';
+            $file->move($uploadDir, $fileName);
+
             $this->staffInfoApi->updateStaffInfo(
                 $id,
                 $data['firstName'],
@@ -559,13 +564,22 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? null,
+                $fileName,
                 $data['telephone'] ?? null,
                 $data['position'] ?? null,
             );
         }
         else
         {
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
+            {
+                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
+            }
+            $file = $request->files->get('photo');
+            $fileName = md5(uniqid()).'.webp';
+            $file->move($uploadDir, $fileName);
+
             $this->clientApi->updateClient(
                 $id,
                 $data['firstName'],
@@ -574,7 +588,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? null,
+                $fileName,
                 $data['telephone'] ?? null,
             );
         }
