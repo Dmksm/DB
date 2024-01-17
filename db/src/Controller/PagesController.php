@@ -386,18 +386,39 @@ class PagesController extends AbstractController
     #[Route('/register', 'register')]
     public function register(Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \InvalidArgumentException('Invalid JSON');
-        }
 
+        // return new Response(
+        //     $request->request->get('jsonData'), 
+        //     401,
+        //     ['content-type' => 'text/html']
+        // );
+        $data = json_decode($request->request->get('jsonData'), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+
+            return new Response(
+                'json error',
+                401,
+                ['content-type' => 'text/html']
+            );
+        }
         $client = $this->clientApi->getClientByEmailAndPassword($data['email'],$data['password']);
         $staff = $this->staffInfoApi->getStaffInfoByEmailAndPassword($data['email'],$data['password']);
 
         if(!$client && !$staff)
         {
+            try
+            {
 
-            $fileName = $this->generateRandomString().'.webp';
+            $file = $request->files->get('photo');
+            
+            $fileName = md5(uniqid()).'.webp';
+            
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+            
+
+            $file->move($uploadDir, $fileName);
+
+
             $this->clientApi->addClient(
                 $data['first_name'],
                 $data['last_name'],
@@ -414,13 +435,23 @@ class PagesController extends AbstractController
                 Response::HTTP_OK,
                 ['content-type' => 'text/html']
             );
+            }
+            catch(\Throwable $ex)
+            {
+                
+                return new Response(
+                    $ex->getMessage(),
+                    501,
+                    ['content-type' => 'text/html']
+                );
+            }
 
         }
         else
         {
 
             return new Response(
-                'this email allready exist',
+                'aaa',
                 Response::HTTP_BAD_REQUEST,
                 ['content-type' => 'text/html']
             );
