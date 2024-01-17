@@ -380,16 +380,24 @@ class PagesController extends AbstractController
     #[Route('/register', 'register')]
     public function register(Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->request->get('jsonData'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \InvalidArgumentException('Invalid JSON');
+            return new Response(
+                'json error',
+                400,
+                ['content-type' => 'text/html']
+            );
         }
-
         $client = $this->clientApi->getClientByEmailAndPassword($data['email'],$data['password']);
         $staff = $this->staffInfoApi->getStaffInfoByEmailAndPassword($data['email'],$data['password']);
 
         if(!$client && !$staff)
         {
+            $file = $request->files->get('photo');
+            $fileName = md5(uniqid()).'.webp';
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+            $file->move($uploadDir, $fileName);
+
             $this->clientApi->addClient(
                 $data['first_name'],
                 $data['last_name'],
@@ -397,7 +405,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'],
-                $data['photo'] ?? self::DEFAULT_IMAGE,
+                $fileName ?? self::DEFAULT_IMAGE,
                 $data['telephone']
             );
             $status = Response::HTTP_OK;
@@ -551,6 +559,17 @@ class PagesController extends AbstractController
 
         if ($isAdmin)
         {
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+
+            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
+            {
+                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
+            }
+
+            $file = $request->files->get('photo');
+            $fileName = md5(uniqid()).'.webp';
+            $file->move($uploadDir, $fileName);
+
             $this->staffInfoApi->updateStaffInfo(
                 $id,
                 $data['firstName'],
@@ -559,13 +578,22 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? self::DEFAULT_IMAGE,
+                $fileName ?? self::DEFAULT_IMAGE,
                 $data['telephone'] ?? null,
                 $data['position'] ?? null,
             );
         }
         else
         {
+            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
+            {
+                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
+            }
+            $file = $request->files->get('photo');
+            $fileName = md5(uniqid()).'.webp';
+            $file->move($uploadDir, $fileName);
+
             $this->clientApi->updateClient(
                 $id,
                 $data['firstName'],
@@ -574,7 +602,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $data['photo'] ?? self::DEFAULT_IMAGE,
+                $fileName ?? self::DEFAULT_IMAGE,
                 $data['telephone'] ?? null,
             );
         }

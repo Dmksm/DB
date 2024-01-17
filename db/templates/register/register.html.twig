@@ -70,7 +70,6 @@
         {
             password.classList.remove("red-border");
         }
-        console.log(validate);
         if (!validate) {
             alert('Неверные поля');
             return;
@@ -85,9 +84,14 @@
             patronymic: document.getElementById('login-patronymic-value').value,
             telephone: document.getElementById('login-telephone-value').value,
         });
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", registerUrl);
-        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+
+
+        var formData = new FormData();
+        formData.append("photo", document.getElementById("login-photo-value").files[0]);
+        formData.append("jsonData", data);
+
+        var xhr = new XMLHttpRequest();
+
         xhr.onload = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 alert('Создание успешно');
@@ -95,7 +99,8 @@
                 alert('Создание не удалось');
             }
         };
-        xhr.send(data);
+        xhr.open("POST", registerUrl);
+        xhr.send(formData);
     }
     function redirectToUrl(url) {
         location.href = url;
@@ -125,7 +130,7 @@
                 <input id="login-telephone-value" class="login-input" placeholder="telephone" type="text" name="telephone" required />
             </div>
             <div>
-                <input class="login-submit" type="submit" value="send" onclick="register('{{ loginPage }}', '{{ registerUrl }}')"/>
+                <input class="login-submit" type="submit" value="send" onclick="register('{{ loginPage }}','{{ registerUrl }}')"/>
             </div>
             <div>
                 <input class="login-register" type="submit" value="Back" onclick="redirectToUrl('{{ loginPage }}')"/>
