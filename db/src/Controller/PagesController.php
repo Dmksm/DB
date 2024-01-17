@@ -558,19 +558,36 @@ class PagesController extends AbstractController
             throw new \InvalidArgumentException('Invalid JSON');
         }
 
-        if ($isAdmin)
+        $photo = ($isAdmin) ? $this->staffInfoApi->getStaffInfo($id)->getPhoto() : $this->clientApi->getClient($id)->getPhoto();
+        $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
+        if(file_exists($uploadDir . $photo))
         {
-            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
-
-            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
-            {
-                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
-            }
-
-            $file = $request->files->get('photo');
+            unlink($uploadDir . $photo);
+        }
+        $file = $request->files->get('photo');
+        if (!empty($file))
+        {
             $fileName = md5(uniqid()).'.webp';
             $file->move($uploadDir, $fileName);
+        }
+        else
+        {
+            $fileName = $request->request->get('photo');
+            $this->logger->alert("fileName $fileName");
+            if (empty($fileName))
+            {
+                $fileName = self::DEFAULT_IMAGE;
+            }
+            else
+            {
+                $fileName = str_replace(self::IMAGES_FOLDER, "", $fileName);
+                $fileName = str_replace(self::PATH_DELIMITER, "", $fileName);
+            }
+        }
 
+        $this->logger->alert("fileName $fileName");
+        if ($isAdmin)
+        {
             $this->staffInfoApi->updateStaffInfo(
                 $id,
                 $data['firstName'],
@@ -579,39 +596,13 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $fileName ?? self::DEFAULT_IMAGE,
+                $fileName,
                 $data['telephone'] ?? null,
                 $data['position'] ?? null,
             );
         }
         else
         {
-            $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
-            if(file_exists($uploadDir . $this->clientApi->getClient($id)->getPhoto()))
-            {
-                unlink($uploadDir . $this->clientApi->getClient($id)->getPhoto());
-            }
-            $file = $request->files->get('photo');
-            if (!empty($file))
-            {
-                $fileName = md5(uniqid()).'.webp';
-                $file->move($uploadDir, $fileName);
-            }
-            else
-            {
-                $fileName = $request->request->get('photo');
-                $this->logger->alert("fileName $fileName");
-                if (empty($fileName))
-                {
-                    $fileName = self::DEFAULT_IMAGE;
-                }
-                else
-                {
-                    $fileName = str_replace(self::IMAGES_FOLDER, "", $fileName);
-                    $fileName = str_replace(self::PATH_DELIMITER, "", $fileName);
-                }
-            }
-            $this->logger->alert("fileName $fileName");
             $this->clientApi->updateClient(
                 $id,
                 $data['firstName'],
