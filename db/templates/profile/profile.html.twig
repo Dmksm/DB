@@ -86,18 +86,26 @@
                 email: document.getElementById('profile-email').value,
                 password: document.getElementById('profile-password').value,
             });
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", url);
-            xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+            var formData = new FormData();
+            if(document.getElementById("file-input").value !== "") {
+                formData.append("photo", document.getElementById("file-input").files[0]);
+            } else {
+                formData.append("photo", document.getElementById("profile-current-image").getAttribute("src"));
+            }
+            formData.append("jsonData", data);
+
+            var xhr = new XMLHttpRequest();
+
             xhr.onload = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert('Успешно');
+                    alert('Изменение успешно');
                 } else {
                     alert('Изменение не удалось');
-                    console.log(`Error: ${xhr.status}`);
                 }
+                location.reload();
             };
-            xhr.send(data);
+            xhr.open("POST", url);
+            xhr.send(formData);
         }
     </script>
     <div class="profile-page page_content">
@@ -105,7 +113,8 @@
         <div class="profile page_content">
             <div class="profile page_content-row">
                 <div class="profile-page">
-                    <img class="profile-image" src="{{ asset(userInfo.imagePath) }}" alt="Картинка не загрузилась"/>
+                    <input id="file-input" type="file" hidden="">
+                    <label for="file-input"><img id="profile-current-image" class="profile-image" src="{{ asset(userInfo.imagePath) }}" alt="Картинка не загрузилась"/></label>
                     <div class="profile-info-list">
                         <div class="profile-text">Имя: <input id="profile-firstName" class="profile-text" value="{{ userInfo.firstName }}"/></div>
                         <div class="profile-text">Фамилия: <input id="profile-lastName" class="profile-text" value="{{ userInfo.lastName }}"/></div>

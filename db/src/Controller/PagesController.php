@@ -20,7 +20,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PagesController extends AbstractController
 {
-    private const IMAGES_FOLDER = "images/";
+    private const PATH_DELIMITER = "/";
+    private const IMAGES_FOLDER = "images" . self::PATH_DELIMITER;
     private const DEFAULT_IMAGE = "unknown_person.jpg";
     private const DATE_TIME_FORMAT = 'Y-m-d';
 
@@ -552,7 +553,7 @@ class PagesController extends AbstractController
             return $this->redirectToErrorPage(401);
         }
         $isAdmin = (bool)($isAdmin);
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->request->get('jsonData'), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new \InvalidArgumentException('Invalid JSON');
         }
@@ -586,14 +587,31 @@ class PagesController extends AbstractController
         else
         {
             $uploadDir =  $this->getParameter('kernel.project_dir') . '/public/images';
-            if(file_exists($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto()))
+            if(file_exists($uploadDir . $this->clientApi->getClient($id)->getPhoto()))
             {
-                unlink($uploadDir . $this->staffInfoApi->getStaffInfo($id)->getPhoto());
+                unlink($uploadDir . $this->clientApi->getClient($id)->getPhoto());
             }
             $file = $request->files->get('photo');
-            $fileName = md5(uniqid()).'.webp';
-            $file->move($uploadDir, $fileName);
-
+            if (!empty($file))
+            {
+                $fileName = md5(uniqid()).'.webp';
+                $file->move($uploadDir, $fileName);
+            }
+            else
+            {
+                $fileName = $request->request->get('photo');
+                $this->logger->alert("fileName $fileName");
+                if (empty($fileName))
+                {
+                    $fileName = self::DEFAULT_IMAGE;
+                }
+                else
+                {
+                    $fileName = str_replace(self::IMAGES_FOLDER, "", $fileName);
+                    $fileName = str_replace(self::PATH_DELIMITER, "", $fileName);
+                }
+            }
+            $this->logger->alert("fileName $fileName");
             $this->clientApi->updateClient(
                 $id,
                 $data['firstName'],
@@ -602,7 +620,7 @@ class PagesController extends AbstractController
                 $data['email'],
                 $data['password'],
                 $data['patronymic'] ?? null,
-                $fileName ?? self::DEFAULT_IMAGE,
+                $fileName,
                 $data['telephone'] ?? null,
             );
         }
