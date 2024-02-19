@@ -11,18 +11,16 @@
             return re.test(telephone);
         }
 
-        function changeProfile(url, errorPageUrl) {
+        function changeProfile(url) {
             let validate = true;
 
             const firstName = document.getElementById('profile-firstName');
             const lastName = document.getElementById('profile-lastName');
-            const patronymic = document.getElementById('profile-patronymic');
-            const birthday = document.getElementById('profile-birthday');
             const telephone = document.getElementById('profile-telephone');
             const email = document.getElementById('profile-email');
             const password = document.getElementById('profile-password');
 
-            if(firstName.value == '')
+            if(firstName.value === '')
             {
                 firstName.classList.add("red-border");
                 validate = false;
@@ -32,7 +30,7 @@
                 firstName.classList.remove("red-border");
             }
 
-            if(lastName.value == '')
+            if(lastName.value === '')
             {
                 lastName.classList.add("red-border");
                 validate = false;
@@ -42,7 +40,7 @@
                 lastName.classList.remove("red-border");
             }
 
-            if(telephone.value == '' || !validateTelephone(telephone.value))
+            if(telephone.value === '' || !validateTelephone(telephone.value))
             {
                 telephone.classList.add("red-border");
                 validate = false;
@@ -52,7 +50,7 @@
                 telephone.classList.remove("red-border");
             }
 
-            if(email.value == '' || !validateEmail(email.value))
+            if(email.value === '' || !validateEmail(email.value))
             {
                 email.classList.add("red-border");
                 validate = false;
@@ -62,7 +60,7 @@
                 email.classList.remove("red-border");
             }
 
-            if(password.value == '')
+            if(password.value === '')
             {
                 password.classList.add("red-border");
                 validate = false;
@@ -126,7 +124,7 @@
                     </div>
                 </div>
             </div>
-            <div class="profile-button-container" onclick="changeProfile('{{ updateUserUrl }}', '{{ errorPageUrl }}')">
+            <div class="profile-button-container" onclick="changeProfile('{{ updateUserUrl }}')">
                 {{ component('Button', { message: 'Изменить'}) }}
             </div>
         </div>

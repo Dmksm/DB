@@ -32,7 +32,7 @@
             let parsedData = JSON.parse(retrievedObject);
             if (parsedData !== null) {
                 let totalCost = Number(0);
-                parsedData.forEach((item, index) => {
+                parsedData.forEach((item) => {
                     let count = '';
                     let cost = item.cost;
                     if (item.count > 1) {
@@ -55,11 +55,11 @@
                 document.getElementById("basket-review-total-cost-body").textContent = 'Общая стоимость: ' + totalCost;
             }
         }
-        function submitOrder(url, successUrl, errorPageUrl) {
+        function submitOrder(url, successUrl) {
             let retrievedObject = localStorage.getItem('product');
             let parsedData = JSON.parse(retrievedObject);
             let productIDs = {};
-            parsedData.forEach((item, index) => {
+            parsedData.forEach((item) => {
                 productIDs[item.id] = item.count;
             });
             const data = JSON.stringify({
@@ -94,7 +94,7 @@
                     <div class="product-button" onclick="clearAll()">
                         {{ component('Button', { message: 'Очистить', type: 'deny'}) }}
                     </div>
-                    <div class="product-button" onclick="submitOrder('{{ submitOrderUrl }}', '{{ successOrderPageUrl }}', '{{ errorPageUrl }}')">
+                    <div class="product-button" onclick="submitOrder('{{ submitOrderUrl }}', '{{ successOrderPageUrl }}')">
                         {{ component('Button', { message: 'Оплатить' }) }}
                     </div>
                 </div>
